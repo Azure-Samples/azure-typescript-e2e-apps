@@ -1,0 +1,19 @@
+{
+  "name": "azure-functions-v4-node",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "swa build",
+    "login": "swa login",
+    "deploy": "swa deploy",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "swa start",
+    "test": "echo \"No tests yet...\"",
+    "install:functions": "npm install azure-functions-core-tools@4.0.5095 --save-exact --unsafe-perm tru",
+    "install:swa": "npm install -g @azure/static-web-apps-cli"
+  },
+  "devDependencies": {
+  },
+  "main": "dist/src/functions/*.js"
+}
