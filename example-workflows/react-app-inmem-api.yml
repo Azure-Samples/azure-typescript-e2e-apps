@@ -14,6 +14,7 @@ on:
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '18.x' # Azure Functions v4 runtime requires 18
+  VERBOSE: true
 
 jobs:
   build-and-deploy:
