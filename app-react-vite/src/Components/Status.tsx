@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 
 let url = `/api/todo`;
 
-console.log(`NODE_ENV = ${process.env.NODE_ENV}`)
+console.log(`CLOUD_ENV = ${process.env.CLOUD_ENV}`)
 console.log(`BACKEND_URI = ${process.env.BACKEND_URI}`)
 
-if (process.env.NODE_ENV?.toLowerCase()=='production') {
+if (process.env.CLOUD_ENV?.toLowerCase()=='production') {
   if (process.env.BACKEND_URI) {
     url = `${process.env.BACKEND_URI}${url}`
   } else {
