@@ -51,7 +51,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'swa-api'
+          app-name: 'swa-api' # change this to your Azure Function app name
           slot-name: 'Production'
           package: ${{env.AZURE_FUNCTIONAPP_PACKAGE_PATH}}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_123 }}
