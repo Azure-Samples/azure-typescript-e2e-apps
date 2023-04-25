@@ -37,7 +37,7 @@ jobs:
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
         env: 
-          VITE_BACKEND_URI: https://swa-api-0425.azurewebsites.net
+          VITE_BACKEND_URI: https://swa-api-123.azurewebsites.net
           VITE_CLOUD_ENV: production
 
   close_pull_request_job:
