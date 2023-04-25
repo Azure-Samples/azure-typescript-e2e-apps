@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 
 let url = `/api/todo`;
 
-console.log(`CLOUD_ENV = ${process.env.CLOUD_ENV}`)
-console.log(`BACKEND_URI = ${process.env.BACKEND_URI}`)
+const cloudEnv = import.meta.env.VITE_CLOUD_ENV;
+const backendEnv = import.meta.env.VITE_BACKEND_URI;
 
-if (process.env.CLOUD_ENV?.toLowerCase()=='production') {
-  if (process.env.BACKEND_URI) {
-    url = `${process.env.BACKEND_URI}${url}`
+console.log(`CLOUD_ENV = ${cloudEnv}`)
+console.log(`BACKEND_URI = ${backendEnv}`)
+
+if (cloudEnv.toLowerCase()=='production') {
+  if (backendEnv) {
+    url = `${backendEnv}${url}`
   } else {
-    throw Error(`Missing process.env.BACKEND_URI`)
+    throw Error(`Missing backendEnv`)
   }
 }
 
