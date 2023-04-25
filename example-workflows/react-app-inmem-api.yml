@@ -30,7 +30,7 @@ jobs:
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          pushd './v2/api/.'
           cd ./api-inmemory
           npm install
           npm run build --if-present
@@ -42,5 +42,5 @@ jobs:
         with:
           app-name: 'swa-api'
           slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: ./v2/api/.
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_123 }}
