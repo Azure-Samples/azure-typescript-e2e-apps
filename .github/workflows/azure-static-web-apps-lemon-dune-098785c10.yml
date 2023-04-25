@@ -42,6 +42,7 @@ jobs:
           ###### End of Repository/Build Configurations ######
         env: 
           BACKEND_URI: https://swa-api-0425.azurewebsites.net
+          NODE_ENV: production
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
