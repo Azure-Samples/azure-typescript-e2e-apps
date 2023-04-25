@@ -1,57 +1,16 @@
-# Project Name
+# Azure TypeScript E2E apps
 
-(short, 1-3 sentenced, description of the project)
+A monorepo of apps used with the Azure cloud. 
 
 ## Features
 
-This project framework provides the following features:
+* `.devcontainer`: local proxied react + api using [SWA CLI](https://learn.microsoft.com/en-us/azure/static-web-apps/static-web-apps-cli-configuration)
+* `app-react-vite`: very simple React 18 + Vite app with Azure _easy auth_
+* `api`: very simple Node.js Azure Functions v4 (new programming model) with `/status` route
+* `api-inmemory`: very simple Node.js Azure Functions v4 (new programming model) with `/status` and in-memory db for `/todo` route
+* `docs`: helpful information about resources
+* `example-workflows`: example GitHub workflow files you can use to build and deploy apps
 
-* Feature 1
-* Feature 2
-* ...
+## Documentation
 
-## Getting Started
-
-### Prerequisites
-
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
-
-### Quickstart
-(Add steps to get up and running quickly)
-
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
-
-
-## Demo
-
-A demo app is included to show how to use the project.
-
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
-
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+* React 18 (Vite) + Azure Functions API v4
