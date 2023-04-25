@@ -6,6 +6,7 @@
     "rootDir": ".",
     "strict": false,
     "sourceMap": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "resolveJsonModule": true
   }
 }
