@@ -1,5 +1,5 @@
 {
-  "name": "azure-functions-v4-node",
+  "name": "azure-typescript-e2e-apps",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -14,6 +14,5 @@
     "install:swa": "npm install -g @azure/static-web-apps-cli"
   },
   "devDependencies": {
-  },
-  "main": "dist/src/functions/*.js"
+  }
 }
