@@ -23,6 +23,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      - name: Show env variables before SWA build and deploy
+        shell: bash
+        run: |
+          printenv
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

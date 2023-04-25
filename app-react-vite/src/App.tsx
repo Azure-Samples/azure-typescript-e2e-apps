@@ -7,13 +7,18 @@ import './App.css';
 
 let url = `/api/todo`;
 
-if (process.env.PRODUCTION) {
+console.log(`NODE_ENV = ${process.env.NODE_ENV}`)
+console.log(`BACKEND_URI = ${process.env.BACKEND_URI}`)
+
+if (process.env.NODE_ENV?.toLowerCase()=='production') {
   if (process.env.BACKEND_URI) {
     url = `${process.env.BACKEND_URI}${url}`
   } else {
     throw Error(`Missing process.env.BACKEND_URI`)
   }
 }
+
+console.log(`URL = ${url}`)
 
 
 function App() {
