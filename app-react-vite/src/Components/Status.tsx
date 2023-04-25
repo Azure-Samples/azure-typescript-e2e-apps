@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-let url = `/api/todo`;
+let url = `/api/status`;
 
 const cloudEnv = import.meta.env.VITE_CLOUD_ENV;
 const backendEnv = import.meta.env.VITE_BACKEND_URI;
