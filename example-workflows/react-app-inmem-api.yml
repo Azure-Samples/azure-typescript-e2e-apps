@@ -42,5 +42,5 @@ jobs:
         with:
           app-name: 'swa-api'
           slot-name: 'Production'
-          package: ./v2/api/.
+          package: ./api-inmemory
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_123 }}
