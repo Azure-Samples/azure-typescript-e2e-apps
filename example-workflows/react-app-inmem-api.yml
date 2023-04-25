@@ -31,7 +31,6 @@ jobs:
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
-          pushd './v2/api/.'
           cd ./api-inmemory
           npm install
           npm run build --if-present
@@ -45,3 +44,5 @@ jobs:
           slot-name: 'Production'
           package: ./api-inmemory
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_123 }}
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
