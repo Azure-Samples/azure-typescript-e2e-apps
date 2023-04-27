@@ -1,4 +1,4 @@
-import express, { Router, Request, Response } from "express";
+import express, { Router } from "express";
 import Database from "../dbazuresql";
 import { noPasswordConfig, passwordConfig } from "../config";
 
@@ -9,8 +9,7 @@ const config = noPasswordConfig;
 console.log(`DB Config: ${JSON.stringify(config)}`)
 const database = new Database(config);
 
-// Define the GET handler for /users
-router.get('/', async (req, res) => {
+router.get('/', async (_, res) => {
     try {
         // Return a list of users
         const users = await database.readAll('Users');
@@ -22,7 +21,6 @@ router.get('/', async (req, res) => {
 
 });
 
-// Define the POST handler for /users
 router.post('/', async (req, res) => {
     try {
         const user = req.body;
@@ -32,14 +30,12 @@ router.post('/', async (req, res) => {
         const rowsAffected = await database.create('Users', user)
         res.status(201).json({ rowsAffected })
 
-
     } catch (err) {
         res.status(500).json({ error: err?.message })
     }
 
 });
 
-// Define the GET handler for /users/:id
 router.get('/:id', async (req, res) => {
     try {
         // Update the user with the specified ID
@@ -59,7 +55,6 @@ router.get('/:id', async (req, res) => {
 
 });
 
-// Define the PUT handler for /users/:id
 router.put('/:id', async (req, res) => {
     try {
         // Update the user with the specified ID
@@ -83,7 +78,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Define the DELETE handler for /users/:id
 router.delete('/:id', async (req, res) => {
     try {
         // Delete the user with the specified ID
