@@ -19,6 +19,7 @@ class Database {
 
   constructor(config) {
     this.config = config;
+    console.log(`Database: config: ${JSON.stringify}`)
   }
 
   async connect() {
@@ -31,7 +32,7 @@ class Database {
         console.log("Database already connected");
       }
     } catch (error) {
-      console.error(`Error connecting to database: ${error}`);
+      console.error(`Error connecting to database: ${JSON.stringify(error)}`);
     }
   }
 

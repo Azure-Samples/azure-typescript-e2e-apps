@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-export const config = {
+export const passwordConfig = {
     server: process.env.AZURE_SQL_SERVER,
     port: +process.env.AZURE_SQL_SERVER_PORT,
     database: process.env.AZURE_SQL_DATABASE,
@@ -11,14 +11,12 @@ export const config = {
       encrypt: true // for Azure users
     }
   };
-console.log(config)  
-  /*
-  export const passwordlessConfiguration = {
+
+
+export const nopasswordConfig = {
     server: process.env.AZURE_SQL_SERVER,
-    port: process.env.AZURE_SQL_SERVER_PORT,
+    port: +process.env.AZURE_SQL_SERVER_PORT,
     database: process.env.AZURE_SQL_DATABASE,
-    user: process.env.AZURE_SQL_SERVER_USERNAME,
-    password: process.env.AZURE_SQL_SERVER_PASSWORD,
     authentication: {
         type: 'azure-active-directory-default',
     },
@@ -26,4 +24,4 @@ console.log(config)
       encrypt: true // for Azure users
     }
   };
-  */
+

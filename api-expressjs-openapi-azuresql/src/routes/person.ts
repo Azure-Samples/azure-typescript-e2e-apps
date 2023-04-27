@@ -1,11 +1,12 @@
 import express, { Router, Request, Response } from "express";
 import Database from "../dbazuresql";
-import { config } from "../config";
+import { nopasswordConfig, passwordConfig } from "../config";
 
 const router: Router = express.Router();
 router.use(express.json());
 
-const database = new Database(config);
+console.log(`DB Config: ${JSON.stringify(nopasswordConfig)}`)
+const database = new Database(nopasswordConfig);
 
 // Define the GET handler for /users
 router.get('/', async (req, res) => {
