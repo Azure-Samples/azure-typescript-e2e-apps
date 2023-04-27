@@ -9,7 +9,7 @@
 // ./src/config.ts
 export const passwordlessConfiguration = {
     server: process.env.AZURE_SQL_SERVER,
-    port: process.env.AZURE_SQL_SERVER_PORT,
+    port: +process.env.AZURE_SQL_SERVER_PORT,
     database: process.env.AZURE_SQL_DATABASE,
     authentication: {
         type: 'azure-active-directory-default',
