@@ -8,18 +8,16 @@ const type = process.env.AZURE_SQL_SERVER_AUTHENTICATION;
 const user = process.env.AZURE_SQL_USER;
 const password = process.env.AZURE_SQL_PASSWORD;
 
-// const passwordConfig = {
-//     server,
-//     port,
-//     database,
-//     user,
-//     password,
-//     options: {
-//         encrypt: true
-//     }
-// }
-// console.log(passwordConfig)
-
+const passwordConfig = {
+    server,
+    port,
+    database,
+    user,
+    password,
+    options: {
+        encrypt: true
+    }
+}
 const noPasswordConfig = {
     server,
     port,
@@ -31,15 +29,16 @@ const noPasswordConfig = {
         encrypt: true
     }
 }
-console.log(noPasswordConfig)
 
-const getAllPersons = `select * from BuildVersion`;
+
+const getAllPersons = `select * from [dbo].[Users]`;
 
 const myQuery = async () => {
 
-    // make sure that any items are correctly URL encoded in the connection string
-    // await sql.connect('Server=localhost,1433;Database=database;User Id=username;Password=password;Encrypt=true')
-    var poolConnection = await sql.connect(noPasswordConfig);
+    const config = noPasswordConfig;
+    console.log(config)
+
+    var poolConnection = await sql.connect(config);
     const result = await poolConnection.request().query(getAllPersons)
     console.log(`Result: ${JSON.stringify(result)}`)
     poolConnection.close();
