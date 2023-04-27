@@ -3,8 +3,8 @@ require('dotenv').config({ debug: true })
 
 const server = process.env.AZURE_SQL_SERVER;
 const database = process.env.AZURE_SQL_DATABASE;
-const port = +process.env.AZURE_SQL_SERVER_PORT;
-const type = process.env.AZURE_SQL_SERVER_AUTHENTICATION;
+const port = +process.env.AZURE_SQL_PORT;
+const type = process.env.AZURE_SQL_AUTHENTICATIONTYPE;
 const user = process.env.AZURE_SQL_USER;
 const password = process.env.AZURE_SQL_PASSWORD;
 
