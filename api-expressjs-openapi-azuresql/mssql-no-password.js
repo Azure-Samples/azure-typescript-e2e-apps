@@ -1,42 +1,49 @@
 const sql = require('mssql')
+require('dotenv').config({ debug: true })
 
-const passwordConfig = {
-    server: 'dfberry-dbserver-1.database.windows.net', // better stored in an app setting such as process.env.DB_SERVER
-    port: 1433, // optional, defaults to 1433, better stored in an app setting such as process.env.DB_PORT
-    database: 'dfberry-db-1', // better stored in an app setting such as process.env.DB_NAME
-    user: 'dbserveradmin',
-    password: '',
-    options: {
-        encrypt: true
-    }
-}
+const server = process.env.AZURE_SQL_SERVER;
+const database = process.env.AZURE_SQL_DATABASE;
+const port = +process.env.AZURE_SQL_SERVER_PORT;
+const type = process.env.AZURE_SQL_SERVER_AUTHENTICATION;
+const user = process.env.AZURE_SQL_USER;
+const password = process.env.AZURE_SQL_PASSWORD;
+
+// const passwordConfig = {
+//     server,
+//     port,
+//     database,
+//     user,
+//     password,
+//     options: {
+//         encrypt: true
+//     }
+// }
+// console.log(passwordConfig)
 
 const noPasswordConfig = {
-    server: 'dfberry-dbserver-1.database.windows.net', // better stored in an app setting such as process.env.DB_SERVER
-    port: 1433, // optional, defaults to 1433, better stored in an app setting such as process.env.DB_PORT
-    database: 'dfberry-db-1', // better stored in an app setting such as process.env.DB_NAME
+    server,
+    port,
+    database,
     authentication: {
-        type: 'azure-active-directory-default'
+        type
     },
     options: {
         encrypt: true
     }
 }
+console.log(noPasswordConfig)
 
-const getAllPersons = `select * from People`;
+const getAllPersons = `select * from BuildVersion`;
 
-const myQuery = async() => {
-    try {
-        // make sure that any items are correctly URL encoded in the connection string
-        // await sql.connect('Server=localhost,1433;Database=database;User Id=username;Password=password;Encrypt=true')
-        var poolConnection = await sql.connect(noPasswordConfig);
-        const result = await poolConnection.request().query(getAllPersons)
-        console.log(`Result: ${JSON.stringify(result)}`)
-        poolConnection.close();
-        return;
-    } catch (err) {
-        console.log(`error: ${JSON.stringify(err)}`)
-    }
+const myQuery = async () => {
+
+    // make sure that any items are correctly URL encoded in the connection string
+    // await sql.connect('Server=localhost,1433;Database=database;User Id=username;Password=password;Encrypt=true')
+    var poolConnection = await sql.connect(noPasswordConfig);
+    const result = await poolConnection.request().query(getAllPersons)
+    console.log(`Result: ${JSON.stringify(result)}`)
+    poolConnection.close();
+    return;
 }
 
 myQuery().then(() => console.log('done')).catch(err => console.log(err))
