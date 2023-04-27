@@ -58,7 +58,7 @@ class Database {
         `INSERT INTO ${table} (name, email, password) VALUES (@name, @email, @password)`
       );
       console.log(`CREATE result: ${JSON.stringify(result)}`);
-      return result.recordset[0];
+      return result.rowsAffected[0];
     } catch (error) {
       console.error(`Error creating record: ${error?.message}`);
     }
@@ -72,7 +72,7 @@ class Database {
       console.log(`READALL result: ${JSON.stringify(result)}`);
       return result.recordsets[0];
     } catch (error) {
-      console.error(`Error reading record: ${error}`);
+      console.error(`Error deleting record: ${error?.message}`);
     }
   }
 
@@ -86,7 +86,7 @@ class Database {
       console.log(`READ result: ${JSON.stringify(result)}`);
       return result.recordset[0];
     } catch (error) {
-      console.error(`Error reading record: ${error}`);
+      console.error(`Error deleting record: ${error?.message}`);
     }
   }
 
@@ -107,9 +107,9 @@ class Database {
         `UPDATE ${table} SET name=@name, email=@email, password=@password WHERE id = @id`
       );
       console.log(`UPDATE result: ${JSON.stringify(result)}`);
-      return result.recordset[0];
+      return result.rowsAffected[0];
     } catch (error) {
-      console.error(`Error updating record: ${error}`);
+      console.error(`Error deleting record: ${error?.message}`);
     }
   }
 
@@ -118,15 +118,16 @@ class Database {
       await this.connect();
 
       console.log(`id: ${JSON.stringify(+id)}`);
+      const idAsNumber = Number(id)
 
       const request = this.poolconnection.request();
       const result = await request
-        .input("id", sql.Int, +id)
+        .input("id", sql.Int, idAsNumber )
         .query(`DELETE FROM ${table} WHERE id = @id`);
       console.log(`DELETE result: ${JSON.stringify(result)}`);
-      return result.recordset[0];
+      return result.rowsAffected[0];
     } catch (error) {
-      console.error(`Error deleting record: ${error}`);
+      console.error(`Error deleting record: ${error?.message}`);
     }
   }
 }
