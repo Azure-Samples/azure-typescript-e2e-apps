@@ -1,17 +1,5 @@
 import sql from "mssql";
 
-/*
-const config = {
-  user: 'username',
-  password: 'password',
-  server: 'serverurl',
-  database: 'databaseName',
-  options: {
-    encrypt: true // for Azure users
-  }
-};
-*/
-
 class Database {
   private config: any;
   private poolconnection: sql.ConnectionPool;
@@ -24,7 +12,8 @@ class Database {
 
   async connect() {
     try {
-      if (!this.connected) {
+      console.log(`Database connecting...${this.connected}`)
+      if (this.connected===false) {
         this.poolconnection = await sql.connect(this.config);
         this.connected = true;
         console.log("Database connection successful");
@@ -38,8 +27,7 @@ class Database {
 
   async disconnect() {
     try {
-      // @ts-ignore
-      sql.close();
+      this.poolconnection.close();
       console.log("Database connection closed");
     } catch (error) {
       console.error(`Error closing database connection: ${error}`);
@@ -47,89 +35,74 @@ class Database {
   }
 
   async create(table, data) {
-    try {
-      await this.connect();
-      const request = this.poolconnection.request();
 
-      request.input("name", sql.NVarChar(255), data.name);
-      request.input("email", sql.NVarChar(255), data.email);
-      request.input("password", sql.NVarChar(255), data.password);
+    await this.connect();
+    const request = this.poolconnection.request();
 
-      const result = await request.query(
-        `INSERT INTO ${table} (name, email, password) VALUES (@name, @email, @password)`
-      );
-      console.log(`CREATE result: ${JSON.stringify(result)}`);
-      return result.rowsAffected[0];
-    } catch (error) {
-      console.error(`Error creating record: ${error?.message}`);
-    }
+    request.input("name", sql.NVarChar(255), data.name);
+    request.input("email", sql.NVarChar(255), data.email);
+    request.input("password", sql.NVarChar(255), data.password);
+
+    const result = await request.query(
+      `INSERT INTO ${table} (name, email, password) VALUES (@name, @email, @password)`
+    );
+
+    return result.rowsAffected[0];
   }
 
   async readAll(table) {
-    try {
-      await this.connect();
-      const request = this.poolconnection.request();
-      const result = await request.query(`SELECT * FROM ${table}`);
-      console.log(`READALL result: ${JSON.stringify(result)}`);
-      return result.recordsets[0];
-    } catch (error) {
-      console.error(`Error deleting record: ${error?.message}`);
-    }
+
+    await this.connect();
+    const request = this.poolconnection.request();
+    const result = await request.query(`SELECT * FROM ${table}`);
+
+    return result.recordsets[0];
   }
 
   async read(table, id) {
-    try {
-      await this.connect();
-      const request = this.poolconnection.request();
-      const result = await request
-        .input("id", sql.Int, +id)
-        .query(`SELECT * FROM ${table} WHERE id = @id`);
-      console.log(`READ result: ${JSON.stringify(result)}`);
-      return result.recordset[0];
-    } catch (error) {
-      console.error(`Error deleting record: ${error?.message}`);
-    }
+
+    await this.connect();
+
+    const request = this.poolconnection.request();
+    const result = await request
+      .input("id", sql.Int, +id)
+      .query(`SELECT * FROM ${table} WHERE id = @id`);
+
+    return result.recordset[0];
+
   }
 
   async update(table, id, data) {
-    try {
-      await this.connect();
-      const request = this.poolconnection.request();
 
-      console.log(`id: ${JSON.stringify(+id)}`);
-      console.log(`data: ${JSON.stringify(data)}`);
+    await this.connect();
 
-      request.input("id", sql.Int, +id);
-      request.input("name", sql.NVarChar(255), data.name);
-      request.input("email", sql.NVarChar(255), data.email);
-      request.input("password", sql.NVarChar(255), data.password);
+    const request = this.poolconnection.request();
 
-      const result = await request.query(
-        `UPDATE ${table} SET name=@name, email=@email, password=@password WHERE id = @id`
-      );
-      console.log(`UPDATE result: ${JSON.stringify(result)}`);
-      return result.rowsAffected[0];
-    } catch (error) {
-      console.error(`Error deleting record: ${error?.message}`);
-    }
+    request.input("id", sql.Int, +id);
+    request.input("name", sql.NVarChar(255), data.name);
+    request.input("email", sql.NVarChar(255), data.email);
+    request.input("password", sql.NVarChar(255), data.password);
+
+    const result = await request.query(
+      `UPDATE ${table} SET name=@name, email=@email, password=@password WHERE id = @id`
+    );
+
+    return result.rowsAffected[0];
   }
 
   async delete(table, id) {
-    try {
-      await this.connect();
 
-      console.log(`id: ${JSON.stringify(+id)}`);
-      const idAsNumber = Number(id)
+    await this.connect();
 
-      const request = this.poolconnection.request();
-      const result = await request
-        .input("id", sql.Int, idAsNumber )
-        .query(`DELETE FROM ${table} WHERE id = @id`);
-      console.log(`DELETE result: ${JSON.stringify(result)}`);
-      return result.rowsAffected[0];
-    } catch (error) {
-      console.error(`Error deleting record: ${error?.message}`);
-    }
+    console.log(`id: ${JSON.stringify(+id)}`);
+    const idAsNumber = Number(id)
+
+    const request = this.poolconnection.request();
+    const result = await request
+      .input("id", sql.Int, idAsNumber)
+      .query(`DELETE FROM ${table} WHERE id = @id`);
+
+    return result.rowsAffected[0];
   }
 }
 
