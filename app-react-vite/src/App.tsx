@@ -3,18 +3,23 @@ import NavBar from './Components/NavBar';
 import Status from './Components/Status';
 import './App.css';
 
-
-
 let url = `/api/todo`;
 
-if (process.env.PRODUCTION) {
-  if (process.env.BACKEND_URI) {
-    url = `${process.env.BACKEND_URI}${url}`
+const cloudEnv = import.meta.env.VITE_CLOUD_ENV;
+const backendEnv = import.meta.env.VITE_BACKEND_URI;
+
+console.log(`CLOUD_ENV = ${cloudEnv}`)
+console.log(`BACKEND_URI = ${backendEnv}`)
+
+if (cloudEnv.toLowerCase()=='production') {
+  if (backendEnv) {
+    url = `${backendEnv}${url}`
   } else {
-    throw Error(`Missing process.env.BACKEND_URI`)
+    throw Error(`Missing backendEnv`)
   }
 }
 
+console.log(`URL = ${url}`)
 
 function App() {
 
