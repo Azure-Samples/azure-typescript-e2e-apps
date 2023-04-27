@@ -1,17 +1,18 @@
 import express, { Router, Request, Response } from "express";
 import Database from "../dbazuresql";
-import { passwordlessConfiguration } from "../config";
+import { config } from "../config";
 
 const router: Router = express.Router();
 router.use(express.json());
 
-const database = new Database(passwordlessConfiguration);
+const database = new Database(config);
 
 // Define the GET handler for /users
 router.get('/', async(req, res) => {
     // Return a list of users
     const users = await database.readAll('Users');
-    res.status(200).json(users.recordset[0]);
+    console.log(`users: ${JSON.stringify(users)}`);
+    res.status(200).json(users);
 });
 
 // Define the POST handler for /users
@@ -33,6 +34,7 @@ router.get('/:id', async (req, res) => {
     const userId = req.params.id;
 
     const result = await database.read('Users', userId);
+    console.log(`users: ${JSON.stringify(result)}`);
     res.status(200).json(result);
 });
 
@@ -40,8 +42,10 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     // Update the user with the specified ID
     const userId = req.params.id;
+    console.log(`userId: ${userId}`);
     const user = req.body;
     delete user.id;
+    console.log(`user: ${JSON.stringify(user)}`);
 
     const result = await database.update('Users', userId, user);
 });

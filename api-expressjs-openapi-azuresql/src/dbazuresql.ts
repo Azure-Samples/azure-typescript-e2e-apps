@@ -1,4 +1,4 @@
-import sql from 'mssql';
+import sql from "mssql";
 
 /*
 const config = {
@@ -13,10 +13,9 @@ const config = {
 */
 
 class Database {
-
   private config: any;
   private poolconnection: sql.ConnectionPool;
-  private connected: boolean=false;
+  private connected: boolean = false;
 
   constructor(config) {
     this.config = config;
@@ -24,14 +23,13 @@ class Database {
 
   async connect() {
     try {
-      if(!this.connected){
+      if (!this.connected) {
         this.poolconnection = await sql.connect(this.config);
-        this.connected=true;
-        console.log('Database connection successful');
+        this.connected = true;
+        console.log("Database connection successful");
       } else {
-        console.log('Database already connected');
+        console.log("Database already connected");
       }
-
     } catch (error) {
       console.error(`Error connecting to database: ${error}`);
     }
@@ -41,7 +39,7 @@ class Database {
     try {
       // @ts-ignore
       sql.close();
-      console.log('Database connection closed');
+      console.log("Database connection closed");
     } catch (error) {
       console.error(`Error closing database connection: ${error}`);
     }
@@ -52,15 +50,17 @@ class Database {
       await this.connect();
       const request = this.poolconnection.request();
 
-      request.input('name', sql.NVarChar(255), data.name);
-      request.input('email', sql.NVarChar(255), data.email);
-      request.input('password', sql.NVarChar(255), data.password);
+      request.input("name", sql.NVarChar(255), data.name);
+      request.input("email", sql.NVarChar(255), data.email);
+      request.input("password", sql.NVarChar(255), data.password);
 
-      const result = await request
-        .query(`INSERT INTO ${table} (name, email, password) VALUES (@name, @email, @password)`);
+      const result = await request.query(
+        `INSERT INTO ${table} (name, email, password) VALUES (@name, @email, @password)`
+      );
+      console.log(`CREATE result: ${JSON.stringify(result)}`);
       return result.recordset[0];
     } catch (error) {
-      console.error(`Error creating record: ${error}`);
+      console.error(`Error creating record: ${error?.message}`);
     }
   }
 
@@ -68,9 +68,9 @@ class Database {
     try {
       await this.connect();
       const request = this.poolconnection.request();
-      const result = await request
-        .query(`SELECT * FROM ${table}`);
-      return result.recordset[0];
+      const result = await request.query(`SELECT * FROM ${table}`);
+      console.log(`READALL result: ${JSON.stringify(result)}`);
+      return result.recordsets[0];
     } catch (error) {
       console.error(`Error reading record: ${error}`);
     }
@@ -81,8 +81,9 @@ class Database {
       await this.connect();
       const request = this.poolconnection.request();
       const result = await request
-        .input('id', sql.Int, id)
+        .input("id", sql.Int, +id)
         .query(`SELECT * FROM ${table} WHERE id = @id`);
+      console.log(`READ result: ${JSON.stringify(result)}`);
       return result.recordset[0];
     } catch (error) {
       console.error(`Error reading record: ${error}`);
@@ -94,13 +95,18 @@ class Database {
       await this.connect();
       const request = this.poolconnection.request();
 
-      request.input('id', sql.Int, id);
-      request.input('name', sql.NVarChar(255), data.name);
-      request.input('email', sql.NVarChar(255), data.email);
-      request.input('password', sql.NVarChar(255), data.password);
+      console.log(`id: ${JSON.stringify(+id)}`);
+      console.log(`data: ${JSON.stringify(data)}`);
 
-      const result = await request
-        .query(`UPDATE ${table} SET name=@name, email=@email, password=@password WHERE id = @id`);
+      request.input("id", sql.Int, +id);
+      request.input("name", sql.NVarChar(255), data.name);
+      request.input("email", sql.NVarChar(255), data.email);
+      request.input("password", sql.NVarChar(255), data.password);
+
+      const result = await request.query(
+        `UPDATE ${table} SET name=@name, email=@email, password=@password WHERE id = @id`
+      );
+      console.log(`UPDATE result: ${JSON.stringify(result)}`);
       return result.recordset[0];
     } catch (error) {
       console.error(`Error updating record: ${error}`);
@@ -110,10 +116,14 @@ class Database {
   async delete(table, id) {
     try {
       await this.connect();
+
+      console.log(`id: ${JSON.stringify(+id)}`);
+
       const request = this.poolconnection.request();
       const result = await request
-        .input('id', sql.Int, id)
+        .input("id", sql.Int, +id)
         .query(`DELETE FROM ${table} WHERE id = @id`);
+      console.log(`DELETE result: ${JSON.stringify(result)}`);
       return result.recordset[0];
     } catch (error) {
       console.error(`Error deleting record: ${error}`);
