@@ -1,5 +1,8 @@
 import * as dotenv from 'dotenv'
-dotenv.config({ debug: true })
+
+if (process.env.NODE_ENV === 'development') {
+    dotenv.config({ debug: true })
+}
 
 /*
 
