@@ -11,10 +11,10 @@ const database = new Database(config);
 
 router.get('/', async (_, res) => {
     try {
-        // Return a list of users
-        const users = await database.readAll('Users');
-        console.log(`users: ${JSON.stringify(users)}`);
-        res.status(200).json(users);
+        // Return a list of persons
+        const persons = await database.readAll('Person');
+        console.log(`persons: ${JSON.stringify(persons)}`);
+        res.status(200).json(persons);
     } catch (err) {
         res.status(500).json({ error: err?.message })
     }
@@ -23,11 +23,11 @@ router.get('/', async (_, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const user = req.body;
-        delete user.id;
-        console.log(`user: ${JSON.stringify(user)}`);
+        const person = req.body;
+        delete person.id;
+        console.log(`person: ${JSON.stringify(person)}`);
 
-        const rowsAffected = await database.create('Users', user)
+        const rowsAffected = await database.create('Person', person)
         res.status(201).json({ rowsAffected })
 
     } catch (err) {
@@ -38,13 +38,13 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        // Update the user with the specified ID
-        const userId = req.params.id;
-        console.log(`userId: ${userId}`);
+        // Update the person with the specified ID
+        const personId = req.params.id;
+        console.log(`personId: ${personId}`);
 
-        if (userId) {
-            const result = await database.read('Users', userId);
-            console.log(`users: ${JSON.stringify(result)}`);
+        if (personId) {
+            const result = await database.read('Person', personId);
+            console.log(`persons: ${JSON.stringify(result)}`);
             res.status(200).json(result);
         } else {
             res.status(404);
@@ -57,18 +57,18 @@ router.get('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        // Update the user with the specified ID
-        const userId = req.params.id;
-        console.log(`userId: ${userId}`);
+        // Update the person with the specified ID
+        const personId = req.params.id;
+        console.log(`personId: ${personId}`);
 
-        const user = req.body;
+        const person = req.body;
 
-        if (userId && user) {
+        if (personId && person) {
 
-            delete user.id;
-            console.log(`user: ${JSON.stringify(user)}`);
+            delete person.id;
+            console.log(`person: ${JSON.stringify(person)}`);
 
-            const rowsAffected = await database.update('Users', userId, user);
+            const rowsAffected = await database.update('Person', personId, person);
             res.status(200).json({ rowsAffected })
         } else {
             res.status(404);
@@ -80,14 +80,14 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        // Delete the user with the specified ID
-        const userId = req.params.id;
-        console.log(`userId: ${userId}`);
+        // Delete the person with the specified ID
+        const personId = req.params.id;
+        console.log(`personId: ${personId}`);
 
-        if (!userId) {
+        if (!personId) {
             res.status(404)
         } else {
-            const rowsAffected = await database.delete('Users', userId);
+            const rowsAffected = await database.delete('Person', personId);
             res.status(204).json({ rowsAffected })
         }
     } catch (err) {

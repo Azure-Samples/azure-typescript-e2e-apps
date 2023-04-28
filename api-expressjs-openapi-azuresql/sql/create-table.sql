@@ -4,11 +4,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[Users](
+CREATE TABLE [dbo].[Person](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[name] [nvarchar](255) NULL,
-	[email] [nvarchar](255) NULL,
-	[password] [nvarchar](255) NULL
+	[firstName] [nvarchar](255) NULL,
+	[lastName] [nvarchar](255) NULL
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -17,12 +16,10 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-INSERT INTO [dbo].[Users]
-           ([name]
-           ,[email]
-           ,[password])
+INSERT INTO [dbo].[Person]
+           ([firstName]
+           ,[lastName])
      VALUES
-           ('Luke'
-           ,'Luke@contoso.com'
-           ,'1234')
+           ('Willam'
+           ,'Jones')
 GO

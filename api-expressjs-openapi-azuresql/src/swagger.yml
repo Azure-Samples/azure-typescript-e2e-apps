@@ -1,77 +1,75 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: Users API
+  title: Persons API
 paths:
-  /users:
+  /persons:
     get:
-      summary: Get all users
+      summary: Get all persons
       responses:
         200:
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/User'
+              $ref: '#/definitions/Person'
     post:
-      summary: Create a new user
+      summary: Create a new person
       parameters:
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/Person'
       responses:
         201:
           description: Created
           schema:
-            $ref: '#/definitions/User'
-  /users/{id}:
+            $ref: '#/definitions/Person'
+  /persons/{id}:
     parameters:
       - name: id
         in: path
         required: true
         type: integer
     get:
-      summary: Get a user by ID
+      summary: Get a person by ID
       responses:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/Person'
       404:
-        description: User not found
+        description: Person not found
     put:
-      summary: Update a user by ID
+      summary: Update a person by ID
       parameters:
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/Person'
       responses:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/Person'
       404:
-        description: User not found
+        description: Person not found
     delete:
-      summary: Delete a user by ID
+      summary: Delete a person by ID
       responses:
         204:
           description: No Content
       404:
-        description: User not found
+        description: Person not found
 definitions:
-  User:
+  Person:
     type: object
     properties:
       id:
         type: integer
-      name:
+      firstName:
         type: string
-      email:
-        type: string
-      password:
+      lastName:
         type: string

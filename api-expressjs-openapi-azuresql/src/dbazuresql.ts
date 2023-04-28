@@ -39,12 +39,11 @@ class Database {
     await this.connect();
     const request = this.poolconnection.request();
 
-    request.input("name", sql.NVarChar(255), data.name);
-    request.input("email", sql.NVarChar(255), data.email);
-    request.input("password", sql.NVarChar(255), data.password);
+    request.input("firstName", sql.NVarChar(255), data.firstName);
+    request.input("lastName", sql.NVarChar(255), data.lastName);
 
     const result = await request.query(
-      `INSERT INTO ${table} (name, email, password) VALUES (@name, @email, @password)`
+      `INSERT INTO ${table} (firstName, lastName) VALUES (@firstName, @lastName)`
     );
 
     return result.rowsAffected[0];
@@ -79,12 +78,11 @@ class Database {
     const request = this.poolconnection.request();
 
     request.input("id", sql.Int, +id);
-    request.input("name", sql.NVarChar(255), data.name);
-    request.input("email", sql.NVarChar(255), data.email);
-    request.input("password", sql.NVarChar(255), data.password);
+    request.input("firstName", sql.NVarChar(255), data.firstName);
+    request.input("lastName", sql.NVarChar(255), data.lastName);
 
     const result = await request.query(
-      `UPDATE ${table} SET name=@name, email=@email, password=@password WHERE id = @id`
+      `UPDATE ${table} SET firstName=@firstName, lastName=@lastName WHERE id = @id`
     );
 
     return result.rowsAffected[0];

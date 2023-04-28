@@ -6,9 +6,9 @@ import swaggerJsdoc from 'swagger-jsdoc';
 const swaggerDefinition = {
     swagger: '2.0',
     info: {
-        title: 'Users API',
+        title: 'Persons API',
         version: '1.0.0',
-        description: 'API for managing users',
+        description: 'API for managing persons',
     },
     basePath: '/',
 };
