@@ -1,18 +1,19 @@
 import express from 'express';
-import { swaggerUi, swaggerSpec } from './swagger';
 
-// App route to database
+// Import App routes
 import person from './routes/person';
+import openapi from './routes/openapi';
 
 const port = process.env.PORT || 3000;
 
 const app = express();
 
-// Swagger explorer route
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// User route
+// Connect App routes
+app.use('/api-docs', openapi);
 app.use('/persons', person)
+app.use('*', (_, res) => {
+  res.redirect('/api-docs');
+})
 
 // Start the server
 app.listen(port, () => {
