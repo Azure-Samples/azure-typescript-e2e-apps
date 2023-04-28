@@ -14,4 +14,15 @@ PRIMARY KEY CLUSTERED
 	[id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+
+GO
+
+INSERT INTO [dbo].[Users]
+           ([name]
+           ,[email]
+           ,[password])
+     VALUES
+           ('Luke'
+           ,'Luke@contoso.com'
+           ,'1234')
 GO
