@@ -4,15 +4,19 @@
   "description": "",
   "main": "dist/app",
   "scripts": {
+    "format": "prettier --write src/**/*.js",
     "dev": "cross-env DEBUG=express:* node src/app.js",
     "start": "echo 'run v2 api-expressjs-openapi-azuresql' && node src/app.js",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
     "cross-env": "^7.0.3",
-    "dotenv": "^16.0.3",
     "mssql": "^9.1.1",
     "swagger-ui-express": "^4.6.2",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "prettier": "^2.8.8"
   }
 }

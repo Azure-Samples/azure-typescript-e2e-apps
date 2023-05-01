@@ -10,10 +10,10 @@ const app = express();
 
 // Connect App routes
 app.use('/api-docs', openapi);
-app.use('/persons', person)
+app.use('/persons', person);
 app.use('*', (_, res) => {
   res.redirect('/api-docs');
-})
+});
 
 // Start the server
 app.listen(port, () => {
