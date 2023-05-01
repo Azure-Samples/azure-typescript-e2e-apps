@@ -34,12 +34,10 @@ class Database {
     }
   }
 
-  async createTable() {
+  async executeQuery(query) {
     await this.connect();
     const request = this.poolconnection.request();
-    const result = await request.query(
-      `CREATE TABLE Person (id int NOT NULL IDENTITY, firstName varchar(255), lastName varchar(255));`
-    );
+    const result = await request.query(query);
 
     return result.rowsAffected[0];
   }

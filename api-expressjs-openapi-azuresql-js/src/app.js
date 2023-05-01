@@ -1,5 +1,4 @@
 const express = require('express');
-const { createTable } = require('./dbcreatetable');
 
 // Import App routes
 const person = require('./route_person');
@@ -12,7 +11,13 @@ const app = express();
 // Development only - don't do in production
 // Run this to create the table in the database
 if (process.env.NODE_ENV === 'development') {
-  createTable(process.env.NODE_ENV)
+  const Database = require('./dbazuresql');
+  const { noPasswordConfig } = require('./config');
+  const database = new Database(noPasswordConfig);
+  database
+    .executeQuery(
+      `CREATE TABLE Person (id int NOT NULL IDENTITY, firstName varchar(255), lastName varchar(255));`
+    )
     .then(() => {
       console.log('Table created');
     })
