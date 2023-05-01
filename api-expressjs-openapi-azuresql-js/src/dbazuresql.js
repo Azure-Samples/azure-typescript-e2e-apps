@@ -34,6 +34,16 @@ class Database {
     }
   }
 
+  async createTable() {
+    await this.connect();
+    const request = this.poolconnection.request();
+    const result = await request.query(
+      `CREATE TABLE Person (id int NOT NULL IDENTITY, firstName varchar(255), lastName varchar(255));`
+    );
+
+    return result.rowsAffected[0];
+  }
+
   async create(table, data) {
     await this.connect();
     const request = this.poolconnection.request();
