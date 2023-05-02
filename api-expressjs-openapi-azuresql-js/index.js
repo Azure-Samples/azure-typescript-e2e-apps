@@ -1,8 +1,8 @@
 const express = require('express');
 
 // Import App routes
-const person = require('./route_person');
-const openapi = require('./route_openapi');
+const person = require('./person');
+const openapi = require('./openapi');
 
 const port = process.env.PORT || 3000;
 
@@ -11,7 +11,7 @@ const app = express();
 // Development only - don't do in production
 // Run this to create the table in the database
 if (process.env.NODE_ENV === 'development') {
-  const Database = require('./dbazuresql');
+  const Database = require('./database');
   const { noPasswordConfig } = require('./config');
   const database = new Database(noPasswordConfig);
   database

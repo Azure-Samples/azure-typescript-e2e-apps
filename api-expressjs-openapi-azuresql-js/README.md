@@ -20,7 +20,7 @@ AZURE_SQL_AUTHENTICATIONTYPE=azure-active-directory-default
 ## Passwordless config
 
 ```javascript
-// ./src/config.ts
+// ./config.ts
 export const passwordlessConfiguration = {
     server: process.env.AZURE_SQL_SERVER,
     port: +process.env.AZURE_SQL_PORT,

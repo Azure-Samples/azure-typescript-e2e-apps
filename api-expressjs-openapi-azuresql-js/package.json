@@ -2,11 +2,8 @@
   "name": "api-expressjs-openapi-azuresql",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app",
+  "main": "index.js",
   "scripts": {
-    "format": "prettier --write src/**/*.js",
-    "dev": "cross-env DEBUG=express:* node src/app.js",
-    "start": "echo 'run v2 api-expressjs-openapi-azuresql' && node src/app.js",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
