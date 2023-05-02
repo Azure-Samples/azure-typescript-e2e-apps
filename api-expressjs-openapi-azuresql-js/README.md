@@ -3,6 +3,18 @@
 * /users
 * /api-docs
 
+## Install
+
+```bash
+npm install
+```
+
+## Run locally
+
+```bash
+NODE_ENV=development node index.js
+```
+
 ## App Service app settings
 
 When you use the Azure CLI service connector to add a system-assigned identity between the App Service and the Azure SQL server, the process creates 4 environment variables in the App Service:
