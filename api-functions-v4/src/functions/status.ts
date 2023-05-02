@@ -1,13 +1,12 @@
-const { app } = require("@azure/functions");
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-async function status(request, context) {
+export async function status(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
     return {
         status: 200,
         jsonBody: {
-            env: process.env,
-            requestHeaders: request.headers
+            env: process.env
         }
     };
 };
@@ -18,5 +17,3 @@ app.http('status', {
     authLevel: 'anonymous',
     handler: status
 });
-
-module.exports = status
