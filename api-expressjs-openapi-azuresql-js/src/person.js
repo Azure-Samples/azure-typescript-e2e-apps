@@ -1,5 +1,5 @@
 const express = require('express');
-const Database = require('./dbazuresql');
+const Database = require('./database');
 const { noPasswordConfig, passwordConfig } = require('./config');
 
 const router = express.Router();

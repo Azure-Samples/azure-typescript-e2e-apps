@@ -1,4 +1,4 @@
-require('dotenv').config({ debug: true });
+require('dotenv').config({ path: '.env.local', debug: true });
 console.log(process.env);
 
 /*
