@@ -6,8 +6,7 @@ async function status(request, context) {
     return {
         status: 200,
         jsonBody: {
-            env: process.env,
-            requestHeaders: request.headers
+            env: process.env
         }
     };
 };
