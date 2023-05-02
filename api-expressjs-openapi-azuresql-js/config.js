@@ -1,5 +1,8 @@
-require('dotenv').config({ path: '.env.local', debug: true });
-console.log(process.env);
+console.log(`process.env.NODE_ENV: ${process.env.NODE_ENV}`);
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config({ path: '.env.local', debug: true });
+  console.log(process.env);
+}
 
 /*
 

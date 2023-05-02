@@ -11,7 +11,7 @@ const app = express();
 // Development only - don't do in production
 // Run this to create the table in the database
 if (process.env.NODE_ENV === 'development') {
-  const Database = require('./dbazuresql');
+  const Database = require('./database');
   const { noPasswordConfig } = require('./config');
   const database = new Database(noPasswordConfig);
   database
