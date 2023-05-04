@@ -8,7 +8,7 @@ router.use(express.json());
 const config = noPasswordConfig;
 
 // Development only - don't do in production
-console.log(config)
+console.log(config);
 
 // Create database object
 const database = new Database(config);
