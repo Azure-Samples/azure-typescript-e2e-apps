@@ -1,8 +1,9 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+//import { MongoClient } from 'mongodb';
 
-import init from '../lib/dbConnection';
-import User from '../lib/dbUser'
-import Dog from '../lib/dbDog'
+const url = process.env.MongoDbConnectionString;
+if(!url) throw Error("url for mongodb not found")
+//const client = new MongoClient(url);
 
 app.get('getAll', {
   route: "user",
@@ -10,12 +11,14 @@ app.get('getAll', {
   handler: async function getAll(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     try{
-      await init();
-      const allUsers = await User.find({})
+  //    await client.connect();
+  //    const users = await client.db().collection('e2etestusers').find({});
   
+  //    console.log(users);
+
       return {
         jsonBody: {
-          users: allUsers
+          users: []
         }
       }
     } catch(err){
