@@ -3,18 +3,6 @@
 * /users
 * /api-docs
 
-## Install
-
-```bash
-npm install
-```
-
-## Run locally
-
-```bash
-NODE_ENV=development node index.js
-```
-
 ## App Service app settings
 
 When you use the Azure CLI service connector to add a system-assigned identity between the App Service and the Azure SQL server, the process creates 4 environment variables in the App Service:
@@ -32,7 +20,7 @@ AZURE_SQL_AUTHENTICATIONTYPE=azure-active-directory-default
 ## Passwordless config
 
 ```javascript
-// ./config.ts
+// ./src/config.ts
 export const passwordlessConfiguration = {
     server: process.env.AZURE_SQL_SERVER,
     port: +process.env.AZURE_SQL_PORT,
@@ -45,3 +33,17 @@ export const passwordlessConfiguration = {
     }
   };
 ```
+## Troubleshooting 
+
+### Local development
+
+* Use [mssql-no-password.js](mssql-no-password.js) to verify you can connect to the database
+* If you connect through a VPN or Proxy, make sure that IP address is allowed in the Azure SQL firewall.
+
+### Azure App Service
+
+* Passwords: 
+    * Add environment variables to App Service
+    * Use [SQL script to create user with roles](./scripts/create-azure-sql-user.sql)
+* No Passwords:
+    Use [Azure CLI service connector script](./scripts/create-service-connector-connection.sh)
