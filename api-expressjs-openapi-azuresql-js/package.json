@@ -2,8 +2,12 @@
   "name": "api-expressjs-openapi-azuresql",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type":"module",
+  "main": "dist/index",
   "scripts": {
+    "format": "prettier --write *.js",
+    "dev": "cross-env NODE_ENV=development DEBUG=express:* node index.js",
+    "start": "node index.js",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {

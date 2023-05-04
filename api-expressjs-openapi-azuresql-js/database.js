@@ -1,13 +1,13 @@
-const sql = require('mssql');
+import sql from 'mssql';
 
-class Database {
+export default class Database {
   config = {};
   poolconnection = null;
   connected = false;
 
   constructor(config) {
     this.config = config;
-    console.log(`Database: config: ${JSON.stringify}`);
+    console.log(`Database: config: ${JSON.stringify(config)}`);
   }
 
   async connect() {
@@ -42,7 +42,7 @@ class Database {
     return result.rowsAffected[0];
   }
 
-  async create(table, data) {
+  async create(data) {
     await this.connect();
     const request = this.poolconnection.request();
 
@@ -50,32 +50,32 @@ class Database {
     request.input('lastName', sql.NVarChar(255), data.lastName);
 
     const result = await request.query(
-      `INSERT INTO ${table} (firstName, lastName) VALUES (@firstName, @lastName)`
+      `INSERT INTO Person (firstName, lastName) VALUES (@firstName, @lastName)`
     );
 
     return result.rowsAffected[0];
   }
 
-  async readAll(table) {
+  async readAll() {
     await this.connect();
     const request = this.poolconnection.request();
-    const result = await request.query(`SELECT * FROM ${table}`);
+    const result = await request.query(`SELECT * FROM Person`);
 
     return result.recordsets[0];
   }
 
-  async read(table, id) {
+  async read(id) {
     await this.connect();
 
     const request = this.poolconnection.request();
     const result = await request
       .input('id', sql.Int, +id)
-      .query(`SELECT * FROM ${table} WHERE id = @id`);
+      .query(`SELECT * FROM Person WHERE id = @id`);
 
     return result.recordset[0];
   }
 
-  async update(table, id, data) {
+  async update(id, data) {
     await this.connect();
 
     const request = this.poolconnection.request();
@@ -85,25 +85,22 @@ class Database {
     request.input('lastName', sql.NVarChar(255), data.lastName);
 
     const result = await request.query(
-      `UPDATE ${table} SET firstName=@firstName, lastName=@lastName WHERE id = @id`
+      `UPDATE Person SET firstName=@firstName, lastName=@lastName WHERE id = @id`
     );
 
     return result.rowsAffected[0];
   }
 
-  async delete(table, id) {
+  async delete(id) {
     await this.connect();
 
-    console.log(`id: ${JSON.stringify(+id)}`);
     const idAsNumber = Number(id);
 
     const request = this.poolconnection.request();
     const result = await request
       .input('id', sql.Int, idAsNumber)
-      .query(`DELETE FROM ${table} WHERE id = @id`);
+      .query(`DELETE FROM Person WHERE id = @id`);
 
     return result.rowsAffected[0];
   }
 }
-
-module.exports = Database;
