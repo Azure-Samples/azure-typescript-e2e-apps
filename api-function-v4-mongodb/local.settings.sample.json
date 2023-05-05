@@ -1,8 +1,0 @@
-{
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=diberryazurefunctid8483f;AccountKey=SlGFtwjU3eeRmlwh7hQIhIcKf79bw581lWK5kb6LKMEo172+lE+4bjucQkHhSRa4BwyyhZ4cIuS1+AStZKiVIw==;EndpointSuffix=core.windows.net",
-    "FUNCTIONS_WORKER_RUNTIME": "node",
-    "AzureWebJobsFeatureFlags": "EnableWorkerIndexing"
-  }
-}
