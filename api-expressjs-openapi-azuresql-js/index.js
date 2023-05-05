@@ -1,8 +1,10 @@
-const express = require('express');
+import express from 'express';
+import { noPasswordConfig } from './config.js';
+import Database from './database.js';
 
 // Import App routes
-const person = require('./person');
-const openapi = require('./openapi');
+import person from './person.js';
+import openapi from './openapi.js';
 
 const port = process.env.PORT || 3000;
 
@@ -11,8 +13,6 @@ const app = express();
 // Development only - don't do in production
 // Run this to create the table in the database
 if (process.env.NODE_ENV === 'development') {
-  const Database = require('./database');
-  const { noPasswordConfig } = require('./config');
   const database = new Database(noPasswordConfig);
   database
     .executeQuery(

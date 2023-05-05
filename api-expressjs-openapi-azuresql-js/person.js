@@ -1,18 +1,22 @@
-const express = require('express');
-const Database = require('./database');
-const { noPasswordConfig, passwordConfig } = require('./config');
+import express from 'express';
+import { noPasswordConfig, passwordConfig } from './config.js';
+import Database from './database.js';
 
 const router = express.Router();
 router.use(express.json());
 
 const config = noPasswordConfig;
-console.log(`DB Config: ${JSON.stringify(config)}`);
+
+// Development only - don't do in production
+console.log(config);
+
+// Create database object
 const database = new Database(config);
 
 router.get('/', async (_, res) => {
   try {
     // Return a list of persons
-    const persons = await database.readAll('Person');
+    const persons = await database.readAll();
     console.log(`persons: ${JSON.stringify(persons)}`);
     res.status(200).json(persons);
   } catch (err) {
@@ -24,9 +28,8 @@ router.post('/', async (req, res) => {
   try {
     // Create a person
     const person = req.body;
-    delete person.id;
     console.log(`person: ${JSON.stringify(person)}`);
-    const rowsAffected = await database.create('Person', person);
+    const rowsAffected = await database.create(person);
     res.status(201).json({ rowsAffected });
   } catch (err) {
     res.status(500).json({ error: err?.message });
@@ -39,7 +42,7 @@ router.get('/:id', async (req, res) => {
     const personId = req.params.id;
     console.log(`personId: ${personId}`);
     if (personId) {
-      const result = await database.read('Person', personId);
+      const result = await database.read(personId);
       console.log(`persons: ${JSON.stringify(result)}`);
       res.status(200).json(result);
     } else {
@@ -60,7 +63,7 @@ router.put('/:id', async (req, res) => {
     if (personId && person) {
       delete person.id;
       console.log(`person: ${JSON.stringify(person)}`);
-      const rowsAffected = await database.update('Person', personId, person);
+      const rowsAffected = await database.update(personId, person);
       res.status(200).json({ rowsAffected });
     } else {
       res.status(404);
@@ -79,7 +82,7 @@ router.delete('/:id', async (req, res) => {
     if (!personId) {
       res.status(404);
     } else {
-      const rowsAffected = await database.delete('Person', personId);
+      const rowsAffected = await database.delete(personId);
       res.status(204).json({ rowsAffected });
     }
   } catch (err) {
@@ -87,4 +90,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

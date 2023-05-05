@@ -4,10 +4,7 @@
     "target": "es6",
     "outDir": "dist",
     "rootDir": ".",
-    "strict": false,
     "sourceMap": true,
-    "noImplicitAny": false,
-    "resolveJsonModule": true
-  },
-  "include": ["src/**/*"]
+    "strict": false
+  }
 }

@@ -4,14 +4,14 @@ import { name, version } from '../../package.json';
 function isObject(v) {
     return '[object Object]' === Object.prototype.toString.call(v);
 };
-function sortJson(o){
+function sortJson(o): Record<string, any> {
     if (Array.isArray(o)) {
         return o.sort().map(sortJson);
     } else if (isObject(o)) {
         return Object
             .keys(o)
-        .sort()
-            .reduce(function(a, k) {
+            .sort()
+            .reduce(function (a, k) {
                 a[k] = sortJson(o[k]);
 
                 return a;
@@ -25,12 +25,15 @@ export async function status(request: HttpRequest, context: InvocationContext): 
 
     const sortedEnv = sortJson(process.env);
 
-    return { jsonBody: {
-        name,
-        version,
-        env: sortedEnv,
-        requestHeaders: request.headers 
-    }};
+    return {
+        status: 200,
+        jsonBody: {
+            name,
+            version,
+            env: sortedEnv,
+            requestHeaders: request.headers
+        }
+    };
 };
 
 app.http('status', {
