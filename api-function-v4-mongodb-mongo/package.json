@@ -10,7 +10,8 @@
     "prestart": "rm -rf dist && npm run build",
     "start": "func start --typescript --verbose",
     "test": "echo \"No tests yet...\"",
-    "start:azurite": "azurite --location azurite --debug azurite\\debug.log"
+    "azurite:install":"npm install -g azurite",
+    "azurite:start": "azurite --location azurite --debug azurite\\debug.log"
   },
   "dependencies": {
     "@azure/functions": "4.0.0-alpha.9",
