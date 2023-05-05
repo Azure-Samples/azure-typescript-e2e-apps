@@ -1,18 +1,27 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { MongoClient } from 'mongodb';
 
-const url = "mongodb://diberry-cosmosdb-mongodb:aP02zwVT74F2dDcm3hb8uX7lN2CKzkZwGuqCeF694ZxLjito8tDS9viEsnVU73QKhfR0Ih2IKWLfACDbr4w7hA==@diberry-cosmosdb-mongodb.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@diberry-cosmosdb-mongodb@";
+const url = process.env.MongoDbConnectionString;
 if (!url) throw Error("url for mongodb not found")
-const client = new MongoClient(url);
+// @ts-ignore
+const client = new MongoClient(url, { useUnifiedTopology: true, useNewUrlParser: true });
+const dbName = 'test';
+const collectionName = "users";
 
+/*
+curl --location 'http://localhost:7071/api/user'
+*/
 app.get('getAll', {
   route: "user",
   authLevel: 'anonymous',
   handler: async function getAll(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
     try {
+
       await client.connect();
-      const users = await client.db().collection('e2etestusers').find({}).toArray();
+      const db = client.db(dbName);
+      const collection = db.collection(collectionName);
+      const users = await collection.find({}).toArray();
 
       console.log(users);
 
@@ -35,6 +44,10 @@ app.get('getAll', {
   }
 })
 /*
+curl --location 'http://localhost:7071/api/user' \
+--header 'Content-Type: application/json' \
+--data '{"user":{"name":"hello", "age": "123"}}'
+*/
 app.post('addOne', {
   route: "user",
   authLevel: 'anonymous',
@@ -45,9 +58,10 @@ app.post('addOne', {
 
     if (body && body["user"]) {
 
-      const user = new User(body["user"]);
-      await user.save();
-
+      await client.connect();
+      const db = client.db(dbName);
+      const collection = db.collection(collectionName);
+      const user = await collection.insertOne(body["user"]);
       return {
         jsonBody: user
       }
@@ -57,15 +71,22 @@ app.post('addOne', {
   }
 })
 
-
+/*
+curl --location --request DELETE 'http://localhost:7071/api/user'
+*/
 app.deleteRequest('deleteAll', {
   route: "user",
   authLevel: 'anonymous',
   handler: async function deleteAll(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+    const users = await collection.deleteMany();
+
     return {
-      jsonBody: User.deleteMany({})
+      jsonBody: users
     }
   }
 })
-*/
+
