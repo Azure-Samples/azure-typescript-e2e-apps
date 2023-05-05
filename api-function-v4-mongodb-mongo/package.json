@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "preinstall": "npm install -g azurite azure-functions-core-tools@4 --unsafe-perm true",
-    "build": "npm run clean && tsc",
+    "build": "tsc",
     "watch": "tsc -w",
     "prestart": "rm -rf dist && npm run build",
     "start": "func start --typescript --verbose",

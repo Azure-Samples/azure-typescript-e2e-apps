@@ -1,27 +1,27 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-//import { MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-const url = process.env.MongoDbConnectionString;
-if(!url) throw Error("url for mongodb not found")
-//const client = new MongoClient(url);
+const url = "mongodb://diberry-cosmosdb-mongodb:aP02zwVT74F2dDcm3hb8uX7lN2CKzkZwGuqCeF694ZxLjito8tDS9viEsnVU73QKhfR0Ih2IKWLfACDbr4w7hA==@diberry-cosmosdb-mongodb.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@diberry-cosmosdb-mongodb@";
+if (!url) throw Error("url for mongodb not found")
+const client = new MongoClient(url);
 
 app.get('getAll', {
   route: "user",
   authLevel: 'anonymous',
   handler: async function getAll(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
 
-    try{
-  //    await client.connect();
-  //    const users = await client.db().collection('e2etestusers').find({});
-  
-  //    console.log(users);
+    try {
+      await client.connect();
+      const users = await client.db().collection('e2etestusers').find({}).toArray();
+
+      console.log(users);
 
       return {
         jsonBody: {
-          users: []
+          users: users
         }
       }
-    } catch(err){
+    } catch (err) {
 
       console.log(err)
       return {
