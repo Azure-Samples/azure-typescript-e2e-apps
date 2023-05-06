@@ -15,6 +15,17 @@ const Schema = mongoose.Schema;
 // @ts-ignore
 const ObjectId = Schema.ObjectId;
 
+export interface IBlogPost {
+  author: string
+  title: string
+  body: string
+}
+
+export interface IBlogPostDocument extends IBlogPost, mongoose.Document {
+  id: string
+  created: Date
+}
+
 const BlogPostSchema = new Schema({
   id: ObjectId,
   author: String,
