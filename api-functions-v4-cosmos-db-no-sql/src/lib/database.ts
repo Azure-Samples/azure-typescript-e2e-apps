@@ -1,17 +1,30 @@
 import { CosmosClient } from "@azure/cosmos";
 
-export interface IProduct {
+export interface IProductDocument{
   id: string
+  _ird: string
+  _self: string
+  _etag: string
+  _attachments: string
+  _ts: number
+
+  name: string
   categoryId: string
   categoryName: string
   sku: string
-  name: string
   description: string
   price: number
 }
 
+type OmitUnderscore<T> = Pick<T, Exclude<keyof T, `_${string}`>>
+
+export type IProduct = OmitUnderscore<IProductDocument>
+export type IProductInput = Omit<IProduct, "id">
+
 class CosmosDb {
 
+  // Cosmos DB connection information
+  // Other connection options can be found here: https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-sdk-node
   key: string;
   endpoint: string;
   databaseName: string;
@@ -32,6 +45,21 @@ class CosmosDb {
     this.databaseName = databaseName;
     this.containerName = containerName;
     this.partitionKeyPath = partitionKeyPath;
+  }
+
+  getIProductFields(product: IProduct): IProduct {
+    return {
+      id: product.id,
+      name: product.name,
+      categoryId: product.categoryId,
+      categoryName: product.categoryName,
+      sku: product.sku,
+      description: product.description,
+      price: product.price,
+    }
+  }
+  getIProductFieldsFromArray(products: IProduct[]): IProduct[] {
+    return products.map(product => this.getIProductFields(product))
   }
 
   async init() {
@@ -63,7 +91,7 @@ class CosmosDb {
     }
   }
 
-  async getProducts() {
+  async getProducts(): Promise<IProduct[]> {
     await this.init()
     const querySpec = {
       query: "SELECT * from c",
@@ -71,32 +99,34 @@ class CosmosDb {
     const { resources } = await this.container.items
       .query(querySpec)
       .fetchAll();
-    return resources;
+
+    return this.getIProductFieldsFromArray(resources);
   }
 
   async getProduct(id: string) {
     await this.init()
-    const { resource: product } = await this.container.item(id).read();
-    return product;
+    const product: IProduct = await this.container.item(id).read();
+    return this.getIProductFields(product);
   }
 
-  async addProduct(product: IProduct) {
+  async addProduct(product: IProductInput): Promise<IProduct> {
     await this.init()
-    const { resource: createdProduct } = await this.container.items.create(product);
-    return createdProduct;
+    const addedProduct = await this.container.items.create(product);
+    return this.getIProductFields(addedProduct.resource);
   }
 
-  async updateProduct(product: IProduct) {
+  async updateProduct(id, product: IProductInput): Promise<IProduct>  {
     await this.init()
-    const { resource: updatedProduct } = await this.container
-      .item(product.id)
-      .replace(product);
-    return updatedProduct;
+    const updatedProduct = await this.container
+      .item(id)
+      .replace({ id, ...product });
+    return this.getIProductFields(updatedProduct.resource);
   }
 
-  async deleteProduct(id: string) {
+  async deleteProduct(id: string): Promise<void> {
     await this.init()
     await this.container.item(id).delete();
+    return;
   }
 }
 

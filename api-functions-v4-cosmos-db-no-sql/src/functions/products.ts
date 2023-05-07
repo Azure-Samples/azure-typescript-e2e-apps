@@ -11,7 +11,7 @@ const cosmosDb = new CosmosDb({
 
 // curl --location 'http://localhost:7071/api/products' --verbose
 export async function getProducts(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
-    context.log(`Http function getProducts processed request for url "${request.url}"`);
+    context.log(`getProducts processing request for url "${request.url}, ${context.invocationId}"`);
 
     const products = await cosmosDb.getProducts();
 
