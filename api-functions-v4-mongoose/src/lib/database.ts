@@ -1,19 +1,13 @@
-import mongoose, { Connection } from 'mongoose';
+import { Schema, Document, createConnection, ConnectOptions, model, set } from 'mongoose';
 
 const connectionString = process.env.MONGODB_URI;
 console.log('connectionString', connectionString);
 
-const connection = mongoose.createConnection(connectionString, {
-  // @ts-ignore
+const connection = createConnection(connectionString, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-
-
-// BlogPost
-const Schema = mongoose.Schema;
-// @ts-ignore
-const ObjectId = Schema.ObjectId;
+  useUnifiedTopology: true,
+  autoIndex: true
+} as ConnectOptions);
 
 export interface IBlogPost {
   author: string
@@ -21,13 +15,13 @@ export interface IBlogPost {
   body: string
 }
 
-export interface IBlogPostDocument extends IBlogPost, mongoose.Document {
+export interface IBlogPostDocument extends IBlogPost, Document {
   id: string
   created: Date
 }
 
 const BlogPostSchema = new Schema({
-  id: ObjectId,
+  id: Schema.Types.ObjectId,
   author: String,
   title: String,
   body: String,
@@ -37,7 +31,15 @@ const BlogPostSchema = new Schema({
   }
 });
 
-export const BlogPost = mongoose.model('BlogPost', BlogPostSchema);
+BlogPostSchema.set('toJSON', {
+  transform: function (doc, ret, options) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+  }
+}); 
+
+export const BlogPost = model<IBlogPostDocument>('BlogPost', BlogPostSchema);
 
 connection.model('BlogPost', BlogPostSchema);
 
