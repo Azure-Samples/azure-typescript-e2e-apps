@@ -1,0 +1,22 @@
+{
+  "name": "key-vault-secrets",
+  "version": "1.0.0",
+  "description": "* Getting started\r     * Authentication and client object creation\r * Secrets\r     * Set, update, rotate\r         * Set secret\r         * Set secret with properties (tags, content type, enabled, not before, expires)\r         * Update secret\r         * Update secret properties\r         * Rotate - link to existing tutorials about Fns and rotation\r     * Get\r         * Current version\r         * Get all versions of a secret\r         * Disabled secret - not allowed, must enable first\r     * Enable and disable\r         * Enable secret\r         * Disable secret\r     * Delete\r         * Soft delete\r         * Soft delete with poller wait until done\r         * Recover deleted secret\r         * Purge deleted secret\r         * Purge all deleted secrets\r     * Find\r         * Find current secret version by property (List with filter by property)\r         * Find all secrets/versions by property (List with filter by property)\r         * Find secret by version id\r     * List\r         * List secrets, list with paging\r         * List latst version of secrets, list with paging\r         * List deleted secrets, list with paging\r         * List current secret by tag\r     * Backup\r         * Backup secret\r         * Restore secret",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:quickstart": "cross-env NODE_ENV=development node quickstart.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/identity": "^3.1.4",
+    "@azure/keyvault-secrets": "^4.7.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "crossenv": "^0.0.2-security"
+  }
+}
