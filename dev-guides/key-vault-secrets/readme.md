@@ -4,12 +4,18 @@
 
 * [Quickstart](https://learn.microsoft.com/azure/key-vault/secrets/quick-create-node?tabs=linux)
 
+## Azure Key Vault secrets
+
+* [Reference docs](https://learn.microsoft.com/javascript/api/overview/azure/keyvault-secrets-readme?view=azure-node-latest)
+
+
 ## .env
 
-1. Create `.env` file with Key vault name
+1. Create `.env.development` file with Key vault name
 
     ```
     KEY_VAULT_NAME=my-keyvault
+    KEY_VAULT_NAME_2=my-keyvault
     ```
 
 2. Sign into Azure with [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) to execute scripts
@@ -26,13 +32,13 @@
     * Set, update, rotate
         * Set secret
         * Set secret with properties (tags, content type, enabled, not before, expires)
-        * Update secret
+        * Update secret - create new version of existing secret
         * Update secret properties
         * Rotate - link to existing tutorials about Fns and rotation
     * Get
         * Current version
         * Get all versions of a secret
-        * Disabled secret - not allowed, must enable first
+        * Get disabled secret value - not allowed, must enable first
     * Enable and disable
         * Enable secret
         * Disable secret
