@@ -8,7 +8,9 @@
     "lint": "eslint --fix src/*.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:quickstart": "cross-env NODE_ENV=development node quickstart.mjs",
-    "start:main": "cross-env NODE_ENV=development node src/main.mjs"
+    "start:main": "cross-env NODE_ENV=development node src/main.mjs",
+    "start:get-disabled": "cross-env NODE_ENV=development node src/create-disabled-secret-disabled.mjs",
+    "start:delete-secret": "cross-env NODE_ENV=development node src/dina-delete-my-secret.mjs"
   },
   "keywords": [],
   "author": "",

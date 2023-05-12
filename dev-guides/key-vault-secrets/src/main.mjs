@@ -1,14 +1,12 @@
-//import * as dotenv from 'dotenv';
-//dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
-import { createSecretValueAsString } from './create-secret-value.mjs';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
 import { parseKeyVaultSecretIdentifier } from '@azure/keyvault-secrets';
 import assert from 'node:assert/strict';
 import { getClient } from './get-client.mjs';
 import {
-  updateSecretValue,
-  updateSecretProperties,
-} from './update-secret-properties.mjs';
-import { createSecret } from './set-secret.mjs';
+  createSecret,
+  updateSecretProperties
+} from './set-secret.mjs';
 import {
   getSecretFromId, getCurrentSecret
 } from './get-secret.mjs';
@@ -42,24 +40,26 @@ const secretProperties = {
     projectOwner: 'Central portal team',
   },
   contentType: 'Database connection string',
-  enabled: true,
+  enabled: false,
   notBefore: undefined, // date
   expiresOn: undefined, // date
 }
 
 // create secret
 const originalSecret = await createSecret(client, secretName, secretValue, secretProperties);
-const secretVersions = [];
-secretVersions.push(originalSecret);
+console.log(originalSecret);
 
-// update secret 4 times
-for (let i = 1; i < secretValues.length; i++) {
-  // Wait a few seconds
-  await sleep(1000); // so created at date is different 
-  console.log(`update secret ${i}`)
-  const secret = await updateSecretValue(client, originalSecret.name, secretValues[i]);
-  secretVersions.push(secret);
-}
+// const secretVersions = [];
+// secretVersions.push(originalSecret);
+
+// // update secret 4 times
+// for (let i = 1; i < secretValues.length; i++) {
+//   // Wait a few seconds
+//   await sleep(1000); // so created at date is different 
+//   console.log(`update secret ${i}`)
+//   const secret = await updateSecretValue(client, originalSecret.name, secretValues[i]);
+//   secretVersions.push(secret);
+// }
 
 
 // ---------------------------------------------------------------------------
