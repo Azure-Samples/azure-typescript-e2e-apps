@@ -11,6 +11,7 @@ const Message: React.FC<MessageProps> = ({ text, sender }) => {
       <p>
         {sender}: {text}
       </p>
+      <hr></hr>
     </div>
   );
 };
