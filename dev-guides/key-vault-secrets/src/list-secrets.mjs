@@ -109,26 +109,15 @@ export async function listDeletedSecretsByPage(client, maxResults = 3) {
     for await (const secretProperties of client.listPropertiesOfSecretVersions(
       secretName,
     )) {
-      if (propertyName === 'tags') {
-        if (
-          JSON.stringify(secretProperties.tags) === JSON.stringify(propertyValue)
-        ) {
-          secrets.push({
-            name: secretProperties.name,
-            version: secretProperties.version,
-          });
-        }
-      } else if (
-        secretProperties
-        && secretProperties[propertyName]
-        && secretProperties[propertyName] === propertyValue
-      ) {
-        secrets.push({
-          name: secretProperties.name,
-          version: secretProperties.version,
-        });
+      
+      const foundSecretVersion = (propertyName === 'tags')
+          // do 
+          ? (JSON.stringify(secretProperties.tags) === JSON.stringify(propertyValue)) ? true : false
+          : ( secretProperties && secretProperties[propertyName] && secretProperties[propertyName] === propertyValue) ? true: false
+        
+      if(foundSecretVersion){
+        secrets.push({ name: secretProperties.name, version: secretProperties.version })
       }
-    }
 
     // return all versions of all secrets
     return secrets;
