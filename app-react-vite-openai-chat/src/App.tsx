@@ -1,100 +1,119 @@
-import React, { useState } from 'react';
-import Message from './components/Message';
-import './App.css';
+import React, { useState } from "react";
+import Message from "./components/Message";
+import AppSettingsForm, {
+  OpenAiAppConfig,
+  defaultAppConfig,
+} from "./components/AppConfig";
+import SettingsForm, {
+  OpenAiRequestConfig,
+  defaultConfig,
+} from "./components/RequestConfig";
+import ConversationSettingsForm, {
+  ConversationConfig,
+  defaultConversationConfig,
+} from "./components/ConversationConfig";
+import "./App.css";
 
 type Message = {
-  role: string
-  content: string
-}
+  role: string;
+  content: string;
+};
 
-type OpenAiRequest= {
-  messages: Message[]
-  max_tokens: number
-  temperature: number
-  top_p: number
-  frequency_penalty: number
-  presence_penalty: number
-  stop: string[] | null
-}
+type OpenAiRequest = {
+  messages: Message[];
+} & OpenAiRequestConfig;
 
 const Chatbot = () => {
-
-  const openAiConfig = {
-    endpoint: import.meta.env.VITE_OPENAI_ENDPOINT,
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-    deployment: import.meta.env.VITE_OPENAI_DEPLOYMENT,
-  }
-  const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
-
-  const systemDefinition = {
-    role: 'system',
-    content: 'Your are an Azure services expert whose primary purpose is to help customers understand how to use Azure with JavaScript and the Azure SDKs in the @azure namespace of npm package manager.'
-  }
-  const assistantDefinition = {
-    "role": "assistant",
-    "content": "I am an Azure JavaScript developer expert. I can help you use the Azure SDKs for JavaScript."
-  }
-
-
-  console.log(JSON.stringify(openAiConfig));
+  const [appConfig, setAppConfig] = useState<OpenAiAppConfig>(defaultAppConfig);
+  const [conversationConfig, setConversationConfig] =
+    useState<ConversationConfig>(defaultConversationConfig);
+  const [messages, setMessages] = useState<{ text: string; sender: string }[]>(
+    []
+  );
+  const [config, setRequestConfig] =
+    useState<OpenAiRequestConfig>(defaultConfig);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const sendMessage = async (userText: string) => {
-
+    setError(undefined);
     const userChatInput = {
-      role: 'user',
-      content: userText
-    }
-
-    const request:OpenAiRequest = {
-      "messages": [systemDefinition, assistantDefinition, userChatInput],
-      "max_tokens": 800,
-      "temperature": 0,
-      "frequency_penalty": 0,
-      "presence_penalty": 0,
-      "top_p": 0.95,
-      "stop": null
+      role: "user",
+      content: userText,
+    };
+    const systemDefinition = {
+      role: "system",
+      content: conversationConfig.systemContent,
+    };
+    const assistantDefinition = {
+      role: "assistant",
+      content: conversationConfig.assistantContent,
+    };
+    const request: OpenAiRequest = {
+      messages: [systemDefinition, assistantDefinition, userChatInput],
+      ...config,
     };
 
     try {
-      const response = await fetch(`${openAiConfig.endpoint}/openai/deployments/${openAiConfig.deployment}/chat/completions?api-version=2023-03-15-preview`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': openAiConfig.apiKey
-        },
-        body: JSON.stringify(request),
-      });
+      const response = await fetch(
+        `${appConfig.endpoint}/openai/deployments/${appConfig.deployment}/chat/completions?api-version=${appConfig.apiVersion}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "api-key": appConfig.apiKey,
+          },
+          body: JSON.stringify(request),
+        }
+      );
 
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
 
-      const responseText = data?.choices[0]?.message?.content || "No answer found";
+        const responseText =
+          data?.choices[0]?.message?.content || "No answer found";
 
-      setMessages([...messages, { "text": userText  + "\n\n", "sender": "user" },  { "text": responseText + "\n\n", "sender": "bot" }]);
-    } catch (error) {
-      console.error('Error:', error);
+        setMessages([
+          ...messages,
+          { text: userText + "\n\n", sender: "user" },
+          { text: responseText + "\n\n", sender: "bot" },
+        ]);
+      } else {
+        throw new Error(
+          `Error fetching response from OpenAI API: ${response.status} ${JSON.stringify(response)}`
+        );
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error?.message);
+      } else {
+        setError(JSON.stringify(error));
+      }
     }
   };
 
   return (
     <>
-    <div className="chatbot-container">
-      <div className="chatbot-messages">
-        {messages.map((message, index) => (
-          <Message key={index} text={message.text} sender={message.sender} />
-        ))}
+      <AppSettingsForm onSubmit={setAppConfig} />
+      <ConversationSettingsForm onSubmit={setConversationConfig} />
+      <SettingsForm onSubmit={setRequestConfig} />
+      <div className="chatbot-container">
+        <div className="chatbot-messages">
+          {messages.map((message, index) => (
+            <Message key={index} text={message.text} sender={message.sender} />
+          ))}
+        </div>
+        <textarea
+          className="chatbot-input"
+          placeholder="Type your message..."
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              sendMessage((event.target as HTMLInputElement).value);
+              (event.target as HTMLInputElement).value = "";
+            }
+          }}
+        />
       </div>
-      <textarea
-        className="chatbot-input"
-        placeholder="Type your message..."
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            sendMessage((event.target as HTMLInputElement).value);
-            (event.target as HTMLInputElement).value = '';
-          }
-        }}
-      />
-      
-    </div>
+      {error && <div className="errors">{error}</div>}
     </>
   );
 };
