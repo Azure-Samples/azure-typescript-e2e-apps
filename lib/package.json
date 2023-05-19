@@ -8,7 +8,7 @@
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint src/**/*.ts --fix",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "wtfnode dist/connection-test.js"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +26,7 @@
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "wtfnode": "^0.9.1"
   }
 }
