@@ -1,10 +1,9 @@
 import {
   CosmosClient,
-  Database,
   DatabaseResponse,
-  Container,
   ContainerResponse,
   ResourceResponse,
+  Resource,
   ItemResponse,
   ItemDefinition,
   DatabaseAccount
@@ -12,7 +11,7 @@ import {
 
 import * as dotenv from 'dotenv';
 dotenv.config();
-type CustomData<T> = Omit<T, '_etag' | '_rid' | '_self' | '_ts'>;
+type CustomData<T> = Omit<T, '_etag' | '_rid' | '_self' | '_ts'>; // Resource
 type CosmosDBData<T> = T;
 type HttpResponse<T> = {
   statusCode: number;
@@ -26,167 +25,173 @@ type IErrorStatus = {
   statusCode: number;
   statusMessage: string;
 };
-type ItemManagerOptions = {
-  databaseId: string;
-  containerId: string;
-};
 
-export class ItemManager<T> {
+/**
+ * This class expects a resource name and key in the constructor.
+ * You must create the database and container before using items in
+ * the container. If you don't pass in values, they are defaulted to
+ * 'test' and 'test' respectively. When you make any calls to container's
+ * items or item, those defaults are also used.
+ *
+ * @class ItemManager
+ */
+export class ItemManager<T extends Resource> {
   client: CosmosClient;
 
-  options: ItemManagerOptions = {
-    databaseId: 'test',
-    containerId: `test-${+new Date()}`
-  };
+  #databaseId = 'test';
+  #containerId = 'test';
 
-  constructor(
-    private name: string,
-    private key: string,
-    private databaseOptions?: ItemManagerOptions
-  ) {
-    if (databaseOptions?.databaseId) {
-      this.options.databaseId = databaseOptions.databaseId;
-    }
-
-    if (databaseOptions?.containerId) {
-      this.options.containerId = databaseOptions.containerId;
-    }
-
+  constructor(private name: string, private key: string) {
     if (!name || !key) {
       throw new Error('Database name and key must be specified');
     }
-
     this.client = new CosmosClient({
       endpoint: `https://${name}.documents.azure.com`,
       key
     });
-    console.log(`Created client for ${name} and ${key.substring(0, 3)}...`);
   }
-  public async getInfo(): Promise<
-    ResourceResponse<DatabaseAccount> | IErrorStatus
-  > {
-    if (!this.client) {
-      return { statusCode: 400, statusMessage: 'Client not found' };
-    }
+  public async getInfo(): Promise<DatabaseAccount | IErrorStatus> {
     const response = await this.client.getDatabaseAccount();
-    return response;
-  }
-  private async getContainer(
-    options?: ItemManagerOptions
-  ): Promise<Container | undefined> {
-    const databaseResult = await this.createDatabase(
-      options?.databaseId || this.options.databaseId
-    );
-
-    if (!isOk(databaseResult.statusCode) || !('database' in databaseResult)) {
-      return undefined;
-    }
-
-    if (!databaseResult.database) {
-      const containerResult = await this.createContainer(
-        databaseResult.database,
-        options?.containerId || this.options.containerId
-      );
-
-      if (!isOk(containerResult.statusCode)) {
-        return undefined;
+    if (!isOk(response.statusCode)) {
+      return {
+        statusCode: response.statusCode,
+        statusMessage: 'Error getting database account information.'
+      };
+    } else {
+      if (response.resource) {
+        return response.resource;
+      } else {
+        return {
+          statusCode: 500,
+          statusMessage: 'DbManager: No resource found'
+        };
       }
-      return containerResult.container;
     }
   }
 
   async createItem(
     item: CustomData<T>,
-    settings?: ItemManagerOptions
+    databaseId: string = this.#databaseId,
+    containerId: string = this.#containerId
   ): Promise<CustomData<T>> {
-    const container = await this.getContainer(settings);
-    if (!container) {
-      throw new Error('Container not found');
-    }
     return this.executeAction(
-      () => container.items.create(item),
+      () =>
+        this.client
+          .database(databaseId)
+          .container(containerId)
+          .items.create(item),
       'create item'
     );
   }
-  /*
-  async readItem(id: string): Promise<CustomData<T>> {
+
+  async readItem(
+    id: string,
+    databaseId: string = this.#databaseId,
+    containerId: string = this.#containerId
+  ): Promise<CustomData<T>> {
     return this.executeAction(
-      () => container.item(id).read<CustomData<T>>(),
+      () =>
+        this.client
+          .database(databaseId)
+          .container(containerId)
+          .item(id)
+          .read<CustomData<T>>(),
       'read item'
     );
   }
 
   async updateItem(
     id: string,
-    updatedItem: CustomData<T>
+    updatedItem: CustomData<T>,
+    databaseId: string = this.#databaseId,
+    containerId: string = this.#containerId
   ): Promise<CustomData<T>> {
     const currentItem = await this.readItem(id);
     const itemToUpdate = { ...currentItem, ...updatedItem };
     return this.executeAction(
-      () => this.container.item(id).replace(itemToUpdate),
+      () =>
+        this.client
+          .database(databaseId)
+          .container(containerId)
+          .item(id)
+          .replace(itemToUpdate),
       'update item'
     );
   }
 
-  async deleteItem(id: string): Promise<void> {
+  async deleteItem(
+    id: string,
+    databaseId: string = this.#databaseId,
+    containerId: string = this.#containerId
+  ): Promise<void> {
     await this.executeAction(
-      () => this.container.item(id).delete(),
+      () =>
+        this.client
+          .database(databaseId)
+          .container(containerId)
+          .item(id)
+          .delete(),
       'delete item'
     );
   }
 
-  async queryItems(query: string): Promise<CustomData<T>[]> {
-    return (await this.container.items.query(query).fetchAll())
-      .resources as CustomData<T>[];
+  async queryItems(
+    query = 'SELECT * from c',
+    databaseId: string = this.#databaseId,
+    containerId: string = this.#containerId
+  ): Promise<CustomData<T>[]> {
+    return (
+      await this.client
+        .database(databaseId)
+        .container(containerId)
+        .items.query(query)
+        .fetchAll()
+    ).resources as CustomData<T>[];
   }
 
-  async upsertItem(item: CustomData<T>): Promise<CustomData<T>> {
-    const { resource, statusCode } = await this.container.items.upsert<
-      CustomData<T>
-    >(item);
+  async upsertItem(
+    item: CustomData<T>,
+    databaseId: string = this.#databaseId,
+    containerId: string = this.#containerId
+  ): Promise<CustomData<T>> {
+    const { resource, statusCode } = await this.client
+      .database(databaseId)
+      .container(containerId)
+      .items.upsert<CustomData<T>>(item);
     this.checkStatusCode(statusCode, 'upsert item');
     const customData = resource as CustomData<T>;
     return customData;
   }
-*/
-  private async createDatabase(
-    databaseId: string
-  ): Promise<DatabaseResponse | IErrorStatus> {
-    const errorResult: IErrorStatus = {
-      statusCode: 500,
-      statusMessage: 'Error - Default error'
-    };
-    try {
-      if (databaseId) {
-        const databaseCreateResult =
-          await this.client.databases.createIfNotExists({
-            id: databaseId
-          });
-        return databaseCreateResult;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-    return errorResult;
+
+  async createDatabase(
+    databaseId: string = this.#databaseId
+  ): Promise<DatabaseResponse> {
+    return await this.client.databases.createIfNotExists({
+      id: databaseId
+    });
   }
 
-  private async deleteDatabase(databaseId: string): Promise<DatabaseResponse> {
+  async deleteDatabase(databaseId: string): Promise<DatabaseResponse> {
     return await this.client.database(databaseId).delete();
   }
 
-  private async createContainer(
-    database: Database,
-    containerName: string
+  async createContainer(
+    databaseId: string = this.#databaseId,
+    containerId: string = this.#containerId
   ): Promise<ContainerResponse> {
-    return await database.containers.create({ id: containerName });
+    return await this.client.database(databaseId).containers.createIfNotExists({
+      id: containerId
+    });
   }
 
-  private async deleteContainer(
-    database: Database,
-    containerName: string
+  async deleteContainer(
+    databaseId: string = this.#databaseId,
+    containerId: string
   ): Promise<ContainerResponse> {
-    const container = await database.container(containerName);
-    return container.delete();
+    return await this.client
+      .database(databaseId)
+      .container(containerId)
+      .delete();
   }
   private checkStatusCode(statusCode: number, action: string): void {
     if (statusCode >= 400) {
@@ -202,5 +207,18 @@ export class ItemManager<T> {
     this.checkStatusCode(response.statusCode, actionName);
     const customData = response.resource as CustomData<T>;
     return customData;
+  }
+
+  createTFromResource<T extends Resource, K extends keyof T>(
+    obj: T,
+    ...keys: K[]
+  ): Pick<T, K> {
+    const picked: Partial<Pick<T, K>> = {};
+
+    keys.forEach((key) => {
+      picked[key] = obj[key];
+    });
+
+    return picked as Pick<T, K>;
   }
 }

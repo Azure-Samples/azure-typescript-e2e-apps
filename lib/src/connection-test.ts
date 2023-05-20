@@ -17,7 +17,7 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
       .catch((error) => {
         clearTimeout(timeout);
         reject(error);
-    });
+      });
   });
 }
 
@@ -49,10 +49,9 @@ async function insertData(
   return item;
 }
 
-
 const name = process.env.AZURE_COSMOSDB_NAME as string;
 const key = process.env.AZURE_COSMOSDB_KEY as string;
-const timeoutMs = 10000;
+const timeoutMs = 300000;
 const wrappedPromise = withTimeout(
   insertData(name, key, { name: 'hello', age: 21 }),
   timeoutMs
@@ -60,11 +59,10 @@ const wrappedPromise = withTimeout(
 
 wrappedPromise
   .then((result) => {
-  console.log('Operation finished ', result); // Data fetched successfully
-  process.exit(0);
+    console.log('Operation finished ', result); // Data fetched successfully
+    process.exit(0);
   })
   .catch((error) => {
-  console.log('Operation didn\'t finish', error.message); // Timeout exceeded
-  process.exit(1);
+    console.log("Operation didn't finish", error.message); // Timeout exceeded
+    process.exit(1);
   });
-
