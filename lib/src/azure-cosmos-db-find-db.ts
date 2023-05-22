@@ -18,7 +18,7 @@ async function findDatabases(): Promise<any> {
     id: 'test2'
   });
 
-  const databaseFound = await client.databases
+  const { resources } = await client.databases
     .query({
       query: `SELECT * FROM root r where r.id =@dbId`,
       parameters: [
@@ -31,7 +31,7 @@ async function findDatabases(): Promise<any> {
     .fetchAll();
 
   console.log('databases found');
-  return databaseFound.resources;
+  return resources;
 }
 
 findDatabases()
