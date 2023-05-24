@@ -55,7 +55,7 @@ const Chatbot = () => {
         setMessages([
           ...messages,
           { text: userText + "\n\n", sender: "user" },
-          { text: responseText + "\n\n", sender: "bot" },
+          { text: responseText + "\n\n", sender: "assistant" },
         ]);
       } else {
         throw new Error(

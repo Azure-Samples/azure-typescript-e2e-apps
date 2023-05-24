@@ -13,6 +13,7 @@ import ConversationSettingsForm, {
   defaultConversationConfig,
 } from "./components/ConversationConfig";
 import TextBoxForm from "./components/TextBoxForm";
+import ConversationLog from "./components/ConversationLog";
 import "./App.css";
 
 type Message = {
@@ -42,22 +43,18 @@ const Chatbot = () => {
   const [appConfig, setAppConfig] = useState<OpenAiAppConfig>(defaultAppConfig);
   const [conversationConfig, setConversationConfig] =
     useState<ConversationConfig>(defaultConversationConfig);
-  const [message, setMessage] = useState<string>("");
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
-    []
-  );
-  const [config, setRequestConfig] =
-    useState<OpenAiRequestConfig>(defaultConfig);
-  const [error, setError] = useState<string | undefined>(undefined);
 
   const systemDefinition = {
     role: "system",
     content: conversationConfig.systemContent,
   };
-  const assistantDefinition = {
-    role: "assistant",
-    content: conversationConfig.assistantContent,
-  };
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
+    [systemDefinition]
+  );
+  const [config, setRequestConfig] =
+    useState<OpenAiRequestConfig>(defaultConfig);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const sendMessage = (userText: string) => {
     console.log(userText);
@@ -65,14 +62,17 @@ const Chatbot = () => {
     setError(undefined);
     const userChatInput = {
       role: "user",
-      content: userText,
+      content: userText + "\n\n",
     };
 
+    // Messages start with system definition, then user input, then assistant response
+    // repeating the user input and assistant response until the conversation is complete
     const request: OpenAiRequest = {
-      messages: [systemDefinition, assistantDefinition, userChatInput],
+      messages: [...messages, userChatInput],
       ...config,
     };
     console.log(request);
+    console.log(`Conversation length: ${messages.length}`);
 
     fetch(
       `${appConfig.endpoint}/openai/deployments/${appConfig.deployment}/chat/completions?api-version=${appConfig.apiVersion}`,
@@ -101,11 +101,14 @@ const Chatbot = () => {
             choices[0].message.content || "No answer found";
 
           console.log(responseText);
-          setMessages([
-            ...messages,
-            { role: "user", content: `${userText}\n\n` },
-            { role: "bot", content: `${responseText}\n\n` },
-          ]);
+          setMessages(
+            // stack up the messages
+            [
+              ...messages,
+              userChatInput,
+              { role: "assistant", content: `${responseText}\n\n` },
+            ]
+          );
         }
         setMessage("");
       })
@@ -135,8 +138,8 @@ const Chatbot = () => {
         </div>
         <TextBoxForm onSubmit={sendMessage} />
       </div>
-      {message && <div>{message}</div>}
       {error && <div className="errors">{error}</div>}
+      <ConversationLog messages={messages} />
     </>
   );
 };
