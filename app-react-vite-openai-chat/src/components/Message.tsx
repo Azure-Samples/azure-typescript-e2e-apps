@@ -1,11 +1,8 @@
 import React from "react";
 
-interface MessageProps {
-  role: string;
-  content: string;
-}
+import { Message } from "../lib/openai-request";
 
-const Message: React.FC<MessageProps> = ({ content, role }) => {
+const MessageDisplay: React.FC<Message> = ({ content, role }) => {
   return (
     <div>
       <b>{role.toUpperCase()}</b>:<br></br>
@@ -15,4 +12,4 @@ const Message: React.FC<MessageProps> = ({ content, role }) => {
   );
 };
 
-export default Message;
+export default MessageDisplay;
