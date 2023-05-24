@@ -33,7 +33,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit }) => {
   const [topP, setTopP] = useState(defaultConfig.top_p);
   const [stop, setStop] = useState(defaultConfig.stop);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit({
       max_tokens: maxTokens,
@@ -53,7 +53,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit }) => {
           <input
             type="number"
             value={maxTokens}
-            onChange={(event) => setMaxTokens(Number(event.target.value.trim()))}
+            onChange={(event) =>
+              setMaxTokens(Number(event.target.value.trim()))
+            }
           />
         </label>
         <br />
@@ -62,7 +64,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit }) => {
           <input
             type="number"
             value={temperature}
-            onChange={(event) => setTemperature(Number(event.target.value.trim()))}
+            onChange={(event) =>
+              setTemperature(Number(event.target.value.trim()))
+            }
           />
         </label>
         <br />
@@ -82,7 +86,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit }) => {
           <input
             type="number"
             value={presencePenalty}
-            onChange={(event) => setPresencePenalty(Number(event.target.value.trim()))}
+            onChange={(event) =>
+              setPresencePenalty(Number(event.target.value.trim()))
+            }
           />
         </label>
         <br />

@@ -9,18 +9,27 @@ interface SettingsFormProps {
 }
 
 export const defaultConversationConfig: ConversationConfig = {
-  systemContent: "Your are an Azure services expert whose primary purpose is to help customers understand how to use Azure with JavaScript and the Azure SDKs in the @azure namespace of npm package manager.",
-  assistantContent: "I am an Azure JavaScript and TypeScript developer expert. I can help you use the Azure SDKs for JavaScript.",
+  systemContent:
+    "Your are an Azure services expert whose primary purpose is to help customers understand how to use Azure with JavaScript and the Azure SDKs in the @azure namespace of npm package manager.",
+  assistantContent:
+    "I am an Azure JavaScript and TypeScript developer expert. I can help you use the Azure SDKs for JavaScript.",
 };
 
-const ConversationSettingsForm: React.FC<SettingsFormProps> = ({ onSubmit }) => {
+const ConversationSettingsForm: React.FC<SettingsFormProps> = ({
+  onSubmit,
+}) => {
+  const [systemContent, setSystemContent] = useState<string>(
+    defaultConversationConfig.systemContent
+  );
+  const [assistantContent, setAssistantContent] = useState<string>(
+    defaultConversationConfig.assistantContent
+  );
 
-  const [systemContent, setSystemContent] = useState<string>(defaultConversationConfig.systemContent);
-  const [assistantContent, setAssistantContent] = useState<string>(defaultConversationConfig.assistantContent);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSubmit({ systemContent, assistantContent });
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    if (event) {
+      event.preventDefault();
+      onSubmit({ systemContent, assistantContent });
+    }
   };
   return (
     <details>
@@ -38,7 +47,6 @@ const ConversationSettingsForm: React.FC<SettingsFormProps> = ({ onSubmit }) => 
         <label>
           Assistant:
           <input
-
             type="string"
             value={assistantContent}
             onChange={(event) => setAssistantContent(event.target.value.trim())}

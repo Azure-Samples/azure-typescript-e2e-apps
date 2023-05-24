@@ -23,10 +23,25 @@ type OpenAiRequest = {
   messages: Message[];
 } & OpenAiRequestConfig;
 
+type JSONValue = string | number | boolean | null | JSONObject | JSONArray;
+type JSONObject = { [key: string]: JSONValue };
+type JSONArray = JSONValue[];
+
+type JSONData = Record<string, JSONValue>;
+
+type Choice = {
+  message: {
+    content: string;
+  };
+};
+
+type OpenAiResponse = Choice[];
+
 const Chatbot = () => {
   const [appConfig, setAppConfig] = useState<OpenAiAppConfig>(defaultAppConfig);
   const [conversationConfig, setConversationConfig] =
     useState<ConversationConfig>(defaultConversationConfig);
+  const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<{ text: string; sender: string }[]>(
     []
   );
@@ -34,7 +49,7 @@ const Chatbot = () => {
     useState<OpenAiRequestConfig>(defaultConfig);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const sendMessage = async (userText: string) => {
+  const sendMessage = (userText: string) => {
     setError(undefined);
     const userChatInput = {
       role: "user",
@@ -53,42 +68,46 @@ const Chatbot = () => {
       ...config,
     };
 
-    try {
-      const response = await fetch(
-        `${appConfig.endpoint}/openai/deployments/${appConfig.deployment}/chat/completions?api-version=${appConfig.apiVersion}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "api-key": appConfig.apiKey,
-          },
-          body: JSON.stringify(request),
+    fetch(
+      `${appConfig.endpoint}/openai/deployments/${appConfig.deployment}/chat/completions?api-version=${appConfig.apiVersion}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": appConfig.apiKey,
+        },
+        body: JSON.stringify(request),
+      }
+    )
+      .then((response) => response.json())
+      .then((data: JSONData) => {
+        console.log(data);
+
+        if (
+          data.choices &&
+          Array.isArray(data.choices) &&
+          data.choices.length > 0
+        ) {
+          const choices: OpenAiResponse = data.choices as OpenAiResponse;
+
+          const responseText: string =
+            choices[0].message.content || "No answer found";
+
+          setMessages([
+            ...messages,
+            { text: `${message}\n\n`, sender: "user" },
+            { text: `${responseText}\n\n`, sender: "bot" },
+          ]);
         }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-
-        const responseText =
-          data?.choices[0]?.message?.content || "No answer found";
-
-        setMessages([
-          ...messages,
-          { text: userText + "\n\n", sender: "user" },
-          { text: responseText + "\n\n", sender: "bot" },
-        ]);
-      } else {
-        throw new Error(
-          `Error fetching response from OpenAI API: ${response.status} ${JSON.stringify(response)}`
-        );
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error?.message);
-      } else {
-        setError(JSON.stringify(error));
-      }
-    }
+        setMessage("");
+      })
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setError(error?.message);
+        } else {
+          setError("An error occured");
+        }
+      });
   };
 
   return (
@@ -102,17 +121,17 @@ const Chatbot = () => {
             <Message key={index} text={message.text} sender={message.sender} />
           ))}
         </div>
-        <textarea
-          className="chatbot-input"
-          placeholder="Type your message..."
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              sendMessage((event.target as HTMLInputElement).value);
-              (event.target as HTMLInputElement).value = "";
-            }
-          }}
-        />
+          <textarea
+            className="chatbot-input"
+            placeholder="Type your message..."
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                sendMessage((event.target as HTMLInputElement).value);
+                (event.target as HTMLInputElement).value = "";
+              }
+            }}/>
       </div>
+      {message && <div >{message}</div>}
       {error && <div className="errors">{error}</div>}
     </>
   );
