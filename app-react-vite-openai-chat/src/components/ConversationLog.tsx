@@ -11,8 +11,9 @@ type ConversationLogProps = {
 const ConversationLog: React.FC<ConversationLogProps> = ({
   messages,
 }: ConversationLogProps) => {
-
-  const userMessagesLength:number = messages.filter(x => x.role == 'user').length;
+  const userMessagesLength: number = messages.filter(
+    (x) => x.role == "user"
+  ).length;
 
   return (
     <details>
