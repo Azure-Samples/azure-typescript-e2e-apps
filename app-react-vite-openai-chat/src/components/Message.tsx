@@ -1,16 +1,15 @@
 import React from "react";
 
 interface MessageProps {
-  text: string;
-  sender: string;
+  role: string;
+  content: string;
 }
 
-const Message: React.FC<MessageProps> = ({ text, sender }) => {
+const Message: React.FC<MessageProps> = ({ content, role }) => {
   return (
     <div>
-      <p>
-        {sender}: {text}
-      </p>
+      <b>{role.toUpperCase()}</b>:<br></br>
+      <pre>{content}</pre>
       <hr></hr>
     </div>
   );

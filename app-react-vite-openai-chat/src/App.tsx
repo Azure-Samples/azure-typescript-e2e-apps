@@ -12,6 +12,7 @@ import ConversationSettingsForm, {
   ConversationConfig,
   defaultConversationConfig,
 } from "./components/ConversationConfig";
+import TextBoxForm from "./components/TextBoxForm";
 import "./App.css";
 
 type Message = {
@@ -42,31 +43,36 @@ const Chatbot = () => {
   const [conversationConfig, setConversationConfig] =
     useState<ConversationConfig>(defaultConversationConfig);
   const [message, setMessage] = useState<string>("");
-  const [messages, setMessages] = useState<{ text: string; sender: string }[]>(
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     []
   );
   const [config, setRequestConfig] =
     useState<OpenAiRequestConfig>(defaultConfig);
   const [error, setError] = useState<string | undefined>(undefined);
 
+  const systemDefinition = {
+    role: "system",
+    content: conversationConfig.systemContent,
+  };
+  const assistantDefinition = {
+    role: "assistant",
+    content: conversationConfig.assistantContent,
+  };
+
   const sendMessage = (userText: string) => {
+    console.log(userText);
+
     setError(undefined);
     const userChatInput = {
       role: "user",
       content: userText,
     };
-    const systemDefinition = {
-      role: "system",
-      content: conversationConfig.systemContent,
-    };
-    const assistantDefinition = {
-      role: "assistant",
-      content: conversationConfig.assistantContent,
-    };
+
     const request: OpenAiRequest = {
       messages: [systemDefinition, assistantDefinition, userChatInput],
       ...config,
     };
+    console.log(request);
 
     fetch(
       `${appConfig.endpoint}/openai/deployments/${appConfig.deployment}/chat/completions?api-version=${appConfig.apiVersion}`,
@@ -90,13 +96,15 @@ const Chatbot = () => {
         ) {
           const choices: OpenAiResponse = data.choices as OpenAiResponse;
 
+          console.log(choices);
           const responseText: string =
             choices[0].message.content || "No answer found";
 
+          console.log(responseText);
           setMessages([
             ...messages,
-            { text: `${message}\n\n`, sender: "user" },
-            { text: `${responseText}\n\n`, sender: "bot" },
+            { role: "user", content: `${userText}\n\n` },
+            { role: "bot", content: `${responseText}\n\n` },
           ]);
         }
         setMessage("");
@@ -118,20 +126,16 @@ const Chatbot = () => {
       <div className="chatbot-container">
         <div className="chatbot-messages">
           {messages.map((message, index) => (
-            <Message key={index} text={message.text} sender={message.sender} />
+            <Message
+              key={index}
+              content={message.content}
+              role={message.role}
+            />
           ))}
         </div>
-          <textarea
-            className="chatbot-input"
-            placeholder="Type your message..."
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                sendMessage((event.target as HTMLInputElement).value);
-                (event.target as HTMLInputElement).value = "";
-              }
-            }}/>
+        <TextBoxForm onSubmit={sendMessage} />
       </div>
-      {message && <div >{message}</div>}
+      {message && <div>{message}</div>}
       {error && <div className="errors">{error}</div>}
     </>
   );
