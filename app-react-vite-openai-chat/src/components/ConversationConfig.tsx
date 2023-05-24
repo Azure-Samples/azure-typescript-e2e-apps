@@ -32,7 +32,7 @@ const ConversationSettingsForm: React.FC<SettingsFormProps> = ({
     }
   };
   return (
-    <details>
+    <details className="detail-container">
       <summary>Conversation settings</summary>
       <form onSubmit={handleSubmit}>
         <label>

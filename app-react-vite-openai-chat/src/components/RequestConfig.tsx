@@ -45,7 +45,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit }) => {
     });
   };
   return (
-    <details>
+    <details className="detail-container">
       <summary>Request settings</summary>
       <form onSubmit={handleSubmit}>
         <label>

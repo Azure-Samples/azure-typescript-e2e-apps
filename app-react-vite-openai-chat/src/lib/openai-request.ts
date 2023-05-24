@@ -20,8 +20,9 @@ export type OpenAiAppConfig = {
   apiKey: string;
   deployment: string;
 };
+export type Role = "user" | "assistant" | "system";
 export type Message = {
-  role: "user" | "assistant" | "system";
+  role: Role | string;
   content: string;
 };
 export type OpenAiConversation = {
@@ -33,41 +34,53 @@ export type OpenAiRequest = {
   requestConfig: OpenAiRequestConfig;
   conversation: OpenAiConversation;
 };
-export type JSONValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JSONObject
-  | JSONArray;
-export type JSONObject = { [key: string]: JSONValue };
-export type JSONArray = JSONValue[];
-export type JSONData = Record<string, JSONValue>;
+export type Choice = {
+  index: number;
+  finish_reason: string;
+  message: Message;
+};
+export type Usage = {
+  completion_tokens: number;
+  prompt_tokens: number;
+  total_tokens: number;
+};
+export type OpenAiResponse = {
+  id: string;
+
+  object: string;
+  created: number;
+  model: string;
+  choices: Choice[];
+  usage: Usage;
+};
+
 export const OpenAiRequest = async (request: OpenAiRequest): Promise<any> => {
+  console.log(request);
   if (
-    request.appConfig.apiKey ||
+    !request.appConfig.apiKey ||
     !request.appConfig.deployment ||
     !request.appConfig.endpoint ||
     !request.appConfig.apiVersion
   ) {
-    return fetch(
-      `${request.appConfig.endpoint}/openai/deployments/${request.appConfig.deployment}/chat/completions?api-version=${request.appConfig.apiVersion}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "api-key": request.appConfig.apiKey,
-        },
-        body: JSON.stringify({
-          messages: request.conversation.messages,
-          config: request.requestConfig,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data: JSONData) => {
-        return data;
-      })
-      .catch((error) => console.error(error));
+    throw Error("Missing API Key or Deployment");
+  }
+
+  const response = await fetch(
+    `${request.appConfig.endpoint}/openai/deployments/${request.appConfig.deployment}/chat/completions?api-version=${request.appConfig.apiVersion}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "api-key": request.appConfig.apiKey,
+      },
+      body: JSON.stringify({
+        messages: request.conversation.messages,
+        ...request.requestConfig,
+      }),
+    }
+  );
+  if (response.ok) {
+    const data: unknown = response.json();
+    return data as OpenAiResponse;
   }
 };

@@ -76,3 +76,7 @@
 .chatbot-messages p.bot {
   text-align: left;
 }
+
+.detail-container{
+  width: 500px;
+}

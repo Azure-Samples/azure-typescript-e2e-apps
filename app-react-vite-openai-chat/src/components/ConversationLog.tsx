@@ -16,7 +16,7 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
   ).length;
 
   return (
-    <details>
+    <details className="detail-container">
       <summary>Conversation Log ({userMessagesLength})</summary>
       {JSON.stringify(messages)}
     </details>
