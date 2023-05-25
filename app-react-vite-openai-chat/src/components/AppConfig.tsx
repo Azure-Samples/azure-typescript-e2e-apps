@@ -12,9 +12,9 @@ interface AppSettingsFormProps {
 
 export const defaultAppConfig: OpenAiAppConfig = {
   apiVersion: "2023-03-15-preview",
-  endpoint: import.meta.env.VITE_OPENAI_ENDPOINT || "",
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY || "",
-  deployment: import.meta.env.VITE_OPENAI_DEPLOYMENT || ""
+  endpoint: import.meta.env?.VITE_OPENAI_ENDPOINT as string,
+  apiKey: import.meta.env?.VITE_OPENAI_API_KEY as string,
+  deployment: import.meta.env?.VITE_OPENAI_DEPLOYMENT as string,
 };
 
 const AppSettingsForm: React.FC<AppSettingsFormProps> = ({ onSubmit }) => {
@@ -23,7 +23,7 @@ const AppSettingsForm: React.FC<AppSettingsFormProps> = ({ onSubmit }) => {
   const [apiKey, setApiKey] = useState(defaultAppConfig.apiKey);
   const [deployment, setDeployment] = useState(defaultAppConfig.deployment);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit({
       apiVersion: apiVersion,
@@ -33,7 +33,7 @@ const AppSettingsForm: React.FC<AppSettingsFormProps> = ({ onSubmit }) => {
     });
   };
   return (
-    <details>
+    <details className="detail-container">
       <summary>App settings</summary>
       <form onSubmit={handleSubmit}>
         <label>
@@ -42,13 +42,12 @@ const AppSettingsForm: React.FC<AppSettingsFormProps> = ({ onSubmit }) => {
             type="text"
             value={apiVersion}
             onChange={(event) => setApiVersion(event.target.value.trim())}
-          />  
+          />
         </label>
         <br />
         <label>
           Endpoint:
           <input
-
             type="text"
             value={endpoint}
             onChange={(event) => setEndpoint(event.target.value.trim())}
