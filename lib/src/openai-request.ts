@@ -93,13 +93,23 @@ export class OpenAIConversationManager {
 
     this.#requestConfig = defaultConfig;
 
-    this.#conversationConfig = {
-      systemPrompt: {
-        role: 'system',
-        content: defaultConversationConfig.systemContent
-      },
-      messages: []
-    };
+    if (systemContent && systemContent.length > 0) {
+      this.#conversationConfig = {
+        systemPrompt: {
+          role: 'system',
+          content: systemContent
+        },
+        messages: []
+      };
+    } else {
+      this.#conversationConfig = {
+        systemPrompt: {
+          role: 'system',
+          content: defaultConversationConfig.systemContent
+        },
+        messages: []
+      };
+    }
   }
   async OpenAiConverationStep(userText: string): Promise<any> {
     const request: OpenAiRequest = {
