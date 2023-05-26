@@ -4,7 +4,7 @@ export type OpenAiRequestConfig = {
   top_p: number;
   frequency_penalty: number;
   presence_penalty: number;
-  stop: string[] | string | undefined;
+  stop: string[] | string;
 };
 export const defaultConfig: OpenAiRequestConfig = {
   max_tokens: 800,
@@ -21,12 +21,6 @@ export type OpenAiAppConfig = {
   deployment: string;
 };
 
-export const defaultAppConfig: OpenAiAppConfig = {
-  apiVersion: '2023-03-15-preview',
-  endpoint: process.env.AZURE_OPENAI_ENDPOINT as string,
-  apiKey: process.env.AZURE_OPENAI_API_KEY as string,
-  deployment: process.env.AZURE_OPENAI_DEPLOYMENT as string
-};
 export type ConversationConfig = {
   systemContent: string;
   assistantContent: string;
@@ -78,10 +72,10 @@ export class OpenAIConversationManager {
   #messages: Message[] = [];
 
   constructor(
-    endpoint: string,
-    apiKey: string,
-    deployment: string,
-    apiVersion: string,
+    endpoint: string = process.env.AZURE_OPENAI_ENDPOINT as string,
+    apiKey: string = process.env.AZURE_OPENAI_API_KEY as string,
+    deployment: string = process.env.AZURE_OPENAI_DEPLOYMENT as string,
+    apiVersion = '2023-03-15-preview',
     systemContent: string
   ) {
     this.#appConfig = {

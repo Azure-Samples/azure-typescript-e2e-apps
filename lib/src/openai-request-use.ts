@@ -1,7 +1,5 @@
 import * as OpenAiManager from './openai-request';
-import { Command } from 'commander';
-import { config as dotenv } from 'dotenv';
-import { readFileSync } from 'fs';
+import program, { processInput } from './openai-request-cli';
 
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
 const apiKey = process.env.AZURE_OPENAI_API_KEY;
@@ -11,78 +9,68 @@ const systemPrompt =
   process.env.AZURE_OPENAI_SYSTEM_PROMPT ||
   'Your are an Azure services expert whose primary purpose is to help customers understand how to use Azure with JavaScript and the Azure SDKs in the @azure namespace of npm package manager.';
 
-const openAiManager = new OpenAiManager.OpenAIConversationManager(
-  endpoint as string,
-  apiKey as string,
-  deployment as string,
-  apiVersion as string,
-  systemPrompt
-);
+let initialized = false;
+let response: OpenAiManager.OpenAiResponse;
 
-type CommandLineOption = {
-  data?: string;
-  quit?: boolean;
-  help?: boolean;
-  env?: string;
+let openAiManager: OpenAiManager.OpenAIConversationManager;
+
+// CLI Loop
+
+const checkRequiredParams = (env: Record<string, string> | undefined) => {
+  const errors = [];
+
+  if (!env) {
+    console.log(
+      'Please set the following environment variables:\nAZURE_OPENAI_ENDPOINT\nAZURE_OPENAI_API_KEY\nAZURE_OPENAI_DEPLOYMENT\nAZURE_OPENAI_API_VERSION'
+    );
+    process.exit(1);
+  }
+
+  if (!env?.AZURE_OPENAI_ENDPOINT) {
+    errors.push('AZURE_OPENAI_ENDPOINT');
+  }
+  if (!env?.AZURE_OPENAI_API_KEY) {
+    errors.push('AZURE_OPENAI_API_KEY');
+  }
+  if (!env?.AZURE_OPENAI_DEPLOYMENT) {
+    errors.push('AZURE_OPENAI_DEPLOYMENT');
+  }
+  if (!env?.AZURE_OPENAI_API_VERSION) {
+    errors.push('AZURE_OPENAI_API_VERSION');
+  }
+  if (errors.length > 0) {
+    console.log('Please set the following environment variables:');
+    errors.forEach((error) => {
+      console.log(`  ${error}`);
+    });
+    process.exit(1);
+  }
 };
 
-const program = new Command();
+const ask = async () => {
+  const cliValues = await processInput();
+  checkRequiredParams(cliValues?.envVars);
 
-program.version('1.0.0').description('A CLI for interacting with content');
+  // Not checking secrets before usage
+  if (!initialized) {
+    openAiManager = new OpenAiManager.OpenAIConversationManager(
+      cliValues?.envVars?.AZURE_OPENAI_ENDPOINT as string,
+      cliValues?.envVars?.AZURE_OPENAI_API_KEY as string,
+      cliValues?.envVars?.AZURE_OPENAI_DEPLOYMENT as string,
+      cliValues?.envVars?.AZURE_OPENAI_API_VERSION as string,
+      cliValues?.envVars?.AZURE_OPENAI_SYSTEM_PROMPT as string
+    );
+    initialized = true;
+    console.log(`User: ${cliValues?.data} ${cliValues?.inputText}`);
 
-program
-  .command('input [content]')
-  .alias('i')
-  .description('Input content')
-  .action((content: string) => {
-    console.log(`You entered: ${content}`);
-  });
-
-program.option('-d, --data <filename>', 'Read content from a file');
-
-program.option(
-  '-e, --env <filename>',
-  'Load environment variables from a file'
-);
-
-program.option('-q, --quit', 'Quit the CLI');
-
-program.option('-h, --help', 'Display help');
-
-program.parse(process.argv);
-
-const options: CommandLineOption = program.opts();
-
-if (options.help) {
-  program.helpInformation();
-
-  console.log(`  
-    Examples:  
-    $ my-cli.js input "Hello, world!"            Input content  
-    $ my-cli.js -d myfile.txt                   Read content from a file  
-    $ my-cli.js -e .env                          Load environment variables from a file  
-    $ my-cli.js -q                               Quit the CLI  
-    $ my-cli.js -h                               Display help  
-  `);
-
-  process.exit(0);
-}
-
-if (options.quit) {
-  console.log('Goodbye!');
-  process.exit(0);
-}
-
-if (options.env) {
-  const envConfig = dotenv({ path: options.env }).parsed;
-  if (envConfig) {
-    for (const key in envConfig) {
-      process.env[key] = envConfig[key];
-    }
+    // first request includes data
+    response = await openAiManager.OpenAiConverationStep(
+      `${cliValues?.data} ${cliValues?.inputText}`
+    );
+    console.log(`Assistant: ${response.choices[0].message.content}`);
+    process.exit(0);
   }
-}
+};
 
-if (options.data) {
-  const fileContent = readFileSync(options.data, 'utf-8');
-  console.log(`Content from file: ${fileContent}`);
-}
+console.log('Hello!');
+ask();
