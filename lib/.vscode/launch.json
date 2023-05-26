@@ -5,6 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "CLI",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "test:tsnode:cli"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "Current TS File",
             "type": "node",
             "request": "launch",
