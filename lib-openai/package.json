@@ -1,22 +1,21 @@
 {
-  "name": "lib",
+  "name": "@azure-typescript-e2e-apps/lib-openai",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
   "scripts": {
-    "build:all": "npm run format && npm run lint && npm run build",
+    "build": "npm run format && npm run lint && npm run build:tsc",
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint src/**/*.ts --fix",
-    "build": "tsc",
-    "test": "wtfnode dist/connection-test.js",
-    "test:tsnode:cli": "ts-node src/openai-request-use.ts -e \"./.env\" -i \"What is typescript?\"",
-    "test:node:cli": "ts-node dist/openai-request-use.js -e \"./.env\" -i \"What is typescript?\""
+    "build:tsc": "tsc",
+    "test:tsnode:cli": "ts-node src/index.ts -e \"./.env\" -i \"What is typescript?\"",
+    "test:node:cli": "ts-node dist/index.js -e \"./.env\" -i \"What is typescript?\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@azure/cosmos": "^3.17.3",
     "commander": "^10.0.1",
     "dotenv": "^16.0.3",
     "ts-node": "^10.9.1",
