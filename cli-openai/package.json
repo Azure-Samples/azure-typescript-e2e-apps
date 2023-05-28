@@ -8,7 +8,9 @@
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint src/**/*.ts --fix",
     "build:tsc": "tsc",
+    "prestart": "npm run build",
     "start": "node dist/index.js -d mydata.txt -e .env",
+    "start:tsnode:debug": "ts-node dist/index.js",
     "start:help": "node dist/index.js --help",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
