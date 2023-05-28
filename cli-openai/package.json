@@ -4,10 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build:all": "npm run format && npm run lint && npm run build",
+    "build": "npm run format && npm run lint && npm run build:tsc",
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint src/**/*.ts --fix",
-    "build": "tsc",
+    "build:tsc": "tsc",
     "start": "node dist/index.js -d mydata.txt -e .env",
     "start:help": "node dist/index.js --help",
     "test": "echo \"Error: no test specified\" && exit 1"
