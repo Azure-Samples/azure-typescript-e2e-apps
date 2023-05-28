@@ -1,6 +1,6 @@
 // CLI Loop
 export const checkRequiredEnvParams = (
-  env: Record<string, string>
+  env: Record<string, string | undefined>
 ): string[] => {
   const errors = [];
 

@@ -9,7 +9,7 @@
     "lint": "eslint src/**/*.ts --fix",
     "build:tsc": "tsc",
     "prestart": "npm run build",
-    "start": "node dist/index.js -d mydata.txt -e .env",
+    "start": "node dist/index.js -d mydata.txt -e .env.development -l",
     "start:tsnode:debug": "ts-node dist/index.js",
     "start:help": "node dist/index.js --help",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +19,7 @@
   "dependencies": {
     "@azure-typescript-e2e-apps/lib-openai": "file:../lib-openai",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
+    "chalk": "^4.1.2",
     "commander": "^10.0.1",
     "dotenv": "^16.0.3",
     "eslint": "^8.41.0",
