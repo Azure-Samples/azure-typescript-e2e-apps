@@ -1,0 +1,33 @@
+{
+  "name": "lib",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run format && npm run lint && npm run build:tsc",
+    "format": "prettier --write src/**/*.ts",
+    "lint": "eslint src/**/*.ts --fix",
+    "build:tsc": "tsc",
+    "test": "wtfnode dist/connection-test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/cosmos": "^3.17.3",
+    "commander": "^10.0.1",
+    "dotenv": "^16.0.3",
+    "ts-node": "^10.9.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.1",
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "wtfnode": "^0.9.1"
+  }
+}
