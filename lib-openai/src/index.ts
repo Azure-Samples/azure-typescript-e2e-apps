@@ -1,19 +1,19 @@
 import {
   OpenAiAppConfig,
   OpenAiConversation,
-  OpenAiError,
   OpenAiRequest,
   OpenAiRequestConfig,
-  OpenAiResponse
+  OpenAiResponse,
+  OpenAiSuccessResponse
 } from './models';
 
 // export types a client needs
 export {
   OpenAiAppConfig,
-  OpenAiError,
   OpenAiRequest,
   OpenAiRequestConfig,
-  OpenAiResponse
+  OpenAiResponse,
+  OpenAiSuccessResponse
 } from './models';
 
 export default class OpenAIConversationManager {
@@ -53,9 +53,9 @@ export default class OpenAIConversationManager {
 
   async OpenAiConverationStep(
     userText: string,
-    appOptions: OpenAiAppConfig,
-    requestOptions: OpenAiRequestConfig
-  ): Promise<OpenAiResponse | OpenAiError> {
+    appOptions?: OpenAiAppConfig,
+    requestOptions?: OpenAiRequestConfig
+  ): Promise<OpenAiResponse> {
     try {
       const request: OpenAiRequest = {
         conversation: {
@@ -75,26 +75,31 @@ export default class OpenAIConversationManager {
         appConfig: appOptions ? appOptions : this.#appConfig,
         requestConfig: requestOptions ? requestOptions : this.#requestConfig
       };
-      return await this.OpenAiRequest(request);
+
+      const response = await this.OpenAiRequest(request);
+      return response;
     } catch (error: unknown) {
       if (error instanceof Error) {
         return {
-          status: 'error',
-          message: error.message,
-          stack: error.stack
+          status: '499',
+          error: {
+            message: error.message,
+            stack: error.stack
+          },
+          data: undefined
         };
       } else {
         return {
-          status: 'error',
-          message: 'Unknown error',
-          stack: ''
+          status: '498',
+          error: {
+            message: JSON.stringify(error)
+          },
+          data: undefined
         };
       }
     }
   }
-  async OpenAiRequest(
-    request: OpenAiRequest
-  ): Promise<OpenAiResponse | OpenAiError> {
+  async OpenAiRequest(request: OpenAiRequest): Promise<OpenAiResponse> {
     if (
       !request.appConfig.apiKey ||
       !request.appConfig.deployment ||
@@ -102,8 +107,11 @@ export default class OpenAIConversationManager {
       !request.appConfig.apiVersion
     ) {
       return {
-        status: 'error',
-        message: 'OpenAiRequest: Missing API Key or Deployment'
+        data: undefined,
+        status: '400',
+        error: {
+          message: 'OpenAiRequest: Missing API Key or Deployment'
+        }
       };
     }
 
@@ -122,10 +130,19 @@ export default class OpenAIConversationManager {
       }
     );
     if (response.ok) {
-      const data: unknown = response.json();
-      return data as OpenAiResponse;
+      const data: OpenAiSuccessResponse = await response.json();
+      return {
+        data,
+        status: '200',
+        error: undefined
+      };
     } else {
-      return { status: 'error', message: response.statusText };
+      return {
+        status: '497',
+        error: {
+          message: response.statusText
+        }
+      };
     }
   }
 }

@@ -1,8 +1,3 @@
-export type OpenAiError = {
-  status: string;
-  message: string;
-  stack?: string;
-};
 export type OpenAiRequestConfig = {
   max_tokens: number;
   temperature: number;
@@ -42,12 +37,21 @@ export type Usage = {
   prompt_tokens: number;
   total_tokens: number;
 };
-export type OpenAiResponse = {
+export type OpenAiErrorResponse = {
+  message: string;
+  stack?: string;
+};
+export type OpenAiSuccessResponse = {
   id: string;
-
   object: string;
   created: number;
   model: string;
   choices: Choice[];
   usage: Usage;
+};
+
+export type OpenAiResponse = {
+  data?: OpenAiSuccessResponse;
+  status: string;
+  error?: OpenAiErrorResponse;
 };
