@@ -32,26 +32,23 @@ program
   )
   .helpOption('-h, --help', 'Display help');
 
-program
-  .command('start')
-  .description('Start a conversation')
-  .action(async () => {
-    console.log('Welcome to the OpenAI conversation!');
+program.description('Start a conversation').action(async () => {
+  console.log('Welcome to the OpenAI conversation!');
 
-    /* eslint-disable-next-line no-constant-condition */
-    while (true) {
-      const answer: string = await askQuestion('What would you like to ask? ');
+  /* eslint-disable-next-line no-constant-condition */
+  while (true) {
+    const answer: string = await askQuestion('What would you like to ask? ');
 
-      // Print response
-      console.log(`You said: ${answer}`);
+    // Print response
+    console.log(`You said: ${answer}`);
 
-      // Exit if user types 'exit'
-      if (answer.toLowerCase() === 'exit') {
-        console.log('Goodbye!');
-        process.exit();
-      }
+    // Exit if user types 'exit'
+    if (answer.toLowerCase() === 'exit') {
+      console.log('Goodbye!');
+      process.exit();
     }
-  });
+  }
+});
 
 async function askQuestion(question: string): Promise<string> {
   return new Promise((resolve) => {
