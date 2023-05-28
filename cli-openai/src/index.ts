@@ -6,6 +6,7 @@ import { checkRequiredEnvParams } from './settings';
 import OpenAIConversationClient, {
   OpenAiResponse
 } from '@azure-typescript-e2e-apps/lib-openai';
+import chalk from 'chalk';
 
 import readline from 'node:readline/promises';
 import { env } from 'process';
@@ -16,10 +17,10 @@ let debugFile = 'debug.log';
 let envFile = '.env';
 
 // CLI client
-const program = new Command();
+const program: Command = new Command();
 
 // ReadLine client
-const rl = readline.createInterface({
+const readlineClient = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
@@ -30,7 +31,9 @@ function printf(text: string) {
 }
 function printd(text: string) {
   if (debug) {
-    writeFileSync(debugFile, `${text}\n`, { flag: 'a' });
+    writeFileSync(debugFile, `${new Date().toISOString()}:${text}\n`, {
+      flag: 'a'
+    });
   }
 }
 
@@ -52,6 +55,7 @@ program
     'Load environment variables from a file. Prefer .env to individual option switches. If both are sent, .env is used only.'
   )
   .option('-l, --log <filename>. Default: debug.log', 'Log everything to file')
+  .option('-x, --exit', 'Exit conversation loop')
   .helpOption('-h, --help', 'Display help');
 
 program.description('Start a conversation').action(async (options) => {
@@ -59,6 +63,9 @@ program.description('Start a conversation').action(async (options) => {
   if (options.log) {
     debug = true;
     debugFile = options?.log || 'debug.log';
+
+    // reset debug file
+    writeFileSync(debugFile, ``);
   }
   printd(`CLI Options: ${JSON.stringify(options)}`);
 
@@ -74,7 +81,7 @@ program.description('Start a conversation').action(async (options) => {
   const errors = checkRequiredEnvParams(process.env);
   if (errors.length > 0) {
     const failures = `${errors.join('\n')}`;
-    printf(`CLI Required env vars failed: ${failures}`);
+    printf(chalk.red(`CLI Required env vars failed: ${failures}`));
   } else {
     printd(`CLI Required env vars success`);
   }
@@ -89,19 +96,19 @@ program.description('Start a conversation').action(async (options) => {
   printd(`CLI OpenAi client created`);
 
   // Prepare: Start conversation
-  printf('Welcome to the OpenAI conversation!');
+  printf(chalk.green('Welcome to the OpenAI conversation!'));
 
   /* eslint-disable-next-line no-constant-condition */
   while (true) {
-    const yourQuestion: string = await askQuestion(
-      'What would you like to ask? '
+    const yourQuestion: string = await readlineClient.question(
+      chalk.green('What would you like to ask? (`exit` to stop)\n>')
     );
     // Print response
-    printf(`\nYOU: ${yourQuestion}`);
+    printf(`\n${chalk.green.bold(`YOU`)}: ${chalk.gray(yourQuestion)}`);
 
-    // Exit if user types 'exit'
+    // Exit
     if (yourQuestion.toLowerCase() === 'exit') {
-      printf('Goodbye!');
+      printf(chalk.green('Goodbye!'));
       process.exit();
     }
 
@@ -109,14 +116,10 @@ program.description('Start a conversation').action(async (options) => {
   }
 });
 
-async function askQuestion(question: string): Promise<string> {
-  return await rl.question(question);
-}
 async function getAnswer(
   question: string,
   openAiClient: OpenAIConversationClient
 ): Promise<void> {
-
   // Request
   const { status, data, error }: OpenAiResponse =
     await openAiClient.OpenAiConverationStep(question);
@@ -128,20 +131,26 @@ async function getAnswer(
 
   // Error
   if (Number(status) > 299) {
-    printf(`Conversation step request error: ${error?.message || 'unknown'}`);
+    printf(
+      chalk.red(
+        `Conversation step request error: ${error?.message || 'unknown'}`
+      )
+    );
     process.exit();
   }
 
   // Answer
   if (data?.choices[0]?.message) {
     printf(
-      `\n\nASSISTANT:\n\n${data?.choices[0].message.content}\n\nEnter 'exit' to quit.`
+      `\n\n${chalk.green.bold(`ASSISTANT`)}:\n\n${
+        data?.choices[0].message.content
+      }\n\n`
     );
     return;
   }
 
   // No Answer
-  printf(`\n\nASSISTANT:\n\nNo response provided.\n\nEnter 'exit' to quit.`);
+  printf(`\n\n${chalk.green.bold(`ASSISTANT`)}:\n\nNo response provided.\n\n`);
   return;
 }
 

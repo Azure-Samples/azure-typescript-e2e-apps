@@ -16,7 +16,7 @@ export {
   OpenAiSuccessResponse
 } from './models';
 
-export default class OpenAIConversationManager {
+export default class OpenAIConversationClient {
   #appConfig: OpenAiAppConfig;
   #conversationConfig: OpenAiConversation;
   #requestConfig: OpenAiRequestConfig = {
