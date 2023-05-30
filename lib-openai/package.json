@@ -1,7 +1,7 @@
 {
   "name": "@azure-typescript-e2e-apps/lib-openai",
   "version": "1.0.1",
-  "description": "",
+  "description": "Conversation manager class for Azure OpenAi",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
