@@ -55,3 +55,8 @@ export type OpenAiResponse = {
   status: string;
   error?: OpenAiErrorResponse;
 };
+
+export type DebugOptions = {
+  debug: boolean;
+  logger: (message: string) => void;
+};

@@ -1,0 +1,21 @@
+{
+    "id": "chatcmpl-7LusHpPOALYwkFQfkyE3XOsVxVSMz",
+    "object": "chat.completion",
+    "created": 1685457869,
+    "model": "gpt-35-turbo",
+    "choices": [
+        {
+            "index": 0,
+            "finish_reason": "stop",
+            "message": {
+                "role": "assistant",
+                "content": "TypeScript is a programming language that is a superset of JavaScript. It was developed by Microsoft and is designed to make it easier to write and maintain large-scale JavaScript applications. TypeScript adds features such as static typing, classes, interfaces, and modules to JavaScript, which can help catch errors at compile-time rather than at runtime. It also provides better tooling and IDE support, making it easier to write and debug code. TypeScript code is compiled into JavaScript code that can run in any browser or JavaScript runtime."
+            }
+        }
+    ],
+    "usage": {
+        "completion_tokens": 101,
+        "prompt_tokens": 13,
+        "total_tokens": 114
+    }
+}

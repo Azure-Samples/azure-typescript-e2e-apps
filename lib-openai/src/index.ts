@@ -1,4 +1,5 @@
 import {
+  DebugOptions,
   OpenAiAppConfig,
   OpenAiConversation,
   OpenAiRequest,
@@ -9,6 +10,7 @@ import {
 
 // export types a client needs
 export {
+  DebugOptions,
   OpenAiAppConfig,
   OpenAiRequest,
   OpenAiRequestConfig,
@@ -53,10 +55,12 @@ export default class OpenAIConversationClient {
 
   async OpenAiConverationStep(
     userText: string,
-    appOptions?: OpenAiAppConfig,
-    requestOptions?: OpenAiRequestConfig
+    appOptions?: OpenAiAppConfig | undefined,
+    requestOptions?: OpenAiRequestConfig | undefined,
+    debugOptions?: DebugOptions | undefined
   ): Promise<OpenAiResponse> {
     try {
+      // REQUEST
       const request: OpenAiRequest = {
         conversation: {
           // add the system prompt to focus the conversation
@@ -75,8 +79,15 @@ export default class OpenAIConversationClient {
         appConfig: appOptions ? appOptions : this.#appConfig,
         requestConfig: requestOptions ? requestOptions : this.#requestConfig
       };
+      if (debugOptions?.debug) {
+        debugOptions.logger(`LIB OpenAi request: ${JSON.stringify(request)}`);
+      }
 
+      // RESPONSE
       const response = await this.OpenAiRequest(request);
+      if (debugOptions?.debug) {
+        debugOptions.logger(`LIB OpenAi response: ${JSON.stringify(response)}`);
+      }
       return response;
     } catch (error: unknown) {
       if (error instanceof Error) {
