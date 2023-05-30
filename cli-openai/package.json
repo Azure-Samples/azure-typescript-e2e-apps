@@ -1,7 +1,7 @@
 {
   "name": "@azure-typescript-e2e-apps/cli-openai",
   "version": "1.0.0",
-  "description": "",
+  "description": "Conversation loop for Azure OpenAI",
   "main": "dist/index.js",
   "scripts": {
     "build": "npm run format && npm run lint && npm run build:tsc",
