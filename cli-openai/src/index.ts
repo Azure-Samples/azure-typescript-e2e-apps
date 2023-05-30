@@ -1,15 +1,14 @@
-import { Command, OptionValues } from 'commander';
+import { Command } from 'commander';
 import * as dotenv from 'dotenv';
-import { readFileSync, writeFileSync } from 'fs';
-import path from 'path';
+import { writeFileSync } from 'fs';
 import { checkRequiredEnvParams } from './settings';
 import OpenAIConversationClient, {
-  OpenAiResponse
+  OpenAiResponse,
+  DebugOptions
 } from '@azure-typescript-e2e-apps/lib-openai';
 import chalk from 'chalk';
 
 import readline from 'node:readline/promises';
-import { env } from 'process';
 
 // CLI settings
 let debug = false;
@@ -121,8 +120,20 @@ async function getAnswer(
   openAiClient: OpenAIConversationClient
 ): Promise<void> {
   // Request
+  const appOptions = undefined;
+  const requestOptions = undefined;
+  const debugOptions: DebugOptions = {
+    debug: debug,
+    logger: printd
+  };
+
   const { status, data, error }: OpenAiResponse =
-    await openAiClient.OpenAiConverationStep(question);
+    await openAiClient.OpenAiConverationStep(
+      question,
+      appOptions,
+      requestOptions,
+      debugOptions
+    );
 
   // Response
   printd(`CLI OpenAi response status: ${status}`);
