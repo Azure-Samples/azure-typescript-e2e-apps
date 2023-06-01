@@ -1,25 +1,22 @@
-export type OpenAiRequestConfig = {
-  max_tokens: number;
-  temperature: number;
-  top_p: number;
-  frequency_penalty: number;
-  presence_penalty: number;
-  stop: string[] | string;
-};
+import {
+  ChatCompletions,
+  GetChatCompletionsOptions,
+  ChatMessage
+} from '@azure/openai';
+
+export type OpenAiRequestConfig = GetChatCompletionsOptions;
+export type OpenAiSuccessResponse = ChatCompletions;
+export type Message = ChatMessage;
+
 export type OpenAiAppConfig = {
-  apiVersion: string;
   endpoint: string;
   apiKey: string;
   deployment: string;
 };
 
 export type Role = 'user' | 'assistant' | 'system';
-export type Message = {
-  role: Role | string;
-  content: string;
-};
+
 export type OpenAiConversation = {
-  systemPrompt: Message;
   messages: Message[];
 };
 export type OpenAiRequest = {
@@ -40,14 +37,6 @@ export type Usage = {
 export type OpenAiErrorResponse = {
   message: string;
   stack?: string;
-};
-export type OpenAiSuccessResponse = {
-  id: string;
-  object: string;
-  created: number;
-  model: string;
-  choices: Choice[];
-  usage: Usage;
 };
 
 export type OpenAiResponse = {
