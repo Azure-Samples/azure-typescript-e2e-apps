@@ -1,0 +1,13 @@
+node_modules
+coverage
+poc
+docs
+.vscode
+src
+jest.**.ts
+dist/**/*.test.js
+dist/**/*.data.js
+tsconfig.**.json
+.eslint*
+.prettierrc
+*/**/__tests__

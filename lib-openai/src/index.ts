@@ -1,4 +1,11 @@
 import {
+  OpenAIClient,
+  AzureKeyCredential,
+  GetChatCompletionsOptions
+} from '@azure/openai';
+import { DefaultAzureCredential } from '@azure/identity';
+
+import {
   DebugOptions,
   OpenAiAppConfig,
   OpenAiConversation,
@@ -7,6 +14,7 @@ import {
   OpenAiResponse,
   OpenAiSuccessResponse
 } from './models';
+import { ChatCompletions } from '@azure/openai';
 
 // export types a client needs
 export {
@@ -21,36 +29,42 @@ export {
 export default class OpenAIConversationClient {
   #appConfig: OpenAiAppConfig;
   #conversationConfig: OpenAiConversation;
-  #requestConfig: OpenAiRequestConfig = {
-    max_tokens: 800,
-    temperature: 0,
-    top_p: 0.95,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    stop: ''
+  #requestConfig: GetChatCompletionsOptions = {
+    maxTokens: 800,
+    temperature: 0.9,
+    topP: 1,
+    frequencyPenalty: 0,
+    presencePenalty: 0
   };
+
+  #openAiClient: OpenAIClient;
 
   constructor(
     endpoint: string = process.env.AZURE_OPENAI_ENDPOINT as string,
     apiKey: string = process.env.AZURE_OPENAI_API_KEY as string,
-    deployment: string = process.env.AZURE_OPENAI_DEPLOYMENT as string,
-    apiVersion = '2023-03-15-preview',
-    systemContent = 'Your are an Azure services expert whose primary purpose is to help customers understand how to use Azure with the JavaScript SDKs.'
+    deployment: string = process.env.AZURE_OPENAI_DEPLOYMENT as string
   ) {
     this.#appConfig = {
       endpoint,
       apiKey,
-      deployment,
-      apiVersion
+      deployment
     };
 
     this.#conversationConfig = {
-      systemPrompt: {
-        role: 'system',
-        content: systemContent
-      },
       messages: []
     };
+
+    if (apiKey && endpoint) {
+      this.#openAiClient = new OpenAIClient(
+        endpoint,
+        new AzureKeyCredential(apiKey)
+      );
+    } else {
+      this.#openAiClient = new OpenAIClient(
+        endpoint,
+        new DefaultAzureCredential()
+      );
+    }
   }
 
   async OpenAiConverationStep(
@@ -63,8 +77,6 @@ export default class OpenAIConversationClient {
       // REQUEST
       const request: OpenAiRequest = {
         conversation: {
-          // add the system prompt to focus the conversation
-          systemPrompt: this.#conversationConfig.systemPrompt,
           messages: [
             // add all previous messages so the conversation
             // has context
@@ -90,6 +102,7 @@ export default class OpenAIConversationClient {
       }
       return response;
     } catch (error: unknown) {
+
       if (error instanceof Error) {
         return {
           status: '499',
@@ -114,8 +127,7 @@ export default class OpenAIConversationClient {
     if (
       !request.appConfig.apiKey ||
       !request.appConfig.deployment ||
-      !request.appConfig.endpoint ||
-      !request.appConfig.apiVersion
+      !request.appConfig.endpoint
     ) {
       return {
         data: undefined,
@@ -126,34 +138,17 @@ export default class OpenAIConversationClient {
       };
     }
 
-    const response = await fetch(
-      `${request.appConfig.endpoint}/openai/deployments/${request.appConfig.deployment}/chat/completions?api-version=${request.appConfig.apiVersion}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': request.appConfig.apiKey
-        },
-        body: JSON.stringify({
-          messages: request.conversation.messages,
-          ...request.requestConfig
-        })
-      }
-    );
-    if (response.ok) {
-      const data: OpenAiSuccessResponse = await response.json();
-      return {
-        data,
-        status: '200',
-        error: undefined
-      };
-    } else {
-      return {
-        status: '497',
-        error: {
-          message: response.statusText
-        }
-      };
-    }
+    const chatCompletions: ChatCompletions =
+      await this.#openAiClient.getChatCompletions(
+        request.appConfig.deployment,
+        request.conversation.messages,
+        request.requestConfig
+      );
+
+    return {
+      data: chatCompletions,
+      status: '200',
+      error: undefined
+    };
   }
 }
