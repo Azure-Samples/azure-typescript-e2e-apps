@@ -16,8 +16,5 @@ export const checkRequiredEnvParams = (
   if (!env?.AZURE_OPENAI_DEPLOYMENT) {
     errors.push('AZURE_OPENAI_DEPLOYMENT environment variable not found');
   }
-  if (!env?.AZURE_OPENAI_API_VERSION) {
-    errors.push('AZURE_OPENAI_API_VERSION environment variable not found');
-  }
   return errors;
 };
