@@ -89,8 +89,7 @@ program.description('Start a conversation').action(async (options) => {
   const openAiClient: OpenAIConversationClient = new OpenAIConversationClient(
     process.env.AZURE_OPENAI_ENDPOINT as string,
     process.env.AZURE_OPENAI_API_KEY as string,
-    process.env.AZURE_OPENAI_DEPLOYMENT as string,
-    process.env.AZURE_OPENAI_API_VERSION as string
+    process.env.AZURE_OPENAI_DEPLOYMENT as string
   );
   printd(`CLI OpenAi client created`);
 

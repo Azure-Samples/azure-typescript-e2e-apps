@@ -4,10 +4,11 @@
   "description": "Conversation loop for Azure OpenAI",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run format && npm run lint && npm run build:tsc",
+    "build": "npm run clean && npm run format && npm run lint && npm run build:tsc",
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint src/**/*.ts --fix",
     "build:tsc": "tsc",
+    "clean": "rm -rf dist",
     "prestart": "npm run build",
     "start": "node dist/index.js -d mydata.txt -e .env.development -l debug.log",
     "start:tsnode:debug": "ts-node dist/index.js",
