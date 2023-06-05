@@ -1,6 +1,4 @@
-import sql, { IOptions, config, ConnectionPool } from 'mssql';
-
-const passwordless = 'azure-active-directory-default';
+import sql, { config, ConnectionPool } from 'mssql';
 
 /*
 export interface config {
@@ -70,18 +68,21 @@ export default class Database {
     }
   }
 }
+
 /*
-const server = process.env.AZURE_SQL_SERVER;
-const database = process.env.AZURE_SQL_DATABASE;
-const port = parseInt(process.env.AZURE_SQL_PORT);
-const type = process.env.AZURE_SQL_AUTHENTICATIONTYPE;
+
+// .env
+AZURE_SQL_SERVER=<YOUR_SERVER_NAME>.database.windows.net
+AZURE_SQL_DATABASE=<YOUR_DATABASE_NAME>
+AZURE_SQL_PORT=1433
+AZURE_SQL_AUTHENTICATIONTYPE=azure-active-directory-default
 
 const config = {
-    server,
-    port,
-    database,
+    server:process.env.AZURE_SQL_SERVER,
+    port: process.env.AZURE_SQL_PORT,
+    database: process.env.AZURE_SQL_DATABASE,
     authentication: {
-        type           // passwordless config setting:azure-active-directory-default
+        type: process.env.AZURE_SQL_AUTHENTICATIONTYPE // `azure-active-directory-default`
     },
     options: {
         encrypt: true
@@ -90,4 +91,5 @@ const config = {
 
 const database = new Database(config);
 const result = await database.executeQuery(`select * from mytable where id = 10`)
+
 */
