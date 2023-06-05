@@ -1,8 +1,9 @@
 {
   "name": "@azure-typescript-e2e-apps/lib-mssql",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Azure SQL minimal client for @azure/mssql",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && npm run format && npm run lint && npm run build:tsc",

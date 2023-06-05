@@ -1,24 +1,5 @@
 import sql, { config, ConnectionPool } from 'mssql';
-
-/*
-export interface config {
-    driver?: string | undefined;
-    user?: string | undefined;
-    password?: string | undefined;
-    server: string;
-    port?: number | undefined;
-    domain?: string | undefined;
-    database?: string | undefined;
-    connectionTimeout?: number | undefined;
-    requestTimeout?: number | undefined;
-    stream?: boolean | undefined;
-    parseJSON?: boolean | undefined;
-    options?: IOptions | undefined;
-    pool?: PoolOpts<Connection> | undefined;
-    arrayRowMode?: boolean | undefined;
-    authentication?: tds.ConnectionAuthentication | undefined;
-}
-*/
+export { config, ConnectionPool } from 'mssql';
 
 export default class Database {
   #config: config | string | undefined = undefined;
