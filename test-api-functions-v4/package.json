@@ -1,0 +1,19 @@
+{
+  "name": "test-api-functions-v4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build" : "tsc",
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.17.1"
+  },
+  "dependencies": {
+    "typescript": "^5.1.3"
+  }
+}
