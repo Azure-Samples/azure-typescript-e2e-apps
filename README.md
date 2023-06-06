@@ -27,3 +27,12 @@ A monorepo of apps used with the Azure cloud.
 ## Documentation
 
 * React 18 (Vite) + Azure Functions API v4
+
+## Naming conventions
+
+|Name|Description|
+|--|--|
+|`app-`|Client or full-stack web app.|
+|`api=`|HTTP API.|
+|`lib-`|Library. Included in other projects.|
+|`cli-`|Command-line interface.|
