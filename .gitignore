@@ -398,3 +398,8 @@ FodyWeavers.xsd
 *.sln.iml
 
 **/dist
+
+# Playwright
+**/playwright-logs/
+**/playwright-report
+**/test-results
