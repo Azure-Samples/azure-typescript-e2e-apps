@@ -1,13 +1,14 @@
-import { BlockBlobClient } from '@azure/storage-blob';
 import { DefaultAzureCredential } from '@azure/identity';
 import {
   BlobClient,
   BlobItem,
   BlockBlobClient,
+  BlobUploadCommonResponse,
   ContainerClient,
   BlobSASPermissions,
   BlobServiceClient,
-  SASProtocol, ContainerDeleteIfExistsResponse
+  SASProtocol,
+  ContainerDeleteIfExistsResponse
 } from '@azure/storage-blob';
 import { Response } from './models';
 
@@ -49,6 +50,7 @@ export default class AzureSampleStorageBlobClient {
     }
 
     const blockBlobClient = new BlockBlobClient(
+      // URL includes SAS token
       `${uploadUrlWithFileName}?${sasToken}`
     );
 
@@ -62,10 +64,17 @@ export default class AzureSampleStorageBlobClient {
     };
   }
 
-  uploadBlob(blobClient: BlockBlobClient, blob: any): Promise<BlobUploadCommonResponse> {
+  async uploadBlob(
+    blobClient: BlockBlobClient,
+    blob: any
+  ): Promise<BlobUploadCommonResponse> {
     return await blobClient.uploadData(blob);
   }
-  uploadBrowserBlob(blobClient: BlockBlobClient, blob: any): Promise<BlobUploadCommonResponse> {
+  async uploadBrowserBlob(
+    blobClient: BlockBlobClient,
+    blob: any
+  ): Promise<BlobUploadCommonResponse> {
+    return await blobClient.uploadBrowserData(blob);
   }
 
   /**
