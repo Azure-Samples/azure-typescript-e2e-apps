@@ -4,41 +4,41 @@
 		{
 			"type": "func",
 			"label": "func: host start",
-			"command": "host start",
+			"command": "host start --verbose",
 			"problemMatcher": "$func-node-watch",
 			"isBackground": true,
-			"dependsOn": "npm build (functions)",
-			"options": {
-				"cwd": "${workspaceFolder}/api"
-			}
+			"dependsOn": "npm build (functions)"
 		},
 		{
 			"type": "shell",
 			"label": "npm build (functions)",
 			"command": "npm run build",
-			"dependsOn": "npm install (functions)",
-			"problemMatcher": "$tsc",
-			"options": {
-				"cwd": "${workspaceFolder}/api"
-			}
+			"dependsOn": "npm clean (functions)",
+			"problemMatcher": "$tsc"
 		},
 		{
 			"type": "shell",
 			"label": "npm install (functions)",
-			"command": "npm install",
-			"options": {
-				"cwd": "${workspaceFolder}/api"
-			}
+			"command": "npm install"
 		},
 		{
 			"type": "shell",
 			"label": "npm prune (functions)",
 			"command": "npm prune --production",
 			"dependsOn": "npm build (functions)",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "npm clean (functions)",
+			"command": "npm run clean",
+			"dependsOn": "npm install (functions)"
+		},
+		{
+			"type": "func",
+			"command": "extensions install",
 			"problemMatcher": [],
-			"options": {
-				"cwd": "${workspaceFolder}/api"
-			}
+			"label": "func: extensions install"
 		}
 	]
 }
