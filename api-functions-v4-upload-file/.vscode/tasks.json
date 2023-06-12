@@ -26,6 +26,12 @@
 			"command": "npm prune --production",
 			"dependsOn": "npm build (functions)",
 			"problemMatcher": []
+		},
+		{
+			"type": "func",
+			"command": "extensions install",
+			"problemMatcher": [],
+			"label": "func: extensions install"
 		}
 	]
 }
