@@ -1,6 +1,11 @@
 # Azure Functions V4 app to upload file to Azure Storage
 
-Learn how to use this sample in the [documentation](https://docs.microsoft.com/azure/developer/javascript/how-to/with-web-app/azure-function-file-upload).
+Upload a file to Azure Storage using Azure Functions V4 and the Azure SDK package for Azure Storage.
+
+1. Upload file to HTTP endpoint.
+1. File is saved to Azure Storage. 
+1. Read-only SAS token is generated for the file. 
+1. Read-only URL including SAS token is returned to the client.
 
 ## Prerequisite
 
