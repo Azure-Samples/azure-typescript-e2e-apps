@@ -1,47 +1,46 @@
-# js-e2e-azure-function-upload-file
+# Azure Functions V4 app to upload file to Azure Storage
 
 Learn how to use this sample in the [documentation](https://docs.microsoft.com/azure/developer/javascript/how-to/with-web-app/azure-function-file-upload).
 
+## Prerequisite
+
+You need an Azure Storage account created and ready for Azure Functions.
+
+## Environment variables
+
+The app needs the following environment variables. These should be available in the `local.settings.json` while developing locally. 
+
+```
+"AzureWebJobsStorage": "<STORAGE-CONNECTION-STRING>",
+"FUNCTIONS_WORKER_RUNTIME": "node",
+"AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+"Azure_Storage_AccountName": "<STORAGE-ACCOUNT-NAME>",
+"Azure_Storage_AccountKey":"<STORAGE-ACCOUNT-KEY>"
+```
+
 ## Clone, install and run locally
 
-```bash
-git clone https://github.com/azure-Samples/js-e2e-azure-function-upload-file && \
-cd js-e2e-azure-function-upload-file && npm install \
-npm start
-```
+1. In a new folder, use the following commands to get source code for this project. 
 
-## Clone, install and run in dev container
+    ```bash
+    git init
+    git remote add origin https://github.com/azure-samples/azure-typescript-e2e-apps
+    git config core.sparseCheckout true
+    git sparse-checkout set api-functions-v4-upload-file
+    git pull origin main
+    git sparse-checkout disable
+    ```
 
-```bash
-git clone https://github.com/azure-Samples/js-e2e-azure-function-upload-file && \
-cd js-e2e-azure-function-upload-file && npm install \
-code . \
-```
+2. Install the dependencies.
 
-Once Visual Studio Code, use **Remote - Containers** extension to open the project in a dev container. 
-
-## Deploy to Azure
-
-* Add the Storage connection string as **AzureWebJobsStorage** app setting
+    ```bash
+    npm install
+    ```
 
 ## Call function
 
-The following files have been provided to upload a document:
+Use the following cURL command, provided in [`upload-text-file.sh`](upload-text-file.sh) to automate your file uploads during development.
 
-* upload.sh: `bash upload.sh`
-
-    ```bash
-    curl -X POST \
-    -F 'filename=@test-file.txt' \
-    -H 'Content-Type: text/plain' \
-    'http://localhost:7071/api/upload?filename=test-file.txt&username=jsmith' --verbose
-    ```
-
-* upload-azure.sh: `bash upload-azure.sh` - you need to edit this file before calling it to add your resource name and function key (as the code).
-
-    ```bash
-    curl -X POST \
-    -F 'filename=@test-file.txt' \
-    -H 'Content-Type: text/plain' \
-    'https://YOUR-RESOURCE-NAME.azurewebsites.net/api/upload?code=YOUR-FUNCTION-KEY&filename=test-file.txt&username=jsmith&code=abc' --verbose
-    ```
+```bash
+curl --location 'http://localhost:7071/api/upload' -F "file=@test-file.txt" --form 'name="tom"' --verbose
+```
