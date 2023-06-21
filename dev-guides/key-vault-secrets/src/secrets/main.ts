@@ -3,20 +3,15 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
 import { parseKeyVaultSecretIdentifier } from '@azure/keyvault-secrets';
 import assert from 'node:assert/strict';
 import { getClient } from './get-client.mjs';
-import {
-  createSecret,
-  updateSecretProperties
-} from './set-secret.mjs';
-import {
-  getSecretFromId, getCurrentSecret
-} from './get-secret.mjs';
+import { createSecret, updateSecretProperties } from './set-secret.js';
+import { getSecretFromId, getCurrentSecret } from './get-secret.mjs';
 import { listSecretIds, listSecretNames } from './list-secrets.mjs';
 import { enableSecret, disableSecret } from './enable-secret.mjs';
 import {
   deleteSecretSoftAndWaitUntilDone,
   recoverDeletedSecretAndWaitUntilDone,
   purgeDeletedSecretAndWaitUntilDone,
-  getDeletedSecret,
+  getDeletedSecret
 } from './delete-secret.mjs';
 import { backupSecret, restoreSecret } from './backup-secret.mjs';
 
@@ -28,7 +23,8 @@ const client2 = getClient(process.env.KEY_VAULT_NAME_2);
 if (!client) {
   console.log('client is empty');
 }
-const sleep = (waitTimeInMs) => new Promise((resolve) => setTimeout(resolve, waitTimeInMs));
+const sleep = (waitTimeInMs) =>
+  new Promise((resolve) => setTimeout(resolve, waitTimeInMs));
 // ---------------------------------------------------------------------------
 const secretName = `my-secret-${new Date().getTime()}`;
 const secretValue = secretName;
@@ -37,16 +33,21 @@ const secretProperties = {
     project: 'webPortal',
     secretOwner: 'Jamie Owens',
     secretType: 'Database connection string',
-    projectOwner: 'Central portal team',
+    projectOwner: 'Central portal team'
   },
   contentType: 'Database connection string',
   enabled: false,
   notBefore: undefined, // date
-  expiresOn: undefined, // date
-}
+  expiresOn: undefined // date
+};
 
 // create secret
-const originalSecret = await createSecret(client, secretName, secretValue, secretProperties);
+const originalSecret = await createSecret(
+  client,
+  secretName,
+  secretValue,
+  secretProperties
+);
 console.log(originalSecret);
 
 // const secretVersions = [];
@@ -55,15 +56,13 @@ console.log(originalSecret);
 // // update secret 4 times
 // for (let i = 1; i < secretValues.length; i++) {
 //   // Wait a few seconds
-//   await sleep(1000); // so created at date is different 
+//   await sleep(1000); // so created at date is different
 //   console.log(`update secret ${i}`)
 //   const secret = await updateSecretValue(client, originalSecret.name, secretValues[i]);
 //   secretVersions.push(secret);
 // }
 
-
 // ---------------------------------------------------------------------------
-
 
 // ---------------------------------------------------------------------------
 // Wait a few seconds

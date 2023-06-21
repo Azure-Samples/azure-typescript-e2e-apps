@@ -2,33 +2,49 @@
   "name": "key-vault-secrets",
   "version": "1.0.0",
   "description": "* Getting started\r     * Authentication and client object creation\r * Secrets\r     * Set, update, rotate\r         * Set secret\r         * Set secret with properties (tags, content type, enabled, not before, expires)\r         * Update secret\r         * Update secret properties\r         * Rotate - link to existing tutorials about Fns and rotation\r     * Get\r         * Current version\r         * Get all versions of a secret\r         * Disabled secret - not allowed, must enable first\r     * Enable and disable\r         * Enable secret\r         * Disable secret\r     * Delete\r         * Soft delete\r         * Soft delete with poller wait until done\r         * Recover deleted secret\r         * Purge deleted secret\r         * Purge all deleted secrets\r     * Find\r         * Find current secret version by property (List with filter by property)\r         * Find all secrets/versions by property (List with filter by property)\r         * Find secret by version id\r     * List\r         * List secrets, list with paging\r         * List latst version of secrets, list with paging\r         * List deleted secrets, list with paging\r         * List current secret by tag\r     * Backup\r         * Backup secret\r         * Restore secret",
-  "main": "src/main.mjs",
+  "main": "src/main.ts",
   "scripts": {
     "format": "prettier --write src",
-    "lint": "eslint --fix src/*.mjs",
+    "lint": "eslint --fix src/keys/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:quickstart": "cross-env NODE_ENV=development node quickstart.mjs",
-    "start:main": "cross-env NODE_ENV=development node src/main.mjs",
-    "start:get-disabled": "cross-env NODE_ENV=development node src/create-disabled-secret-disabled.mjs",
-    "start:delete-secret": "cross-env NODE_ENV=development node src/dina-delete-my-secret.mjs",
-    "start:purge-secret": "cross-env NODE_ENV=development node src/dina-purge-my-secret.mjs",
-    "start:backup-secret": "cross-env NODE_ENV=development node src/dina-backup-my-secret.mjs",
-    "start:find0-secret": "cross-env NODE_ENV=development node src/dina-find-my-secret0.mjs > results0.txt",
-    "start:find1-secret": "cross-env NODE_ENV=development node src/dina-find-my-secret1.mjs > results1.txt",
-    "start:find2-secret": "cross-env NODE_ENV=development node src/dina-find-my-secret2.mjs > results2.txt",
-    "start:find3-secret": "cross-env NODE_ENV=development node src/dina-find-my-secret3.mjs > results3.txt",
-    "start:find4-secret": "cross-env NODE_ENV=development node src/dina-find-my-secret4.mjs > results4.txt",
-    "start:find5-secret": "cross-env NODE_ENV=development node src/dina-find-my-secret5.mjs > results5.txt"
+    "start:quickstart": "cross-env NODE_ENV=development node quickstart.ts",
+    "start:main": "cross-env NODE_ENV=development node src/secrets/main.ts",
+    "start:get-disabled": "cross-env NODE_ENV=development node src/secrets/create-disabled-secret-disabled.ts",
+    "start:delete-secret": "cross-env NODE_ENV=development node src/secrets/dina-delete-my-secret.ts",
+    "start:purge-secret": "cross-env NODE_ENV=development node src/secrets/dina-purge-my-secret.ts",
+    "start:backup-secret": "cross-env NODE_ENV=development node src/secrets/dina-backup-my-secret.ts",
+    "start:find0-secret": "cross-env NODE_ENV=development node src/secrets/dina-find-my-secret0.ts > results0.txt",
+    "start:find1-secret": "cross-env NODE_ENV=development node src/secrets/dina-find-my-secret1.ts > results1.txt",
+    "start:find2-secret": "cross-env NODE_ENV=development node src/secrets/dina-find-my-secret2.ts > results2.txt",
+    "start:find3-secret": "cross-env NODE_ENV=development node src/secrets/dina-find-my-secret3.ts > results3.txt",
+    "start:find4-secret": "cross-env NODE_ENV=development node src/secrets/dina-find-my-secret4.ts > results4.txt",
+    "start:find5-secret": "cross-env NODE_ENV=development node src/secrets/dina-find-my-secret5.ts > results5.txt",
+    "build": "npm run format && npm run lint && npm run build:tsc",
+    "build:tsc": "tsc",
+    "start:key:create:1": "cross-env NODE_ENV=development ts-node src/keys/create.ts",
+    "start:key:list:1": "cross-env NODE_ENV=development ts-node src/keys/list.ts",
+    "start:key:get:1": "cross-env NODE_ENV=development ts-node src/keys/get.ts",
+    "start:key:encrypt:1": "cross-env NODE_ENV=development ts-node src/keys/encrypt.ts"
+
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@azure/identity": "^3.1.4",
+    "@azure/keyvault-keys": "^4.7.1",
     "@azure/keyvault-secrets": "^4.7.0",
-    "dotenv": "^16.0.3"
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "@types/node": "^20.3.1",
+    "cross-env": "^7.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
   }
 }

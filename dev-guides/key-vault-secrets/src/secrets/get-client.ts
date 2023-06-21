@@ -2,8 +2,7 @@ import { SecretClient } from '@azure/keyvault-secrets';
 import { DefaultAzureCredential } from '@azure/identity';
 
 export function getClient(keyVaultName) {
-
-  if(!keyVaultName) return;
+  if (!keyVaultName) return;
 
   // Passwordless authentication
   const credential = new DefaultAzureCredential({});
