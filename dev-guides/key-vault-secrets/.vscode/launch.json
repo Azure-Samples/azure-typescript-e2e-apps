@@ -9,7 +9,7 @@
             "request": "launch",
             "runtimeArgs": [
                 "run-script",
-                "start:find4-secret"
+                "start:key:import:1"
             ],
             "runtimeExecutable": "npm",
             "skipFiles": [

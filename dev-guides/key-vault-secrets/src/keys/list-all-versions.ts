@@ -1,21 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
-import { KeyClient, CreateKeyOptions, KeyVaultKey } from '@azure/keyvault-keys';
+import { KeyClient } from '@azure/keyvault-keys';
 import { DefaultAzureCredential } from '@azure/identity';
-
-export async function listKeys(client: KeyClient) {
-  for await (const keyProperties of client.listPropertiesOfKeys()) {
-    console.log(keyProperties.name);
-    for await (const versionProperties of client.listPropertiesOfKeyVersions(
-      keyProperties.name
-    )) {
-      console.log('\tVersion properties: ', versionProperties);
-    }
-  }
-  for await (const deletedKey of client.listDeletedKeys()) {
-    console.log('Deleted: ', deletedKey);
-  }
-}
 
 async function main() {
   const credential = new DefaultAzureCredential();
@@ -26,6 +12,15 @@ async function main() {
   // Get latest version of not-deleted keys
   for await (const keyProperties of client.listPropertiesOfKeys()) {
     console.log(keyProperties.name);
+
+    // Get all versions of key
+    for await (const versionProperties of client.listPropertiesOfKeyVersions(
+      keyProperties.name
+    )) {
+      console.log(
+        `\tversion: ${versionProperties.version} created on ${versionProperties.createdOn}`
+      );
+    }
   }
 }
 

@@ -1,25 +1,28 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
-import { KeyClient } from '@azure/keyvault-keys';
+
+// Azure client libraries
 import { DefaultAzureCredential } from '@azure/identity';
+import { KeyClient } from '@azure/keyvault-keys';
 
 async function main() {
+  // Authenticate to Azure Key Vault
   const credential = new DefaultAzureCredential();
   const client = new KeyClient(
     `https://${process.env.AZURE_KEYVAULT_NAME}.vault.azure.net`,
     credential
   );
 
-  const name = `myRsaKey-1687440362047`;
+  const keyName = `MyKey`;
 
-  const latestKey = await client.getKey(name);
-  console.log(`${latestKey.name} version is ${latestKey.properties.version}`);
+  // Get key
+  let key = await client.getKey(keyName);
+  console.log(key);
 
-  const keyPreviousVersionId = '2f2ec6d43db64d66ad8ffa12489acc8b';
-  const keyByVersion = await client.getKey(name, {
-    version: keyPreviousVersionId
-  });
-  console.log(`Previous key version is ${keyByVersion.properties.version}`);
+  if (key?.name) {
+    key = await client.rotateKey(key.name);
+    console.log(key);
+  }
 }
 
 main()

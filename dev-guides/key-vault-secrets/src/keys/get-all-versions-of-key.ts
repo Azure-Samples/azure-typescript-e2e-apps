@@ -12,14 +12,15 @@ async function main() {
 
   const name = `myRsaKey-1687440362047`;
 
-  const latestKey = await client.getKey(name);
-  console.log(`${latestKey.name} version is ${latestKey.properties.version}`);
+  for await (const keyProperties of client.listPropertiesOfKeyVersions(name)) {
+    const thisVersion = keyProperties.version;
 
-  const keyPreviousVersionId = '2f2ec6d43db64d66ad8ffa12489acc8b';
-  const keyByVersion = await client.getKey(name, {
-    version: keyPreviousVersionId
-  });
-  console.log(`Previous key version is ${keyByVersion.properties.version}`);
+    const { key } = await client.getKey(name, {
+      version: thisVersion
+    });
+
+    // do something with key
+  }
 }
 
 main()

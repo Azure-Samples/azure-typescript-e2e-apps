@@ -60,3 +60,8 @@
     * Backup
         * Backup secret
         * Restore secret
+
+# Create JWK
+
+* [JWT](https://jwt.io/introduction/)
+* [Create JWK](https://mkjwk.org/)

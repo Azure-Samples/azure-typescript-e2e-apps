@@ -81,6 +81,8 @@ async function main() {
 
     // TBD: when I rotate a key, I want the expiration to extend for a year
     // but expiration isn't set after rotation.
+    // rotate === update === new version
+    // I'm responsible for the new key
     const rotatedKey1: KeyVaultKey = await client.rotateKey(key.name);
     console.log(rotatedKey1);
 
@@ -117,6 +119,7 @@ async function main() {
     // TBD: when I try to import a key (used an existing key because I thought
     // it would be well-formed), I get an error
     // EC key is not valid - cannot instantiate crypto service
+    // TBD: Timo
     const importKeyResult = await client.importKey(
       `ImportedKey-${timestamp}`,
       innerKey

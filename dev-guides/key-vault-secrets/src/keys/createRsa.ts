@@ -23,7 +23,7 @@ async function main() {
   const client = new KeyClient(url, credential);
 
   const timestamp: string = Date.now().toString();
-  const name = `encrypt-decrypt-dina-${timestamp}`;
+  const name = `myRsaKey-${timestamp}`;
   const originalInfo = `Hear we go again`;
 
   type MyRsaEncryptionConfiguration = {
@@ -70,17 +70,7 @@ async function main() {
   console.log(key);
 
   if (key && key.id && key.key) {
-    const encryptClient = new CryptographyClient(key, credential);
-
-    const encryptResult = await encryptClient.encrypt(encryptParams);
-
-    const encryptResult2 = await encryptClient.encrypt(encryptParams);
-
-    const decryptResult = await encryptClient.decrypt({
-      algorithm: KnownEncryptionAlgorithms.RSAOaep,
-      ciphertext: encryptResult.result
-    });
-    console.log(decryptResult.result.toString());
+    console.log(`key name: ${key.name}`);
     return;
   }
 }
