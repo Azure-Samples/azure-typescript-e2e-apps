@@ -39,7 +39,8 @@
     "start:key:sign:1": "cross-env NODE_ENV=development ts-node src/keys/sign-and-verify.ts",
     "start:key:sign:2": "cross-env NODE_ENV=development ts-node src/keys/sign-and-verify-small.ts",
     "start:key:backup:1": "cross-env NODE_ENV=development ts-node src/keys/backup-restore.ts",
-    "start:vault:settings:1": "cross-env NODE_ENV=development ts-node src/keys/get-key-vault-settings.ts"
+    "start:vault:settings:1": "cross-env NODE_ENV=development ts-node src/keys/get-key-vault-settings.ts",
+    "start:vault:delete:1": "cross-env NODE_ENV=development ts-node src/keys/create-delete-key.ts"
   },
   "keywords": [],
   "author": "",
