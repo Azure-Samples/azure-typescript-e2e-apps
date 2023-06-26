@@ -1,0 +1,27 @@
+{
+    "name": "my-secret-1684172405295",
+    "properties": {
+        "createdOn": "2023-05-15T17:40:07.000Z",
+        "updatedOn": "2023-05-15T17:40:07.000Z",
+        "enabled": false,
+        "recoverableDays": 90,
+        "recoveryLevel": "Recoverable+Purgeable",
+        "id": "https://diberry-keyvault.vault.azure.net/secrets/my-secret-1684172405295/d9f8b3446992405da61dbeb9e4b86550",
+        "contentType": "Database connection string",
+        "tags": {
+            "project": "webPortal",
+            "secretOwner": "Jamie Owens",
+            "secretType": "Database connection string",
+            "projectOwner": "Central portal team"
+        },
+        "vaultUrl": "https://diberry-keyvault.vault.azure.net",
+        "version": "d9f8b3446992405da61dbeb9e4b86550",
+        "name": "my-secret-1684172405295",
+        "recoveryId": "https://diberry-keyvault.vault.azure.net/deletedsecrets/my-secret-1684172405295",
+        "scheduledPurgeDate": "2023-08-13T17:40:07.000Z",
+        "deletedOn": "2023-05-15T17:40:07.000Z"
+    },
+    "recoveryId": "https://diberry-keyvault.vault.azure.net/deletedsecrets/my-secret-1684172405295",
+    "scheduledPurgeDate": "2023-08-13T17:40:07.000Z",
+    "deletedOn": "2023-05-15T17:40:07.000Z"
+}
