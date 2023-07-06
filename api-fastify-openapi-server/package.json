@@ -1,0 +1,23 @@
+{
+  "name": "api-fastify-openapi-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "fastify start -l info index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dev": {},
+  "dependencies": {
+    "@fastify/autoload": "^5.7.1",
+    "@fastify/cors": "^8.2.1",
+    "@fastify/sensible": "^5.2.0",
+    "@fastify/swagger": "^8.3.1",
+    "@fastify/swagger-ui": "^1.8.1",
+    "fastify": "^4.17.0",
+    "fastify-cli": "^5.7.1",
+    "fastify-plugin": "^4.5.0"
+  }
+}
