@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# typescript build directory
+*/**/dist
+*/**/build
+
+# azurite
+*/**/*azurite**
