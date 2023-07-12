@@ -93,6 +93,7 @@ obj
 appsettings.json
 *.settings.json
 local.settings.json
+local*
 
 # Azurite Storage emulator
 azure/
