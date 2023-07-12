@@ -21,13 +21,12 @@ export async function getGenerateSasToken(
       };
     }
 
-
     context.log(`Http function processed request for url "${request.url}"`);
 
     const container = request.query.get('container') || 'anonymous';
 
     const body = await request.json();
-    /*
+
     if (!body)
       return {
         status: 404,
@@ -47,37 +46,37 @@ export async function getGenerateSasToken(
 
     const sasTokenUrls = [];
     const errors = [];
+    const sasTokenPromises = [];
 
-    for (const name of fileNames) {
-      const sasTokenUrl = await generateSASUrl(
-        process.env?.Azure_Storage_AccountName as string,
-        process.env?.Azure_Storage_AccountKey as string,
-        container,
-        name,
-        permissions
-      );
-      if (sasTokenUrl) {
-        sasTokenUrls.push({ fileName: name, sasTokenUrl: sasTokenUrl });
-      } else {
-        errors.push(name);
-      }
-    }
-
-    return {
-      jsonBody: {
-        tokenUrls: sasTokenUrls,
-        errors: errors,
-        storageAccountName: process.env.Azure_Storage_AccountName,
-        containername: container
-      }
-    };
-    */
-
+    /*
+        for (const name of fileNames) {
+          const sasTokenUrl = await generateSASUrl(
+            process.env?.Azure_Storage_AccountName as string,
+            process.env?.Azure_Storage_AccountKey as string,
+            container,
+            name,
+            permissions
+          );
+          if (sasTokenUrl) {
+            sasTokenUrls.push({ fileName: name, sasTokenUrl: sasTokenUrl });
+          } else {
+            errors.push(name);
+          }
+        }
     
+        return {
+          jsonBody: {
+            tokenUrls: sasTokenUrls,
+            errors: errors,
+            storageAccountName: process.env.Azure_Storage_AccountName,
+            containername: container
+          }
+        };
+        */
+
     return {
       jsonBody: { status: 'ok' }
     };
-    
   } catch (error) {
     console.log(JSON.stringify(error));
 

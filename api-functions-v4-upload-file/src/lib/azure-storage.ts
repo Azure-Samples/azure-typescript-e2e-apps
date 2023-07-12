@@ -53,6 +53,34 @@ export async function uploadBlob(
   return response.errorCode;
 }
 
+export const getSasUrls = async (
+  files: string[],
+  containerName = 'Anonymous',
+  permissions = 'r'
+) => {
+  if (!files || files.length) return { error: 'files is empty' };
+
+  const returnStatus = {
+    results: [],
+    errors: []
+  };
+
+  for (const fileName of files) {
+    const sasTokenUrl = await generateSASUrl(
+      process.env?.Azure_Storage_AccountName as string,
+      process.env?.Azure_Storage_AccountKey as string,
+      containerName,
+      fileName,
+      permissions
+    );
+    if (sasTokenUrl && sasTokenUrl.length > 0) {
+      returnStatus.results.push({ fileName: name, sasTokenUrl: sasTokenUrl });
+    } else {
+      returnStatus.errors.push({ fileName: name });
+    }
+  }
+};
+
 export const generateSASUrl = async (
   serviceName: string,
   serviceKey: string,
