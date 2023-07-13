@@ -68,7 +68,7 @@ export async function postUploadAnyFile(
     };
     */
     return {
-      jsonBody: { status: 'ok' }
+      jsonBody: { status: 'upload ok' }
     };
   } catch (error) {
     return {

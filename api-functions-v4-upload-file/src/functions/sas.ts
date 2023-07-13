@@ -4,12 +4,15 @@ import {
   InvocationContext,
   app
 } from '@azure/functions';
-import { generateSASUrl } from '../lib/azure-storage.js';
+import { getSasUrls } from '../lib/azure-storage.js';
 
 export async function getGenerateSasToken(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
+
+  context.log(`Http function processed request for url "${request.url}"`);
+
   try {
     if (
       !process.env?.Azure_Storage_AccountName ||
@@ -21,15 +24,13 @@ export async function getGenerateSasToken(
       };
     }
 
-    context.log(`Http function processed request for url "${request.url}"`);
-
     const container = request.query.get('container') || 'anonymous';
 
     const body = await request.json();
 
     if (!body)
       return {
-        status: 404,
+        status: 406,
         jsonBody: {
           error: 'Missing POST body'
         }
@@ -37,48 +38,25 @@ export async function getGenerateSasToken(
     const fileNames: string[] = body['files'] as string[];
     if (!fileNames || fileNames.length === 0)
       return {
-        status: 404,
+        status: 407,
         jsonBody: {
           error: 'Missing POST body `files` containing file names'
         }
       };
     const permissions = request.query.get('permission') || 'r';
 
-    const sasTokenUrls = [];
-    const errors = [];
-    const sasTokenPromises = [];
-
-    /*
-        for (const name of fileNames) {
-          const sasTokenUrl = await generateSASUrl(
-            process.env?.Azure_Storage_AccountName as string,
-            process.env?.Azure_Storage_AccountKey as string,
-            container,
-            name,
-            permissions
-          );
-          if (sasTokenUrl) {
-            sasTokenUrls.push({ fileName: name, sasTokenUrl: sasTokenUrl });
-          } else {
-            errors.push(name);
-          }
-        }
-    
-        return {
-          jsonBody: {
-            tokenUrls: sasTokenUrls,
-            errors: errors,
-            storageAccountName: process.env.Azure_Storage_AccountName,
-            containername: container
-          }
-        };
-        */
+    const sasUrlsResponse = await getSasUrls(fileNames, container, permissions);
 
     return {
-      jsonBody: { status: 'ok' }
+      jsonBody: {
+        sasUrlsResponse,
+        storageAccountName: process.env.Azure_Storage_AccountName,
+        containername: container
+      }
     };
+
   } catch (error) {
-    console.log(JSON.stringify(error));
+    console.log(error);
 
     return {
       status: 500,

@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import ErrorBoundary from './components/error-boundary';
 
 import sasTokenService, {sasTokenObjectResponse} from './services/sas-token';
-import uploadService, { uploadObjectResponse } from './services/file-upload';
+//import uploadService, { uploadObjectResponse } from './services/file-upload';
 
 const darkTheme = createTheme({
   palette: {
@@ -84,17 +84,19 @@ function App() {
 
       for (const sasUrl of sasUrls) {
 
-        // 2. Upload each file using the SAS token URL 
-        uploadService.upload(sasUrl, selectedFiles[sasUrl]).then((response: uploadObjectResponse) => {
-          if(response.error){
+        console.log(sasUrl);
 
-            // @ts-ignore
-            setErrors([...errors, response.error])
-          }
-        }).catch((error: unknown) => {
-          // @ts-ignore
-          setErrors([...errors, error])
-        });
+        // 2. Upload each file using the SAS token URL 
+        // uploadService.upload(sasUrl, selectedFiles[sasUrl]).then((response: uploadObjectResponse) => {
+        //   if(response.error){
+
+        //     // @ts-ignore
+        //     setErrors([...errors, response.error])
+        //   }
+        // }).catch((error: unknown) => {
+        //   // @ts-ignore
+        //   setErrors([...errors, error])
+        // });
       }
     }).catch((error: unknown) => {
       // @ts-ignore
