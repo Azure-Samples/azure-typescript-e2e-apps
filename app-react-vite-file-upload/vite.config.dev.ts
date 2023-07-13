@@ -17,7 +17,7 @@ export default defineConfig({
     proxy: {
       // Add your proxy configurations here
       '/api': {
-        target: 'http://localhost:7071'
+        target: 'http://127.0.0.1:7071'
       },
     },
   },
