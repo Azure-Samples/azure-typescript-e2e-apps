@@ -37,14 +37,67 @@ export async function uploadBlob(
   containerName: string,
   blob: Buffer
 ): Promise<string> {
+  if (!serviceName || !serviceKey || !fileName || !containerName || !blob) {
+    return 'Upload function missing parameters';
+  }
+
+  const blobServiceClient = getBlobServiceClient(serviceName, serviceKey);
+
+  const containerClient = await createContainer(
+    containerName,
+    blobServiceClient
+  );
+  const blockBlobClient = await containerClient.getBlockBlobClient(fileName);
+  const response = await blockBlobClient.uploadData(blob);
+
+  return response.errorCode;
+}
+
+export const getSasUrls = async (
+  files: string[],
+  containerName = 'Anonymous',
+  permissions = 'r'
+) => {
+  if (!files || files.length) return { error: 'files is empty' };
+
+  const returnStatus = {
+    results: [],
+    errors: []
+  };
+
+  for (const fileName of files) {
+    const sasTokenUrl = await generateSASUrl(
+      process.env?.Azure_Storage_AccountName as string,
+      process.env?.Azure_Storage_AccountKey as string,
+      containerName,
+      fileName,
+      permissions
+    );
+    if (sasTokenUrl && sasTokenUrl.length > 0) {
+      returnStatus.results.push({ fileName: name, sasTokenUrl: sasTokenUrl });
+    } else {
+      returnStatus.errors.push({ fileName: name });
+    }
+  }
+};
+
+export const generateSASUrl = async (
+  serviceName: string,
+  serviceKey: string,
+  containerName: string,
+  fileName: string, // hierarchy of folders and file name: 'folder1/folder2/filename.ext'
+  permissions = 'r'
+): Promise<string> => {
+  if (!serviceName || !serviceKey || !fileName || !containerName) {
+    return 'Generate SAS function missing parameters';
+  }
+
   const blobServiceClient = getBlobServiceClient(serviceName, serviceKey);
   const containerClient = await createContainer(
     containerName,
     blobServiceClient
   );
   const blockBlobClient = await containerClient.getBlockBlobClient(fileName);
-
-  await blockBlobClient.uploadData(blob);
 
   // Best practice: create time limits
   const SIXTY_MINUTES = 60 * 60 * 1000;
@@ -54,9 +107,9 @@ export async function uploadBlob(
   const accountSasTokenUrl = await blockBlobClient.generateSasUrl({
     startsOn: NOW,
     expiresOn: new Date(new Date().valueOf() + SIXTY_MINUTES),
-    permissions: BlobSASPermissions.parse('r'), // Read only permission to the blob
+    permissions: BlobSASPermissions.parse(permissions), // Read only permission to the blob
     protocol: SASProtocol.Https // Only allow HTTPS access to the blob
   });
 
   return accountSasTokenUrl;
-}
+};
