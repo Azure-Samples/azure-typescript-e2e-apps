@@ -58,7 +58,7 @@ export const getSasUrls = async (
   containerName = 'Anonymous',
   permissions = 'r'
 ) => {
-  if (!files || files.length) return { error: 'files is empty' };
+  if (!files || files.length === 0) return { error: 'files is empty' };
 
   const returnStatus = {
     results: [],
@@ -74,11 +74,12 @@ export const getSasUrls = async (
       permissions
     );
     if (sasTokenUrl && sasTokenUrl.length > 0) {
-      returnStatus.results.push({ fileName: name, sasTokenUrl: sasTokenUrl });
+      returnStatus.results.push({ fileName, sasTokenUrl: sasTokenUrl });
     } else {
-      returnStatus.errors.push({ fileName: name });
+      returnStatus.errors.push({ fileName });
     }
   }
+  return returnStatus;
 };
 
 export const generateSASUrl = async (

@@ -10,7 +10,6 @@ export async function getGenerateSasToken(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-
   context.log(`Http function processed request for url "${request.url}"`);
 
   try {
@@ -46,6 +45,7 @@ export async function getGenerateSasToken(
     const permissions = request.query.get('permission') || 'r';
 
     const sasUrlsResponse = await getSasUrls(fileNames, container, permissions);
+    //const sasUrlsResponse = {};
 
     return {
       jsonBody: {
@@ -54,7 +54,6 @@ export async function getGenerateSasToken(
         containername: container
       }
     };
-
   } catch (error) {
     console.log(error);
 
