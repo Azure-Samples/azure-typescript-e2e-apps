@@ -4,7 +4,7 @@ import {
   InvocationContext,
   app
 } from '@azure/functions';
-import { getSasUrls } from '../lib/azure-storage.js';
+import { generateSASUrl } from '../lib/azure-storage.js';
 
 export async function getGenerateSasToken(
   request: HttpRequest,
@@ -23,35 +23,37 @@ export async function getGenerateSasToken(
       };
     }
 
-    const container = request.query.get('container') || 'anonymous';
+    const containerName = request.query.get('container') || 'anonymous';
+    const fileName = request.query.get('file') || 'nonamefile';
+    const permissions = request.query.get('permission') || 'w';
+    const timerange = parseInt(request.query.get('timerange') || '10'); // 10 minutes
 
-    const body = await request.json();
+    context.log(`containerName: ${containerName}`);
+    context.log(`fileName: ${fileName}`);
+    context.log(`permissions: ${permissions}`);
+    context.log(`timerange: ${timerange}`);
 
-    if (!body)
-      return {
-        status: 406,
-        jsonBody: {
-          error: 'Missing POST body'
-        }
-      };
-    const fileNames: string[] = body['files'] as string[];
-    if (!fileNames || fileNames.length === 0)
-      return {
-        status: 407,
-        jsonBody: {
-          error: 'Missing POST body `files` containing file names'
-        }
-      };
-    const permissions = request.query.get('permission') || 'r';
+    await generateSASUrl(
+      process.env?.Azure_Storage_AccountName as string,
+      process.env?.Azure_Storage_AccountKey as string,
+      containerName,
+      fileName,
+      permissions,
+      timerange
+    );
 
-    const sasUrlsResponse = await getSasUrls(fileNames, container, permissions);
+    const url = await generateSASUrl(
+      process.env?.Azure_Storage_AccountName,
+      process.env?.Azure_Storage_AccountKey,
+      containerName,
+      fileName,
+      permissions
+    );
     //const sasUrlsResponse = {};
 
     return {
       jsonBody: {
-        sasUrlsResponse,
-        storageAccountName: process.env.Azure_Storage_AccountName,
-        containername: container
+        url
       }
     };
   } catch (error) {
@@ -65,7 +67,7 @@ export async function getGenerateSasToken(
 }
 
 app.http('sas', {
-  methods: ['POST'],
+  methods: ['POST', 'GET'],
   authLevel: 'anonymous',
   handler: getGenerateSasToken
 });

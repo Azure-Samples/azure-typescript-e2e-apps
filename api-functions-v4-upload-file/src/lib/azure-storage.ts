@@ -53,41 +53,13 @@ export async function uploadBlob(
   return response.errorCode;
 }
 
-export const getSasUrls = async (
-  files: string[],
-  containerName = 'Anonymous',
-  permissions = 'r'
-) => {
-  if (!files || files.length === 0) return { error: 'files is empty' };
-
-  const returnStatus = {
-    results: [],
-    errors: []
-  };
-
-  for (const fileName of files) {
-    const sasTokenUrl = await generateSASUrl(
-      process.env?.Azure_Storage_AccountName as string,
-      process.env?.Azure_Storage_AccountKey as string,
-      containerName,
-      fileName,
-      permissions
-    );
-    if (sasTokenUrl && sasTokenUrl.length > 0) {
-      returnStatus.results.push({ fileName, sasTokenUrl: sasTokenUrl });
-    } else {
-      returnStatus.errors.push({ fileName });
-    }
-  }
-  return returnStatus;
-};
-
 export const generateSASUrl = async (
   serviceName: string,
   serviceKey: string,
   containerName: string,
   fileName: string, // hierarchy of folders and file name: 'folder1/folder2/filename.ext'
-  permissions = 'r'
+  permissions = 'r', // default read only
+  timerange = 1 // default 1 minute
 ): Promise<string> => {
   if (!serviceName || !serviceKey || !fileName || !containerName) {
     return 'Generate SAS function missing parameters';
@@ -101,7 +73,7 @@ export const generateSASUrl = async (
   const blockBlobClient = await containerClient.getBlockBlobClient(fileName);
 
   // Best practice: create time limits
-  const SIXTY_MINUTES = 60 * 60 * 1000;
+  const SIXTY_MINUTES = timerange * 60 * 1000;
   const NOW = new Date();
 
   // Create SAS URL

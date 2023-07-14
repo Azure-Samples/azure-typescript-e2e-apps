@@ -5,9 +5,8 @@
   "scripts": {
     "setup:core-tools": "npm i -g azure-functions-core-tools@4 --unsafe-perm true",
     "start-azurite": "azurite --silent --location azure --debug azure/debug.log",
-    "watch": "tsc -w",
-    "start:dev": "func start --verbose",
-    "start": "npm run clean && npm run build:tsc && func start --verbose",
+    "prestart": "npm run build",
+    "start": "func start --verbose",
     "test": "echo \"No tests yet...\"",
     "build": "npm run clean && npm run format && npm run lint && npm run build:tsc",
     "format": "prettier --write src/**/*.ts",
