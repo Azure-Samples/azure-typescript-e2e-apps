@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useState, ChangeEvent } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -5,20 +7,27 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-
+import { BlockBlobClient } from '@azure/storage-blob';
 import ErrorBoundary from './components/error-boundary';
 
-import sasTokenService, {sasTokenObjectResponse} from './services/sas-token';
-//import uploadService, { uploadObjectResponse } from './services/file-upload';
+import axios from 'axios';
 
+const request = axios.create({
+  baseURL: '',
+  headers: {
+    'Content-type': 'application/json'
+  }
+});
+
+import sasTokenService from './services/sas-token';
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
-  },
+    mode: 'dark'
+  }
 });
 
 // type SasTokenUrlInfoResponse = {
-//   fileName:string, 
+//   fileName:string,
 //   sasTokenUrl: string
 // }
 
@@ -29,127 +38,133 @@ const darkTheme = createTheme({
 
 type SelectedFilesType = {
   [key: string]: File;
-}
+};
 
 function App() {
+  const [text, setText] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<SelectedFilesType>({});
+  const [selectedFileArrayBuffer, setSelectedFileArrayBuffer] = useState<
+    ArrayBuffer | undefined
+  >(undefined);
+  const [sasTokenUrl, setSasTokenUrl] = useState<string>('');
 
-  const [selectedFiles, setSelectedFiles] = useState<SelectedFilesType>({});
-  const [errors, setErrors] = useState<any[]|unknown>([])
+  const handleFileSelection = (event) => {
+    setSelectedFile(event?.target?.files[0]);
+    setStatus('File selected');
+  };
 
-  function getFileNames(): string[] {
-    const fileNames: string[] = Object.keys(selectedFiles);
-    console.log(fileNames)
-    return (fileNames && fileNames.length > 0) ? fileNames : [];
-  }
+  const handleFileRead = () => {
+    if (selectedFile && selectedFile.name) {
+      const reader = new FileReader();
 
+      reader.onload = () => {
+        const arrayBuffer = reader.result;
+        setStatus('File read');
+        setSelectedFileArrayBuffer(arrayBuffer as ArrayBuffer);
 
-  function handleFileInputChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = event.target.files;
-    const fileObject: SelectedFilesType = {};
+        // convert to text to see what was there
+        const text = new TextDecoder('utf-8').decode(
+          arrayBuffer as ArrayBuffer
+        );
+        setText(text);
 
-    // store files in object by name
-    if (files && files.length) {
-
-      Array.from(files).map((file: File) => {
-        const key = file.name;
-
-        fileObject[key] = file;
-      });
-      setSelectedFiles(fileObject);
+        // Use the array buffer (e.g., perform further processing or send to server)
+        console.log(text);
+      };
+      reader.readAsArrayBuffer(selectedFile);
     }
-  }
+  };
 
-  function handleUploadFiles() {
+  const handleFileSasToken = () => {
 
-    // clear previous errors
-    setErrors([]);
+    // timestamp
+    const timestamp = new Date().getTime();
+    const containerName = `upload-${timestamp}`;
+    const permission = 'w'; //write
+    const timerange = 5; //minutes
 
-    // 1. Get SAS token for each file from API
-    const fileNames: string[] = getFileNames();
-    console.log(`fileNames: ${JSON.stringify(fileNames)}`)
-
-    if (!fileNames || fileNames.length === 0) return;
-
-    sasTokenService.getSasTokens(fileNames).then((sasObjects: sasTokenObjectResponse) => {
-
-      if(sasObjects.error){
-        setErrors(sasObjects.error);
-        return;
+    request.post(`http://localhost:7071/api/sas?file=${encodeURIComponent(selectedFile.name)}&permission=${permission}&container=${containerName}&timerange=${timerange}`, {
+      headers: {
+        'Content-Type': 'application/json'
       }
-      
-      if(!sasObjects.sasUrls || sasObjects.sasUrls.length===0) return;
-      console.log(`sasObjects: ${JSON.stringify(sasObjects)}`)
+    }).then((result:any) => {
+        setSasTokenUrl(result?.data?.url);
+        setStatus(`Sas url received ${result?.data?.url}`);
+      })
+      .catch((error) => {
+        setStatus(`Error getting sas token: ${error.message}`);
+      });
+  };
 
-      const sasUrls = sasObjects?.sasUrls;
-
-      for (const sasUrl of sasUrls) {
-
-        console.log(sasUrl);
-
-        // 2. Upload each file using the SAS token URL 
-        // uploadService.upload(sasUrl, selectedFiles[sasUrl]).then((response: uploadObjectResponse) => {
-        //   if(response.error){
-
-        //     // @ts-ignore
-        //     setErrors([...errors, response.error])
-        //   }
-        // }).catch((error: unknown) => {
-        //   // @ts-ignore
-        //   setErrors([...errors, error])
-        // });
-      }
-    }).catch((error: unknown) => {
-      // @ts-ignore
-      setErrors([...errors, error])
-    });
-  }
+  const handleFileUpload = () => {
+    const blockBlobClient = new BlockBlobClient(sasTokenUrl);
+    blockBlobClient
+      .uploadData(selectedFileArrayBuffer)
+      .then(() => {
+        setStatus('File finished uploading');
+      })
+      .catch((error) => {
+        setStatus(`File finished uploading with error : ${error.message}`);
+      });
+  };
 
   return (
     <>
       <ThemeProvider theme={darkTheme}>
         <ErrorBoundary>
           <CssBaseline />
-          <Box sx={{
-            fontSize: 30,
-            alignItems: 'center',
-            margin: ' 5em 5em 3em 10em',
-            border: '1px solid #ccc',
-            height: '400px',
-          }}>
-            <Box>
-              <TextField
-                name="upload-photo"
-                type="file"
-                inputProps={{
-                  multiple: true
-                }}
-                onChange={handleFileInputChange}
-              />
-              {selectedFiles && Object.keys(selectedFiles).length > 0 &&
-                <>
-                  <Box sx={{
-                    border: '1px solid #ccc',
-                    padding: '10px',
-                    margin: '10px 0'
-                  }}>
-                    {selectedFiles && getFileNames().map((name, index: number) => (
-                      <Typography key={index}>{name}</Typography>
-                    ))}
-                  </Box>
-                  <Button variant="contained" type="button" onClick={handleUploadFiles}>
-                    Upload files to Azure
-                  </Button>
-                </>
-              }
-            </Box>
+
+          <Box
+            sx={{
+              fontSize: 30,
+              alignItems: 'center',
+              margin: ' 5em 5em 3em 10em',
+              border: '1px solid #ccc',
+              height: '400px'
+            }}
+          >
+            <TextField
+              name="upload-photo"
+              type="file"
+              onChange={handleFileSelection}
+            />
+            <hr></hr>
+            {selectedFile.name && (
+              <Button
+                variant="contained"
+                component="label"
+                onClick={handleFileRead}
+              >
+                Read {selectedFile.name}
+              </Button>
+            )}
+            {selectedFileArrayBuffer && (
+              <Button
+                variant="contained"
+                component="label"
+                onClick={handleFileSasToken}
+              >
+                Get sas token for {selectedFile.name}
+              </Button>
+            )}
+            {sasTokenUrl && (
+              <Button
+                variant="contained"
+                component="label"
+                onClick={handleFileUpload}
+              >
+                Upload {selectedFile.name}
+              </Button>
+            )}
+            {status}
+            <br></br>
+            Text: {text}
           </Box>
-          {JSON.stringify(errors)}
-          {JSON.stringify(selectedFiles)}
         </ErrorBoundary>
       </ThemeProvider>
     </>
   );
 }
-
 
 export default App;

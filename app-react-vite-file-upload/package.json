@@ -4,12 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --config vite.config.dev.ts",
+    "dev": "npm run build && vite --config vite.config.dev.ts",
     "start": "vite",
-    "build": "tsc && vite build",
+    "prestart": "npm run build",
+    "build": "npm run clean && tsc && vite build",
+    "compile": "tsc",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "@azure/storage-blob": "^12.14.0",
@@ -18,7 +21,8 @@
     "@mui/material": "^5.13.7",
     "axios": "^1.4.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "rimraf": "^5.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
