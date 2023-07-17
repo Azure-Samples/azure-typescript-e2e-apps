@@ -37,6 +37,34 @@ export async function uploadBlob(
   containerName: string,
   blob: Buffer
 ): Promise<string> {
+  if (!serviceName || !serviceKey || !fileName || !containerName || !blob) {
+    return 'Upload function missing parameters';
+  }
+
+  const blobServiceClient = getBlobServiceClient(serviceName, serviceKey);
+
+  const containerClient = await createContainer(
+    containerName,
+    blobServiceClient
+  );
+  const blockBlobClient = await containerClient.getBlockBlobClient(fileName);
+  const response = await blockBlobClient.uploadData(blob);
+
+  return response.errorCode;
+}
+
+export const generateSASUrl = async (
+  serviceName: string,
+  serviceKey: string,
+  containerName: string,
+  fileName: string, // hierarchy of folders and file name: 'folder1/folder2/filename.ext'
+  permissions = 'r', // default read only
+  timerange = 1 // default 1 minute
+): Promise<string> => {
+  if (!serviceName || !serviceKey || !fileName || !containerName) {
+    return 'Generate SAS function missing parameters';
+  }
+
   const blobServiceClient = getBlobServiceClient(serviceName, serviceKey);
   const containerClient = await createContainer(
     containerName,
@@ -44,19 +72,17 @@ export async function uploadBlob(
   );
   const blockBlobClient = await containerClient.getBlockBlobClient(fileName);
 
-  await blockBlobClient.uploadData(blob);
-
   // Best practice: create time limits
-  const SIXTY_MINUTES = 60 * 60 * 1000;
+  const SIXTY_MINUTES = timerange * 60 * 1000;
   const NOW = new Date();
 
   // Create SAS URL
   const accountSasTokenUrl = await blockBlobClient.generateSasUrl({
     startsOn: NOW,
     expiresOn: new Date(new Date().valueOf() + SIXTY_MINUTES),
-    permissions: BlobSASPermissions.parse('r'), // Read only permission to the blob
+    permissions: BlobSASPermissions.parse(permissions), // Read only permission to the blob
     protocol: SASProtocol.Https // Only allow HTTPS access to the blob
   });
 
   return accountSasTokenUrl;
-}
+};
