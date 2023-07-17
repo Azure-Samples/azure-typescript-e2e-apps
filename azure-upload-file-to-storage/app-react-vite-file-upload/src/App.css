@@ -1,0 +1,39 @@
+/* debug red border outline */
+
+/*
+* {
+    border: 1px solid red;
+}
+*/
+
+.container {
+    margin: 1em;
+    padding: 1em;
+}
+
+button {
+    border: 1px solid blue;
+    border-radius: 5%;
+    background-color: lightblue;
+}
+.select-file input {
+
+    border-radius: 5%;
+}
+input::-webkit-file-upload-button {
+    background-color: transparent;
+  }
+
+/* Make the status box auto-size */
+.get-sas-token .status {
+
+    display: flex;
+    flex-direction: column;
+
+}
+.get-sas-token .status .text{
+
+    flex-grow: 1;
+    background-color: pink;
+   
+}

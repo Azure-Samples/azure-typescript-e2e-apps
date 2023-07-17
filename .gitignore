@@ -404,5 +404,5 @@ FodyWeavers.xsd
 **/playwright-report
 **/test-results
 
-# MacOS
 .DS_Store
+**/.DS_Store
