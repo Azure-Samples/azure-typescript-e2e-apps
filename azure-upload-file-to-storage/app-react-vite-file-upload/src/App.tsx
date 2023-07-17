@@ -69,7 +69,7 @@ function App() {
 
     request
       .post(
-        `http://localhost:7071/api/sas?file=${encodeURIComponent(
+        `/api/sas?file=${encodeURIComponent(
           selectedFile.name
         )}&permission=${permission}&container=${containerName}&timerange=${timerange}`,
         {
