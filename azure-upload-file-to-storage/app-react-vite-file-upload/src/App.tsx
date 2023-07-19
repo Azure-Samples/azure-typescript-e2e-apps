@@ -1,10 +1,8 @@
-// @ts-nocheck
-
 import { useState, ChangeEvent } from 'react';
 import { BlockBlobClient } from '@azure/storage-blob';
 import ErrorBoundary from './components/error-boundary';
 
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import './App.css';
 
 const request = axios.create({
@@ -14,22 +12,36 @@ const request = axios.create({
   }
 });
 
-type SelectedFilesType = {
-  [key: string]: File;
+type SasResponse = {
+  url: string;
+};
+type ListResponse = {
+  list: string[];
 };
 
 function App() {
+  const containerName = `upload`;
   const [text, setText] = useState<string>('');
   const [readFileStatus, setReadFileStatus] = useState<string>('');
-  const [selectedFile, setSelectedFile] = useState<SelectedFilesType>({});
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileArrayBuffer, setSelectedFileArrayBuffer] = useState<
     ArrayBuffer | undefined
   >(undefined);
   const [sasTokenUrl, setSasTokenUrl] = useState<string>('');
   const [uploadStatus, setUploadStatus] = useState<string>('');
+  const [list, setList] = useState<string[]>([]);
 
-  const handleFileSelection = (event) => {
-    setSelectedFile(event?.target?.files[0]);
+  const handleFileSelection = (event: ChangeEvent<HTMLInputElement>) => {
+    const { target } = event;
+
+    if (!(target instanceof HTMLInputElement)) return;
+    if (
+      target?.files === null ||
+      target?.files?.length === 0 ||
+      target?.files[0] === null
+    )
+      return;
+    setSelectedFile(target?.files[0]);
 
     // reset
     setText('');
@@ -61,11 +73,10 @@ function App() {
   };
 
   const handleFileSasToken = () => {
-    // timestamp
-    const timestamp = new Date().getTime();
-    const containerName = `upload-${timestamp}`;
     const permission = 'w'; //write
     const timerange = 5; //minutes
+
+    if (!selectedFile) return;
 
     request
       .post(
@@ -78,61 +89,119 @@ function App() {
           }
         }
       )
-      .then((result: any) => {
-        setSasTokenUrl(result?.data?.url);
+      .then((result: AxiosResponse<SasResponse>) => {
+        const { data } = result;
+        const { url } = data;
+        setSasTokenUrl(url);
       })
-      .catch((error) => {
-        setSasTokenUrl(`Error getting sas token: ${error.message}`);
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          const { message, stack } = error;
+          setSasTokenUrl(`Error getting sas token: ${message} ${stack || ''}`);
+        } else {
+          setUploadStatus(error as string);
+        }
       });
   };
 
   const handleFileUpload = () => {
     const blockBlobClient = new BlockBlobClient(sasTokenUrl);
+    if (
+      !selectedFileArrayBuffer ||
+      !(selectedFileArrayBuffer instanceof ArrayBuffer)
+    )
+      return;
     blockBlobClient
       .uploadData(selectedFileArrayBuffer)
       .then(() => {
         setUploadStatus('Successfully finished upload');
+        return request.get(`/api/list?container=${containerName}`);
       })
-      .catch((error) => {
-        setUploadStatus(`Failed to finish upload with error : ${error.message}`);
+      .then((result: AxiosResponse<ListResponse>) => {
+        // Axios response
+        const { data } = result;
+        const { list } = data;
+        setList(list);
+      })
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          const { message, stack } = error;
+          setUploadStatus(
+            `Failed to finish upload with error : ${message} ${stack || ''}`
+          );
+        } else {
+          setUploadStatus(error as string);
+        }
       });
   };
 
   return (
     <>
       <ErrorBoundary>
-
+        <h1>
+          Upload file to Azure Storage directly using SAS token authentication
+        </h1>
+        <p>
+          <b>Container: {containerName}</b>
+        </p>
         <div className="container select-file">
-        <input className="select-file" type="file" onChange={handleFileSelection} />
+          <input
+            className="select-file"
+            type="file"
+            onChange={handleFileSelection}
+          />
         </div>
-        
-        {selectedFile.name && (
+
+        {selectedFile && selectedFile.name && (
           <div className="container get-file-buffer">
             <button className="get-file-buffer " onClick={handleFileRead}>
               Read file into Buffer
             </button>
-            <div className="get-file-buffer status">{readFileStatus}<br></br>{text}</div>
+            <div className="get-file-buffer status">
+              {readFileStatus}
+              <br></br>
+              {text}
+            </div>
           </div>
         )}
 
         {selectedFileArrayBuffer && (
           <div className="container get-sas-token">
             <button className="get-sas-token" onClick={handleFileSasToken}>
-              Get sas token for {selectedFile.name}
+              Get sas token for {selectedFile?.name}
             </button>
             <div className="get-sas-token status">
               <div className="get-sas-token status text">{sasTokenUrl}</div>
-              </div>
+            </div>
           </div>
         )}
         {sasTokenUrl && (
           <div className="container upload">
             <button className="upload" onClick={handleFileUpload}>
-              Upload {selectedFile.name}
+              Upload {selectedFile?.name}
             </button>
             <div className="upload status">{uploadStatus}</div>
           </div>
         )}
+        <div className="list container">
+          {list &&
+            list.length > 0 &&
+            list.map((item) => {
+              if (
+                item.endsWith('.jpg') ||
+                item.endsWith('.png') ||
+                item.endsWith('.jpeg') ||
+                item.endsWith('.gif')
+              )
+                return (
+                  <div className="list item">
+                    <p>{item}</p>
+                    <img height="100" src={item} alt={item} />
+                  </div>
+                );
+              else return <p>{item}</p>;
+            })}
+        </div>
       </ErrorBoundary>
     </>
   );
