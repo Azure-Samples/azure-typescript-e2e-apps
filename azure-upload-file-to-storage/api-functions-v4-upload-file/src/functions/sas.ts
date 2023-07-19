@@ -49,7 +49,6 @@ export async function getGenerateSasToken(
       fileName,
       permissions
     );
-    //const sasUrlsResponse = {};
 
     return {
       jsonBody: {
@@ -57,8 +56,6 @@ export async function getGenerateSasToken(
       }
     };
   } catch (error) {
-    console.log(error);
-
     return {
       status: 500,
       jsonBody: error
