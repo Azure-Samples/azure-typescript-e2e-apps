@@ -86,3 +86,43 @@ export const generateSASUrl = async (
 
   return accountSasTokenUrl;
 };
+
+type ListFilesInContainerResponse = {
+  error: boolean;
+  errorMessage: string;
+  data: string[];
+};
+
+export const listFilesInContainer = async (
+  serviceName: string,
+  serviceKey: string,
+  containerName: string
+): Promise<ListFilesInContainerResponse> => {
+  if (!serviceName || !serviceKey || !containerName) {
+    return {
+      error: true,
+      errorMessage: 'List files in container function missing parameters',
+      data: []
+    };
+  } else 
+
+  const blobServiceClient = getBlobServiceClient(serviceName, serviceKey);
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+
+  const data = [];
+
+  for await (const response of containerClient
+    .listBlobsFlat()
+    .byPage({ maxPageSize: 20 })) {
+
+    for (const blob of response.segment.blobItems) {
+      data.push(`${containerClient.url}/${blob.name}`);
+    }
+  }
+
+  return {
+    error: false,
+    errorMessage: '',
+    data
+  };
+};
