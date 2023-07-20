@@ -398,6 +398,10 @@ FodyWeavers.xsd
 *.sln.iml
 
 **/dist
+**/*.settings.json
+**/local.settings.json
+**/local*
+**/.env*
 
 # Playwright
 **/playwright-logs/
