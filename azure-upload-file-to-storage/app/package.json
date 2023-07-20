@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run build && vite --config vite.config.dev.ts",
+    "dev": "npm run build && vite --host --config vite.config.dev.ts",
     "start": "vite",
     "prestart": "npm run build",
     "build": "npm run clean && tsc && vite build",
