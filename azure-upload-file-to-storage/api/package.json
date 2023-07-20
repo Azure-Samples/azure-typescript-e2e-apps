@@ -4,7 +4,6 @@
   "description": "",
   "scripts": {
     "setup:core-tools": "npm i -g azure-functions-core-tools@4 --unsafe-perm true",
-    "start-azurite": "azurite --silent --location azure --debug azure/debug.log",
     "prestart": "npm run build",
     "dev": "npm run build && func start --verbose",
     "start": "func start",
@@ -22,7 +21,6 @@
   "devDependencies": {
     "@types/node": "^18.16.19",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
-    "azurite": "^3.18.0",
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
