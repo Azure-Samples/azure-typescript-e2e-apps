@@ -6,5 +6,8 @@
     "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
     "Azure_Storage_AccountName": "",
     "Azure_Storage_AccountKey":""
+  },
+  "Host": {
+    "CORS": "*"
   }
 }
