@@ -1,5 +1,5 @@
 {
-  "name": "@azure-typescript-e2e-apps/lib-storage",
+  "name": "upload-file-api",
   "version": "1.0.0",
   "description": "",
   "scripts": {

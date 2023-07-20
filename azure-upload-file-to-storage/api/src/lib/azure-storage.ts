@@ -104,7 +104,7 @@ export const listFilesInContainer = async (
       errorMessage: 'List files in container function missing parameters',
       data: []
     };
-  }
+  } 
 
   const blobServiceClient = getBlobServiceClient(serviceName, serviceKey);
   const containerClient = blobServiceClient.getContainerClient(containerName);
