@@ -5,8 +5,11 @@ import ErrorBoundary from './components/error-boundary';
 import axios, { AxiosResponse } from 'axios';
 import './App.css';
 
+const API_SERVER = import.meta.env.VITE_API_SERVER as string;
+console.log(API_SERVER)
+
 const request = axios.create({
-  baseURL: '',
+  baseURL: API_SERVER,
   headers: {
     'Content-type': 'application/json'
   }
@@ -194,7 +197,7 @@ function App() {
                 item.endsWith('.gif')
               )
                 return (
-                  <div className="list item">
+                  <div key={item} className="list item">
                     <p>{item}</p>
                     <img height="100" src={item} alt={item} />
                   </div>
