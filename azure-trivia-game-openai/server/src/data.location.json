@@ -1,0 +1,35 @@
+{
+    "summary": {
+        "queryTime": 14,
+        "numResults": 1
+    },
+    "addresses": [
+        {
+            "address": {
+                "buildingNumber": "202",
+                "streetNumber": "202",
+                "routeNumbers": [],
+                "street": "East Holly Street",
+                "streetName": "East Holly Street",
+                "streetNameAndNumber": "202 East Holly Street",
+                "countryCode": "US",
+                "countrySubdivision": "WA",
+                "countrySecondarySubdivision": "Whatcom",
+                "municipality": "Bellingham",
+                "postalCode": "98225",
+                "municipalitySubdivision": "Central Business District",
+                "country": "United States",
+                "countryCodeISO3": "USA",
+                "freeformAddress": "202 East Holly Street, Bellingham, WA 98225",
+                "boundingBox": {
+                    "northEast": "48.749148,-122.478039",
+                    "southWest": "48.749019,-122.478219",
+                    "entity": "position"
+                },
+                "countrySubdivisionName": "Washington",
+                "localName": "Bellingham"
+            },
+            "position": "48.749020,-122.478043"
+        }
+    ]
+}

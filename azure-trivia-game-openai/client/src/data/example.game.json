@@ -1,0 +1,60 @@
+{
+    "location": "31.9973° N, 102.0779° W",
+    "questions": [
+        {
+            "question": "What is the state capital of Texas?",
+            "answers": [
+                "Houston",
+                "Dallas",
+                "Austin",
+                "San Antonio"
+            ],
+            "correct_answer": "Austin",
+            "explanation": "Austin is the state capital of Texas. It is known for its vibrant live music scene and beautiful outdoor spaces."
+        },
+        {
+            "question": "Which famous university is located in Austin?",
+            "answers": [
+                "University of Texas at Austin",
+                "Harvard University",
+                "Stanford University",
+                "Yale University"
+            ],
+            "correct_answer": "University of Texas at Austin",
+            "explanation": "The University of Texas at Austin is a renowned public research university located in the capital city of Texas. It is one of the largest universities in the United States."
+        },
+        {
+            "question": "What is the official nickname of Texas?",
+            "answers": [
+                "The Lone Star State",
+                "The Sunshine State",
+                "The Golden State",
+                "The Empire State"
+            ],
+            "correct_answer": "The Lone Star State",
+            "explanation": "Texas is often called 'The Lone Star State' because of the single star on its flag, symbolizing its former status as an independent republic."
+        },
+        {
+            "question": "Which famous food item originated in Texas?",
+            "answers": [
+                "Hamburgers",
+                "Pizza",
+                "Barbecue",
+                "Sushi"
+            ],
+            "correct_answer": "Barbecue",
+            "explanation": "Texas is well-known for its delicious barbecue, which includes slow-cooked meats like brisket, ribs, and sausage. It is a popular cuisine in the state."
+        },
+        {
+            "question": "What is the state flower of Texas?",
+            "answers": [
+                "Rose",
+                "Tulip",
+                "Bluebonnet",
+                "Sunflower"
+            ],
+            "correct_answer": "Bluebonnet",
+            "explanation": "The state flower of Texas is the Bluebonnet. These beautiful blue flowers bloom in spring and can be seen in abundance across the state."
+        }
+    ]
+}
