@@ -33,15 +33,6 @@ export async function getGenerateSasToken(
     context.log(`permissions: ${permissions}`);
     context.log(`timerange: ${timerange}`);
 
-    /*await generateSASUrl(
-      process.env?.Azure_Storage_AccountName as string,
-      process.env?.Azure_Storage_AccountKey as string,
-      containerName,
-      fileName,
-      permissions,
-      timerange
-    );*/
-
     const url = await generateSASUrl(
       process.env?.Azure_Storage_AccountName,
       process.env?.Azure_Storage_AccountKey,

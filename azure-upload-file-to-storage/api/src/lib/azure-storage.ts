@@ -104,7 +104,7 @@ export const listFilesInContainer = async (
       errorMessage: 'List files in container function missing parameters',
       data: []
     };
-  } 
+  }
 
   const blobServiceClient = getBlobServiceClient(serviceName, serviceKey);
   const containerClient = blobServiceClient.getContainerClient(containerName);
@@ -114,7 +114,6 @@ export const listFilesInContainer = async (
   for await (const response of containerClient
     .listBlobsFlat()
     .byPage({ maxPageSize: 20 })) {
-
     for (const blob of response.segment.blobItems) {
       data.push(`${containerClient.url}/${blob.name}`);
     }

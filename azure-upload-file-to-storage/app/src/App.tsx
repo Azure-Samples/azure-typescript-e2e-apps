@@ -1,12 +1,14 @@
-import { useState, ChangeEvent } from 'react';
 import { BlockBlobClient } from '@azure/storage-blob';
+import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
 import ErrorBoundary from './components/error-boundary';
+import { convertFileToArrayBuffer } from './lib/convert-file-to-arraybuffer';
 
 import axios, { AxiosResponse } from 'axios';
 import './App.css';
 
+// Used only for local development
 const API_SERVER = import.meta.env.VITE_API_SERVER as string;
-console.log(API_SERVER)
 
 const request = axios.create({
   baseURL: API_SERVER,
@@ -24,12 +26,7 @@ type ListResponse = {
 
 function App() {
   const containerName = `upload`;
-  const [text, setText] = useState<string>('');
-  const [readFileStatus, setReadFileStatus] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedFileArrayBuffer, setSelectedFileArrayBuffer] = useState<
-    ArrayBuffer | undefined
-  >(undefined);
   const [sasTokenUrl, setSasTokenUrl] = useState<string>('');
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [list, setList] = useState<string[]>([]);
@@ -44,35 +41,12 @@ function App() {
       target?.files[0] === null
     )
       return;
+
     setSelectedFile(target?.files[0]);
 
     // reset
-    setText('');
-    setSelectedFileArrayBuffer(undefined);
     setSasTokenUrl('');
     setUploadStatus('');
-    setReadFileStatus('');
-  };
-
-  const handleFileRead = () => {
-    if (selectedFile && selectedFile.name) {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const arrayBuffer = reader.result;
-        setReadFileStatus('Successfully read file into ArrayBuffer');
-        setSelectedFileArrayBuffer(arrayBuffer as ArrayBuffer);
-
-        if (selectedFile?.name?.endsWith('.text')) {
-          // convert to text to see what was there
-          const text = new TextDecoder('utf-8').decode(
-            arrayBuffer as ArrayBuffer
-          );
-          setText(text);
-        }
-      };
-      reader.readAsArrayBuffer(selectedFile);
-    }
   };
 
   const handleFileSasToken = () => {
@@ -108,14 +82,20 @@ function App() {
   };
 
   const handleFileUpload = () => {
-    const blockBlobClient = new BlockBlobClient(sasTokenUrl);
-    if (
-      !selectedFileArrayBuffer ||
-      !(selectedFileArrayBuffer instanceof ArrayBuffer)
-    )
-      return;
-    blockBlobClient
-      .uploadData(selectedFileArrayBuffer)
+    if (sasTokenUrl === '') return;
+
+    convertFileToArrayBuffer(selectedFile as File)
+      .then((fileArrayBuffer) => {
+        if (
+          fileArrayBuffer === null ||
+          fileArrayBuffer.byteLength < 1 ||
+          fileArrayBuffer.byteLength > 256000
+        )
+          return;
+
+        const blockBlobClient = new BlockBlobClient(sasTokenUrl);
+        return blockBlobClient.uploadData(fileArrayBuffer);
+      })
       .then(() => {
         setUploadStatus('Successfully finished upload');
         return request.get(`/api/list?container=${containerName}`);
@@ -141,70 +121,99 @@ function App() {
   return (
     <>
       <ErrorBoundary>
-        <h1>
-          Upload file to Azure Storage directly using SAS token authentication
-        </h1>
-        <p>
-          <b>Container: {containerName}</b>
-        </p>
-        <div className="container select-file">
-          <input
-            className="select-file"
-            type="file"
-            onChange={handleFileSelection}
-          />
-        </div>
+        <Box m={4}>
+          {/* App Title */}
+          <Typography variant="h4" gutterBottom>
+            Upload file to Azure Storage
+          </Typography>
+          <Typography variant="h5" gutterBottom>
+            with SAS token
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            <b>Container: {containerName}</b>
+          </Typography>
 
-        {selectedFile && selectedFile.name && (
-          <div className="container get-file-buffer">
-            <button className="get-file-buffer " onClick={handleFileRead}>
-              Read file into Buffer
-            </button>
-            <div className="get-file-buffer status">
-              {readFileStatus}
-              <br></br>
-              {text}
-            </div>
-          </div>
-        )}
+          {/* File Selection Section */}
+          <Box
+            display="block"
+            justifyContent="left"
+            alignItems="left"
+            flexDirection="column"
+            my={4}
+          >
+            <Button variant="contained" component="label">
+              Select File
+              <input type="file" hidden onChange={handleFileSelection} />
+            </Button>
+            {selectedFile && selectedFile.name && (
+              <Box my={2}>
+                <Typography variant="body2">{selectedFile.name}</Typography>
+              </Box>
+            )}
+          </Box>
 
-        {selectedFileArrayBuffer && (
-          <div className="container get-sas-token">
-            <button className="get-sas-token" onClick={handleFileSasToken}>
-              Get sas token for {selectedFile?.name}
-            </button>
-            <div className="get-sas-token status">
-              <div className="get-sas-token status text">{sasTokenUrl}</div>
-            </div>
-          </div>
-        )}
-        {sasTokenUrl && (
-          <div className="container upload">
-            <button className="upload" onClick={handleFileUpload}>
-              Upload {selectedFile?.name}
-            </button>
-            <div className="upload status">{uploadStatus}</div>
-          </div>
-        )}
-        <div className="list container">
-          {list &&
-            list.length > 0 &&
-            list.map((item) => {
-              if (
-                item.endsWith('.jpg') ||
-                item.endsWith('.png') ||
-                item.endsWith('.jpeg') ||
-                item.endsWith('.gif')
-              )
-                return (
-                  <div key={item} className="list item">
-                    <p>{item}</p>
-                    <img height="100" src={item} alt={item} />
-                  </div>
-                );
-              else return <p>{item}</p>;
-            })}
-        </div>
+          {/* SAS Token Section */}
+          {selectedFile && selectedFile.name && (
+            <Box
+              display="block"
+              justifyContent="left"
+              alignItems="left"
+              flexDirection="column"
+              my={4}
+            >
+              <Button variant="contained" onClick={handleFileSasToken}>
+                Get SAS Token
+              </Button>
+              {sasTokenUrl && (
+                <Box my={2}>
+                  <Typography variant="body2">{sasTokenUrl}</Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+
+          {/* File Upload Section */}
+          {sasTokenUrl && (
+            <Box
+              display="block"
+              justifyContent="left"
+              alignItems="left"
+              flexDirection="column"
+              my={4}
+            >
+              <Button variant="contained" onClick={handleFileUpload}>
+                Upload
+              </Button>
+              {uploadStatus && (
+                <Box my={2}>
+                  <Typography variant="body2" gutterBottom>
+                    {uploadStatus}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+
+          {/* Uploaded Files Display */}
+          <Grid container spacing={2}>
+            {list.map((item) => (
+              <Grid item xs={6} sm={4} md={3} key={item}>
+                <Card>
+                  {item.endsWith('.jpg') ||
+                  item.endsWith('.png') ||
+                  item.endsWith('.jpeg') ||
+                  item.endsWith('.gif') ? (
+                    <CardMedia component="img" image={item} alt={item} />
+                  ) : (
+                    <Typography variant="body1" gutterBottom>
+                      {item}
+                    </Typography>
+                  )}
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </ErrorBoundary>
     </>
   );
