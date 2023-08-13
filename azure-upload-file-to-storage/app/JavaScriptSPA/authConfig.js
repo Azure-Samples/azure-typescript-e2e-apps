@@ -2,7 +2,7 @@ const msalConfig = {
     auth: {
       clientId: "57f07842-f3d1-46d7-aa43-9793cb96c2cd",
       authority: "https://login.microsoftonline.com/59481093-5643-41c0-9d60-65840e5c82a0",
-      redirectUri: "http://localhost:3000",
+      redirectUri: "https://sickdnb.z5.web.core.windows.net/",
     },
     cache: {
       cacheLocation: "sessionStorage", // This configures where your cache will be stored
