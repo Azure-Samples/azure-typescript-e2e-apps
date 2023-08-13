@@ -1,3 +1,14 @@
 {
+<<<<<<< HEAD
     "azureFunctions.projectSubpath": "azure-upload-file-to-storage\\api"
+=======
+    "azureFunctions.projectSubpath": "api-functions-v4-upload-file",
+    "azureFunctions.deploySubpath": "api-functions-v4-upload-file",
+    "azureFunctions.postDeployTask": "npm install (functions)",
+    "azureFunctions.projectLanguage": "TypeScript",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.projectLanguageModel": 4,
+    "azureFunctions.preDeployTask": "npm prune (functions)"
+>>>>>>> 2f3a5bebff7afe1344960bd9890e198deb2cdc9e
 }
