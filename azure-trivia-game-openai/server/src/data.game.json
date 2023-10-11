@@ -1,0 +1,50 @@
+{
+  "location": "48.782695, -121.793783",
+  "questions": [
+    {
+      "question": "What is the name of the national park near this location?",
+      "answers": [
+        "Yellowstone National Park",
+        "Yosemite National Park",
+        "North Cascades National Park",
+        "Grand Canyon National Park"
+      ],
+      "correct_answer": "North Cascades National Park",
+      "explanation": "North Cascades National Park is located near this location. It is known for its rugged mountains, glaciers, and pristine wilderness."
+    },
+    {
+      "question": "What is the highest peak in this area?",
+      "answers": [
+        "Mount Rainier",
+        "Mount Everest",
+        "Mount McKinley",
+        "Mount Kilimanjaro"
+      ],
+      "correct_answer": "Mount Rainier",
+      "explanation": "Mount Rainier is the highest peak in this area. It is an active stratovolcano and is the most glaciated peak in the contiguous United States."
+    },
+    {
+      "question": "Which river runs through this area?",
+      "answers": [
+        "Colorado River",
+        "Mississippi River",
+        "Columbia River",
+        "Amazon River"
+      ],
+      "correct_answer": "Columbia River",
+      "explanation": "The Columbia River runs through this area. It is the largest river in the Pacific Northwest region of North America."
+    },
+    {
+      "question": "What is the average annual rainfall in this area?",
+      "answers": ["10 inches", "25 inches", "50 inches", "100 inches"],
+      "correct_answer": "100 inches",
+      "explanation": "The average annual rainfall in this area is approximately 100 inches. The abundant rainfall contributes to the lush green forests and diverse ecosystem."
+    },
+    {
+      "question": "What is the main attraction for outdoor enthusiasts in this area?",
+      "answers": ["Skiing", "Hiking", "Surfing", "Rock climbing"],
+      "correct_answer": "Hiking",
+      "explanation": "Hiking is the main attraction for outdoor enthusiasts in this area. There are numerous trails and breathtaking landscapes to explore."
+    }
+  ]
+}
