@@ -12,7 +12,7 @@
 	"forwardPorts": [7071],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install -g azure-functions-core-tools@4.0.5095 --save-exact --unsafe-perm true",
+	"postCreateCommand": "npm install -g azure-functions-core-tools@4.5098 --save-exact --unsafe-perm true",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
