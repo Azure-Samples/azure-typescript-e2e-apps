@@ -13,6 +13,9 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    env:
+      Azure_Storage_AccountName: ${{ secrets.Azure_Storage_AccountName }}
+      Azure_Storage_AccountKey: ${{ secrets.Azure_Storage_AccountKey }}
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v3
