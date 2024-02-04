@@ -26,22 +26,25 @@ type ListResponse = {
 
 function App() {
   const containerName = `upload`;
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [sasTokenUrl, setSasTokenUrl] = useState<string>('');
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [list, setList] = useState<string[]>([]);
 
   const handleFileSelection = (event: ChangeEvent<HTMLInputElement>) => {
     const { target } = event;
-  
+
     if (!(target instanceof HTMLInputElement)) return;
-    if (!target.files || target.files.length === 0) return;
-  
-    // Convert FileList to array and update state
-    const filesArray = Array.from(target.files);
-    setSelectedFiles(filesArray);
-  
-    // Reset other states
+    if (
+      target?.files === null ||
+      target?.files?.length === 0 ||
+      target?.files[0] === null
+    )
+      return;
+
+    setSelectedFile(target?.files[0]);
+
+    // reset
     setSasTokenUrl('');
     setUploadStatus('');
   };
@@ -50,12 +53,12 @@ function App() {
     const permission = 'w'; //write
     const timerange = 5; //minutes
 
-    if (!selectedFiles[0]) return;
+    if (!selectedFile) return;
 
     request
       .post(
         `/api/sas?file=${encodeURIComponent(
-          selectedFiles[0].name
+          selectedFile.name
         )}&permission=${permission}&container=${containerName}&timerange=${timerange}`,
         {
           headers: {
@@ -79,66 +82,42 @@ function App() {
   };
 
   const handleFileUpload = () => {
-    if (selectedFiles.length === 0) return;
-  
-    Promise.all(
-      selectedFiles.map((file) => {
-        // Fetch SAS token for the current file
-        return request
-          .post(
-            `/api/sas?file=${encodeURIComponent(
-              file.name
-            )}&permission=w&container=${containerName}&timerange=5`,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          )
-          .then((result: AxiosResponse<SasResponse>) => {
-            const { data } = result;
-            const { url } = data;
-            console.log(`SAS Token URL for ${file.name}: ${url}`);
-            // Upload the file using the obtained SAS token
-            return convertFileToArrayBuffer(file).then((fileArrayBuffer) => {
-              if (
-                fileArrayBuffer === null ||
-                fileArrayBuffer.byteLength < 1 ||
-                fileArrayBuffer.byteLength > 256000
-              )
-                return;
-  
-              const blockBlobClient = new BlockBlobClient(url);
-              return blockBlobClient.uploadData(fileArrayBuffer);
-            });
-          });
+    if (sasTokenUrl === '') return;
+
+    convertFileToArrayBuffer(selectedFile as File)
+      .then((fileArrayBuffer) => {
+        if (
+          fileArrayBuffer === null ||
+          fileArrayBuffer.byteLength < 1 ||
+          fileArrayBuffer.byteLength > 256000
+        )
+          return;
+
+        const blockBlobClient = new BlockBlobClient(sasTokenUrl);
+        return blockBlobClient.uploadData(fileArrayBuffer);
       })
-    )
       .then(() => {
-        // All files uploaded successfully
         setUploadStatus('Successfully finished upload');
-        // Fetch the updated file list
         return request.get(`/api/list?container=${containerName}`);
       })
       .then((result: AxiosResponse<ListResponse>) => {
-        // Update the file list
+        // Axios response
         const { data } = result;
         const { list } = data;
         setList(list);
       })
       .catch((error: unknown) => {
-        // Handle errors
         if (error instanceof Error) {
           const { message, stack } = error;
           setUploadStatus(
-            `Failed to finish upload with error: ${message} ${stack || ''}`
+            `Failed to finish upload with error : ${message} ${stack || ''}`
           );
         } else {
           setUploadStatus(error as string);
         }
       });
   };
-  
+
   return (
     <>
       <ErrorBoundary>
@@ -163,23 +142,18 @@ function App() {
             my={4}
           >
             <Button variant="contained" component="label">
-             Select Files
-            <input type="file" hidden multiple onChange={handleFileSelection} />
+              Select File
+              <input type="file" hidden onChange={handleFileSelection} />
             </Button>
-            {selectedFiles.length > 0 && (
+            {selectedFile && selectedFile.name && (
               <Box my={2}>
-                <Typography variant="body2">Selected Files:</Typography>
-                <ul>
-                  {selectedFiles.map((file) => (
-                    <li key={file.name}>{file.name}</li>
-                  ))}
-                </ul>
+                <Typography variant="body2">{selectedFile.name}</Typography>
               </Box>
             )}
           </Box>
- 
-          SAS Token Section
-          {selectedFiles && (
+
+          {/* SAS Token Section */}
+          {selectedFile && selectedFile.name && (
             <Box
               display="block"
               justifyContent="left"
@@ -196,10 +170,10 @@ function App() {
                 </Box>
               )}
             </Box>
-          )} 
+          )}
 
           {/* File Upload Section */}
-          {selectedFiles && (
+          {sasTokenUrl && (
             <Box
               display="block"
               justifyContent="left"
