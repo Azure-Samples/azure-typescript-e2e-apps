@@ -2,6 +2,7 @@ import { BlockBlobClient } from '@azure/storage-blob';
 import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 import ErrorBoundary from './components/error-boundary';
+import NavBar from './components/navbar';
 import { convertFileToArrayBuffer } from './lib/convert-file-to-arraybuffer';
 
 import axios, { AxiosResponse } from 'axios';
@@ -142,7 +143,8 @@ function App() {
   return (
     <>
       <ErrorBoundary>
-        <Box m={4}>
+        <Box m={5}>
+          <NavBar></NavBar>
           {/* App Title */}
           <Typography variant="h4" gutterBottom>
             Upload file to Azure Storage

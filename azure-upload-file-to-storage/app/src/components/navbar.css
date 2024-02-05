@@ -1,0 +1,53 @@
+.main-navigation {
+    max-width: 1024px;
+    margin: 0 auto;
+    background-color: #ffffff; /* Set your desired background color */
+  }
+
+.logo {
+    width: 156px;
+    height: 78px;
+}
+.menu-website-menu-2021-container{
+    display: flex; align-items: center; justify-content: space-between;
+}
+.menu-toggle {
+  color: rgb(255, 0, 0); /* Set the color of the menu toggle button */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.menu-toggle span {
+  margin-left: 5px; /* Add some spacing between the icon and the text */
+}
+
+.mega-menu {
+    color: rgb(0,0,0);
+    list-style: none;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+}
+
+.menu-website-menu-2021 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.menu-item {
+  margin-right: 15px; /* Add spacing between menu items */
+}
+
+.menu-item a {
+  color: rgb(0, 0, 0); /* Set the color of the menu items */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.menu-item a:hover {
+  color:crimson; /* Add color on hover */
+}
