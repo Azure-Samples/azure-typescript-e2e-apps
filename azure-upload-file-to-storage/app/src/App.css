@@ -9,6 +9,11 @@
 .container {
     margin: 1em;
     padding: 1em;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 button {
