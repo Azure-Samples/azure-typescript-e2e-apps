@@ -4,6 +4,7 @@ import { ChangeEvent, useState } from 'react';
 import ErrorBoundary from './components/error-boundary';
 import NavBar from './components/navbar';
 import { convertFileToArrayBuffer } from './lib/convert-file-to-arraybuffer';
+import DragDropFile from './components/dragAndDrop';
 
 import axios, { AxiosResponse } from 'axios';
 import './App.css';
@@ -143,8 +144,9 @@ function App() {
   return (
     <>
       <ErrorBoundary>
-        <Box m={5}>
+        <Box m={6}>
           <NavBar></NavBar>
+          <DragDropFile></DragDropFile>
           {/* App Title */}
           <Typography variant="h4" gutterBottom>
             Upload file to Azure Storage

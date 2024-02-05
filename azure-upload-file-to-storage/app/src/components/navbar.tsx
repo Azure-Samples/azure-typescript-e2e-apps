@@ -4,8 +4,8 @@ import logo from './logo.png';
 const NavBar = () => {
     return (
         <nav id="site-navigation" className="main-navigation">
+            <div className="logo"><img src={logo} alt="Home"></img></div>
             <div className="menu-website-menu-2021-container">
-                <div className="logo"><img src={logo} alt="Home"></img></div>
                 <ul id="menu-website-menu-2021" className="mega-menu">
                     <li id="menu-item-3135" className="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-3135"><a href="https://mimimoto.nl/">Home</a></li>
                     <li id="menu-item-3125" className="menu-item menu-item-type-post_type menu-item-object-page menu-item-3125"><a href="https://mimimoto.nl/products/">Products</a></li>
