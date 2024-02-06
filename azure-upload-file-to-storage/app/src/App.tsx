@@ -164,7 +164,7 @@ function App() {
                 <div className='box-label'>
                 <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
                 <label className="form-check-label" htmlFor="flexCheckDefault">
-                  Default checkbox
+                  Yearly
                 </label>
                 </div>
                 <div className='box-label'>
