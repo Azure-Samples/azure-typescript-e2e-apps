@@ -1,53 +1,59 @@
+
+/*for the stretch */
 .main-navigation {
-    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     background-color: #ffffff; /* Set your desired background color */
     display: flex;
     justify-content: space-evenly;
   }
 
+.navContainer {
+  width: 1200px;
+  display: flex;
+  justify-content: space-around;
+}
 .logo {
     width: 195px;
     height: 78px;
-    flex: 2;
+    flex: 1;
 }
-.menu-website-menu-2021-container{
+/* .menu-website-menu-2021-container{
     display: flex; 
     align-items: center; 
     justify-content: space-between;
     flex: 7;
-}
+    border: 3px solid black; 
+} */
 
 .mega-menu {
-    max-width: 945px;
-    width: 100%;
-    list-style: none;
-    display: flex; 
-    align-items: center; 
-    justify-content: space-around;
-}
-.mega-menu li {
-    white-space: nowrap;
-}
-.menu-website-menu-2021 {
+  flex: 4;
+  height: 100%;
   list-style: none;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
+  display: flex; 
+  align-items: center; 
+  justify-content: space-evenly;
+}
+
+.mega-menu li {
+  white-space: nowrap;
+  float: left;
+  flex: 1; /* Take up all available space */
+  align-items: center;
+
 }
 
 .menu-item {
-  margin-right: 50px; /* Add spacing between menu items */
   display: inline-block;
   align-items: center;
 }
 
 .menu-item a {
-  color: rgb(0, 0, 0); /* Set the color of the menu items */
+  color: rgb(0, 0, 0);
   text-decoration: none;
-  
+  text-align: center; /* Center the text horizontally */
 }
 
 .menu-item a:hover {
-  color:crimson; /* Add color on hover */
+  color: crimson;
 }

@@ -1,15 +1,15 @@
 import { BlockBlobClient } from '@azure/storage-blob';
-import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
+import { Box, Card, Button, CardMedia, Grid, Typography } from '@mui/material';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { ChangeEvent, useState } from 'react';
 import ErrorBoundary from './components/error-boundary';
 import NavBar from './components/navbar';
 import { convertFileToArrayBuffer } from './lib/convert-file-to-arraybuffer';
 import DragDropFile from './components/dragAndDrop';
-
 import axios, { AxiosResponse } from 'axios';
 import './App.css';
 
-// Used only for local development
+// Used only htmlFor local development
 const API_SERVER = import.meta.env.VITE_API_SERVER as string;
 
 const request = axios.create({
@@ -85,7 +85,7 @@ function App() {
   
     Promise.all(
       selectedFiles.map((file) => {
-        // Fetch SAS token for the current file
+        // Fetch SAS token htmlFor the current file
         return request
           .post(
             `/api/sas?file=${encodeURIComponent(
@@ -100,7 +100,7 @@ function App() {
           .then((result: AxiosResponse<SasResponse>) => {
             const { data } = result;
             const { url } = data;
-            console.log(`SAS Token URL for ${file.name}: ${url}`);
+            console.log(`SAS Token URL htmlFor ${file.name}: ${url}`);
             // Upload the file using the obtained SAS token
             return convertFileToArrayBuffer(file).then((fileArrayBuffer) => {
               if (
@@ -143,10 +143,65 @@ function App() {
   
   return (
     <>
+    <body className= 'body'>
+      <NavBar></NavBar>
+    <div className='app-container'>
       <ErrorBoundary>
-        <Box m={6}>
-          <NavBar></NavBar>
-          <DragDropFile></DragDropFile>
+        <Box>
+          <div className='backgroundDragDrop'>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap"/>
+            <h1 className='h1'>Upload files</h1>
+            <DragDropFile></DragDropFile>
+            <h2>Export options</h2>
+              <div className='filler'></div>
+              <div className='checkboxes-left'>
+                <div className='box-label'>
+                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                  Default checkbox
+                </label>
+                </div>
+                <div className='box-label'>
+                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                  Default checkbox
+                </label>
+                </div>
+                <div className='box-label'>
+                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                  Default checkbox
+                </label>
+                </div>
+              </div>
+              <div className='checkboxes-right'>
+                <div className='box-label'>
+                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                  Default checkbox
+                </label>
+                </div>
+                <div className='box-label'>
+                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                <label className="form-check-label" htmlFor="flexRadioDefault1">
+                  Default radio
+                </label>
+                </div>  
+                <div className='box-label'> 
+                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"/>
+                <label className="form-check-label" htmlFor="flexRadioDefault2">
+                  Default radio
+                </label>
+                </div>  
+              </div>
+              <div className='filler'></div>
+              <div className='upload-button-div'>
+                <Button component="label" color='secondary' variant="contained"  onClick={handleFileUpload}>
+                  Upload
+                </Button>
+                <a type="button" className="btn btn-purple"><i className="fas fa-heart pr-2" aria-hidden="false"></i>Heart</a>
+              </div>
+          </div>
           {/* App Title */}
           <Typography variant="h4" gutterBottom>
             Upload file to Azure Storage
@@ -245,7 +300,9 @@ function App() {
           </Grid>
         </Box>
       </ErrorBoundary>
-    </>
+    </div>
+    </body>
+   </> 
   );
 }
 

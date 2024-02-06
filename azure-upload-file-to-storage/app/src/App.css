@@ -5,22 +5,21 @@
     border: 1px solid red;
 }
 */
+.body {
+    background-color: rgb(241, 241, 241);
+}
+.test {
+    background-color: brown;
+}
 
-.container {
-    margin: 1em;
-    padding: 1em;
+.app-container {
     display: flex;
-    min-height: 100vh;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-button {
-    border: 1px solid blue;
-    border-radius: 5%;
-    background-color: lightblue;
-}
 .select-file input {
 
     border-radius: 5%;
@@ -35,6 +34,75 @@ input::-webkit-file-upload-button {
     display: flex;
     flex-direction: column;
 
+}
+.backgroundDragDrop {
+    border-radius: 25px;
+    margin: 0 auto;
+    margin-top: 100px;
+    height: 550px;
+    width: 700px;
+    display:flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+
+  }
+
+.h1 {
+    font-size: 30px;
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 450;
+    flex: 1 0 100%;
+    margin-top: 20px;
+    padding-left: 20px;
+    text-align: left;
+  }
+h2 {
+    font-size: 24px;
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 450;
+    flex: 1 0 100%;
+    margin-top: 20px;
+    padding-left: 20px;
+    text-align: left;
+  }
+
+.filler{
+    height: 3rem;
+    flex: 20%;
+    text-align: center;
+}
+.checkboxes-left{
+    height: 7rem;
+    flex: 30%;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    padding-right: 20px;
+}
+.checkboxes-right{
+    height: 7rem;
+    flex: 30%;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-right: 20px;
+}
+.box-label{
+    margin-bottom: 10px;
+}
+
+.upload-button-div{
+    flex: 1 0 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-bottom: 20px;
+}
+.upload-button2 {
+    border: 1px solid rgb(219, 28, 28);
+    border-radius: 5%;
+    background-color: rgb(0, 0, 0);
 }
 .get-sas-token .status .text{
 
