@@ -8,7 +8,6 @@ languages:
 products:
 - azure-app-service
 - azure-functions
-- 
 ---
 
 # Azure TypeScript E2E apps
