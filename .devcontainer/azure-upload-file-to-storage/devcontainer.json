@@ -6,7 +6,10 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+	"features": {
+		"ghcr.io/jsburckhardt/devcontainer-features/gitleaks:1": {},
+		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
     // 5173: Vite React
