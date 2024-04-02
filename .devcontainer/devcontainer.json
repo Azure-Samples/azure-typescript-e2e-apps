@@ -15,7 +15,8 @@
 	"postCreateCommand": "npm install -g azure-functions-core-tools@4.5098 --save-exact --unsafe-perm true",
 	"features": {
 		"ghcr.io/jsburckhardt/devcontainer-features/gitleaks:1": {},
-		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
+		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
+		"ghcr.io/devcontainers/features/azure-cli:1": {}
 	}
 
 	// Configure tool-specific properties.

@@ -1,0 +1,25 @@
+{
+  "name": "azure-openai-assistants",
+  "version": "1.0.0",
+  "description": "",
+  "type":"module",
+  "main": "dist/index.js",
+  "scripts": {
+    "create-resource": "bash scripts/create-azure-resource.sh",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "ts-node"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/core-auth": "^1.7.1",
+    "@azure/openai-assistants": "^1.0.0-beta.5",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "ts-node": "^10.9.2"
+  }
+}
