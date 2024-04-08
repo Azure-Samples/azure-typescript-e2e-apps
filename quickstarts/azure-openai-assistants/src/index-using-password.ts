@@ -3,20 +3,20 @@ import {
   AssistantCreationOptions,
   ToolDefinition,
 } from "@azure/openai-assistants";
-
-import { DefaultAzureCredential } from "@azure/identity";
+import { AzureKeyCredential } from "@azure/core-auth";
 
 import "dotenv/config";
 
+const azureOpenAIKey = process.env.AZURE_OPENAI_KEY as string;
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT as string;
 const azureOpenAIModelId = process.env.AZURE_OPENAI_MODEL_ID as string;
+const credential = new AzureKeyCredential(azureOpenAIKey);
 
-if (!azureOpenAIEndpoint || !azureOpenAIModelId) {
+if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIModelId) {
   throw new Error(
     "Please ensure to set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT in your environment variables."
   );
 }
-const credential = new DefaultAzureCredential();
 
 const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
 
