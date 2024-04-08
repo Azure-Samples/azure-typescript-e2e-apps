@@ -2,6 +2,12 @@ import {
   AssistantsClient,
   AssistantCreationOptions,
   ToolDefinition,
+  Assistant,
+  AssistantThread,
+  ThreadMessage,
+  ThreadRun,
+  ListResponseOf,
+  MessageContent
 } from "@azure/openai-assistants";
 
 import { DefaultAzureCredential } from "@azure/identity";
@@ -17,7 +23,7 @@ if (!azureOpenAIEndpoint || !azureOpenAIModelId) {
   );
 }
 
-const getClient = () => {
+const getClient = (): AssistantsClient => {
   const credential = new DefaultAzureCredential();
   const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
   return assistantsClient;  
@@ -34,18 +40,17 @@ const options: AssistantCreationOptions = {
 };
 const role = "user";
 const message = "I need to solve the equation `3x + 11 = 14`. Can you help me?";
-const message2 = "What is 3x + 11 = 14?";
 
 // Create an assistant
-const assistantResponse = await assistantsClient.createAssistant(options);
+const assistantResponse: Assistant = await assistantsClient.createAssistant(options);
 console.log(`Assistant created: ${JSON.stringify(assistantResponse)}`);
 
 // Create a thread
-const assistantThread = await assistantsClient.createThread({});
+const assistantThread: AssistantThread = await assistantsClient.createThread({});
 console.log(`Thread created: ${JSON.stringify(assistantThread)}`);
 
 // Add a user question to the thread
-const threadResponse = await assistantsClient.createMessage(
+const threadResponse: ThreadMessage = await assistantsClient.createMessage(
   assistantThread.id,
   role,
   message
@@ -53,7 +58,7 @@ const threadResponse = await assistantsClient.createMessage(
 console.log(`Message created:  ${JSON.stringify(threadResponse)}`);
 
 // Run the thread
-let runResponse = await assistantsClient.createRun(assistantThread.id, {
+let runResponse: ThreadRun = await assistantsClient.createRun(assistantThread.id, {
   assistantId: assistantResponse.id,
 });
 console.log(`Run created:  ${JSON.stringify(runResponse)}`);
@@ -66,14 +71,17 @@ do {
     runResponse.id
   );
 } while (
+  // RunStatus is an enum with the following values: 
+  // "queued", "in_progress", "requires_action", "cancelling", "cancelled", "failed", "completed", "expired"
   runResponse.status === "queued" ||
   runResponse.status === "in_progress"
 );
 
 // Get the messages
-const runMessages = await assistantsClient.listMessages(assistantThread.id);
+const runMessages: ListResponseOf<ThreadMessage> = await assistantsClient.listMessages(assistantThread.id);
 for (const runMessageDatum of runMessages.data) {
   for (const item of runMessageDatum.content) {
+    // types are: "image_file" or "text"
     if (item.type === "text") {
       console.log(`Message content: ${JSON.stringify(item.text?.value)}`);
     }
