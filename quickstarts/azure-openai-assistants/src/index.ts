@@ -18,7 +18,7 @@ const credential = new AzureKeyCredential(azureOpenAIKey);
 const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
 
 const options: AssistantCreationOptions = {
-  model: "gpt-4-1106-preview",
+  model: "gpt-4-1106-Preview",
   name: "Math Tutor",
   instructions: "You are a personal math tutor. Write and run code to answer math questions.",
   tools: [{ type: "code_interpreter" } as ToolDefinition],

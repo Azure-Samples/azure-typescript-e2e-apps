@@ -12,7 +12,7 @@
 	"forwardPorts": [7071],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install -g azure-functions-core-tools@4.5098 --save-exact --unsafe-perm true",
+	"postCreateCommand": "npm install -g azure-functions-core-tools@4.5611 --save-exact --unsafe-perm true",
 	"features": {
 		"ghcr.io/jsburckhardt/devcontainer-features/gitleaks:1": {},
 		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
