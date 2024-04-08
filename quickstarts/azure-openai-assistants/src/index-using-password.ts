@@ -18,7 +18,12 @@ if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIModelId) {
   );
 }
 
-const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
+const getClient = () => {
+  const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
+  return assistantsClient;
+}
+
+const assistantsClient = getClient();
 
 const options: AssistantCreationOptions = {
   model: azureOpenAIModelId, // Deployment name seen in Azure AI Studio
@@ -46,8 +51,6 @@ const threadResponse = await assistantsClient.createMessage(
   message
 );
 console.log(`Message created:  ${JSON.stringify(threadResponse)}`);
-
-console.log(`Created run`);
 
 // Run the thread
 let runResponse = await assistantsClient.createRun(assistantThread.id, {

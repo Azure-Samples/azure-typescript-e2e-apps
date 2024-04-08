@@ -14,7 +14,7 @@ The first set is the recommended variables due to their security:
 ```
 # Used to authenticate using Azure AD as a service principal for role-based
 # authentication.
-#
+# Principal must have access to API/Operation
 # See the documentation for `EnvironmentCredential` at the following link:
 # https://docs.microsoft.com/javascript/api/@azure/identity/environmentcredential
 AZURE_TENANT_ID=<AD tenant id or name>

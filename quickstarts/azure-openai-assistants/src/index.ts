@@ -16,9 +16,14 @@ if (!azureOpenAIEndpoint || !azureOpenAIModelId) {
     "Please ensure to set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT in your environment variables."
   );
 }
-const credential = new DefaultAzureCredential();
 
-const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
+const getClient = () => {
+  const credential = new DefaultAzureCredential();
+  const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
+  return assistantsClient;  
+}
+
+const assistantsClient = getClient();
 
 const options: AssistantCreationOptions = {
   model: azureOpenAIModelId, // Deployment name seen in Azure AI Studio
@@ -46,8 +51,6 @@ const threadResponse = await assistantsClient.createMessage(
   message
 );
 console.log(`Message created:  ${JSON.stringify(threadResponse)}`);
-
-console.log(`Created run`);
 
 // Run the thread
 let runResponse = await assistantsClient.createRun(assistantThread.id, {
