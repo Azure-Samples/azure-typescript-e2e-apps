@@ -1,5 +1,5 @@
 {
-  "name": "azure-openai-assistants",
+  "name": "azure-openai-assistants-javascript",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -16,11 +16,6 @@
     "@azure/core-auth": "^1.7.1",
     "@azure/identity": "^4.0.1",
     "@azure/openai-assistants": "^1.0.0-beta.5",
-    "dotenv": "^16.4.5",
-    "typescript": "^5.4.3"
-  },
-  "devDependencies": {
-    "@types/node": "^20.12.2",
-    "ts-node": "^10.9.2"
+    "dotenv": "^16.4.5"
   }
 }
