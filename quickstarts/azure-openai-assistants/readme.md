@@ -9,19 +9,22 @@ Use the Azure OpenAI Assistants client library to show how the assistant can gen
 
 Two sets of environment variables are offered in the [sample.env](sample.env) which you should rename to `.env` when you use it. 
 
+### Recommended: Passwordless with `Cognitive Services User` role
+
 The first set is the recommended variables due to their security: 
 
 ```
 # Used to authenticate using Azure AD as a service principal for role-based
 # authentication.
-# Principal must have access to API/Operation
 # See the documentation for `EnvironmentCredential` at the following link:
 # https://docs.microsoft.com/javascript/api/@azure/identity/environmentcredential
 AZURE_TENANT_ID=<AD tenant id or name>
 AZURE_CLIENT_ID=<ID of the user/service principal to authenticate as>
 AZURE_CLIENT_SECRET=<client secret used to authenticate to Azure AD>
-AZURE_OPENAI_MODEL_ID=<REPLACE-WITH-DEPLOYMENT-NAME>
+AZURE_OPENAI_DEPLOYMENT_NAME=<REPLACE-WITH-DEPLOYMENT-NAME>
 ```
+
+### Passwords
 
 The second set is only recommended for learning the SDK and isn't meant for development or production:
 
@@ -29,7 +32,7 @@ The second set is only recommended for learning the SDK and isn't meant for deve
 AZURE_OPENAI_KEY=<REPLACE-WITH-RESOURCE-KEY>
 AZURE_OPENAI_RESOURCE=<REPLACE-WITH-RESOURCE_NAME>
 AZURE_OPENAI_ENDPOINT=https://<REPLACE-WITH-RESOURCE_NAME>.openai.azure.com/
-AZURE_OPENAI_MODEL_ID=<REPLACE-WITH-DEPLOYMENT-NAME>
+AZURE_OPENAI_DEPLOYMENT_NAME=<REPLACE-WITH-DEPLOYMENT-NAME>
 ```
 
 ## Output

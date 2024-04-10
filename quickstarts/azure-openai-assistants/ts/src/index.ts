@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {
   AssistantsClient,
   AssistantCreationOptions,
@@ -10,19 +11,21 @@ import {
   MessageContent
 } from "@azure/openai-assistants";
 
+// Add `Cognitive Services User` to identity for Azure OpenAI resource
 import { DefaultAzureCredential } from "@azure/identity";
 
-import "dotenv/config";
-
+// Get environment variables
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT as string;
-const azureOpenAIModelId = process.env.AZURE_OPENAI_MODEL_ID as string;
+const azureOpenAIDeployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME as string;
 
-if (!azureOpenAIEndpoint || !azureOpenAIModelId) {
+// Check env varaibles
+if (!azureOpenAIEndpoint || !azureOpenAIDeployment) {
   throw new Error(
-    "Please ensure to set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT in your environment variables."
+    "Please ensure to set AZURE_OPENAI_DEPLOYMENT_NAME and AZURE_OPENAI_ENDPOINT in your environment variables."
   );
 }
 
+// Get Azure SDK client
 const getClient = (): AssistantsClient => {
   const credential = new DefaultAzureCredential();
   const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
@@ -32,7 +35,7 @@ const getClient = (): AssistantsClient => {
 const assistantsClient = getClient();
 
 const options: AssistantCreationOptions = {
-  model: azureOpenAIModelId, // Deployment name seen in Azure AI Studio
+  model: azureOpenAIDeployment, // Deployment name seen in Azure AI Studio
   name: "Math Tutor",
   instructions:
     "You are a personal math tutor. Write and run JavaScript code to answer math questions.",
