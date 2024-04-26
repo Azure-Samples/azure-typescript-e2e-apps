@@ -1,0 +1,36 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - nginx
+write_files:
+  - owner: www-data:www-data
+    path: /etc/nginx/sites-available/default
+    content: |
+      server {
+        listen 80 default_server;
+        server_name _;
+        location / {
+          # First, try if the file exists locally, otherwise request it from the app
+          try_files $uri @app;
+        }
+        location @app {
+          proxy_pass http://localhost:3000;
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection 'upgrade';
+          proxy_set_header X-Forwarded-For $remote_addr;
+          proxy_set_header Host $host;
+          proxy_cache_bypass $http_upgrade;
+        }
+      }
+runcmd:
+  # install Node.js
+  - 'curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -'
+  - 'sudo apt-get install -y nodejs'
+  # clone GitHub Repo into myapp directory
+  - 'cd /home/azureuser'
+  - git clone "https://github.com/Azure-Samples/js-e2e-vm" myapp
+  # Start app
+  - 'cd myapp && npm install && npm start'
+  # restart NGINX
+  - systemctl restart nginx
