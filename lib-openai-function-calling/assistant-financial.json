@@ -1,0 +1,26 @@
+{
+    "name": "Finance Assistant",
+    "instructions":
+      "You are a personal finance assistant. Retrieve the latest closing price of a stock using its ticker symbol.",
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "getStockPrice",
+          "description":
+            "Retrieve the latest closing price of a stock using its ticker symbol.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "description": "The ticker symbol of the stock"
+              }
+            },
+            "required": ["symbol"]
+          }
+        }
+      }
+    ],
+    "model": "AZURE_DEPLOYMENT_NAME"
+  }
