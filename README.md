@@ -35,3 +35,7 @@ A monorepo of apps used with the Azure cloud.
 |`api=`|HTTP API.|
 |`lib-`|Library. Included in other projects.|
 |`cli-`|Command-line interface.|
+
+## Azure CLI scripts
+
+* [Managed identity](/quickstarts/azure-sql-server/migrate-to-passwordless/create-managed-identity.sh)
