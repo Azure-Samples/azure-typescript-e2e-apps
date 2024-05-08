@@ -2,16 +2,16 @@
   "name": "js",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",  
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "mssql": "^10.0.2"
   }
 }
