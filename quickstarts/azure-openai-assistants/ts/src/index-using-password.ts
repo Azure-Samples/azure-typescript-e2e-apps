@@ -18,7 +18,7 @@ const azureOpenAIDeployment = process.env
 // Check env varaibles
 if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIDeployment) {
   throw new Error(
-    "Please ensure to set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT in your environment variables."
+    "Please set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME in your environment variables."
   );
 }
 
@@ -71,9 +71,8 @@ const runResponse: Run = await assistantsClient.beta.threads.runs.createAndPoll(
 console.log(`Run created:  ${JSON.stringify(runResponse)}`);
 
 // Get the messages
-const runMessages: MessagesPage = await assistantsClient.beta.threads.messages.list(
-  assistantThread.id
-);
+const runMessages: MessagesPage =
+  await assistantsClient.beta.threads.messages.list(assistantThread.id);
 for await (const runMessageDatum of runMessages) {
   for (const item of runMessageDatum.content) {
     // types are: "image_file" or "text"

@@ -4,13 +4,12 @@ import { AzureOpenAI } from "openai";
 // Get environment variables
 const azureOpenAIKey = process.env.AZURE_OPENAI_KEY;
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT;
-const azureOpenAIDeployment = process.env
-  .AZURE_OPENAI_DEPLOYMENT_NAME;
+const azureOpenAIDeployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME;
 
 // Check env varaibles
 if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIDeployment) {
   throw new Error(
-    "Please ensure to set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT in your environment variables."
+    "Please set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME in your environment variables."
   );
 }
 
@@ -36,8 +35,9 @@ const role = "user";
 const message = "I need to solve the equation `3x + 11 = 14`. Can you help me?";
 
 // Create an assistant
-const assistantResponse =
-  await assistantsClient.beta.assistants.create(options);
+const assistantResponse = await assistantsClient.beta.assistants.create(
+  options
+);
 console.log(`Assistant created: ${JSON.stringify(assistantResponse)}`);
 
 // Create a thread
@@ -45,11 +45,13 @@ const assistantThread = await assistantsClient.beta.threads.create({});
 console.log(`Thread created: ${JSON.stringify(assistantThread)}`);
 
 // Add a user question to the thread
-const threadResponse =
-  await assistantsClient.beta.threads.messages.create(assistantThread.id, {
+const threadResponse = await assistantsClient.beta.threads.messages.create(
+  assistantThread.id,
+  {
     role,
     content: message,
-  });
+  }
+);
 console.log(`Message created:  ${JSON.stringify(threadResponse)}`);
 
 // Run the thread and poll it until it is in a terminate state
