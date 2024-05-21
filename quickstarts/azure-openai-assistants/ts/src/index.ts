@@ -20,7 +20,7 @@ const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT as string;
 const azureOpenAIDeployment = process.env
   .AZURE_OPENAI_DEPLOYMENT_NAME as string;
 
-// Check env varaibles
+// Check env variables
 if (!azureOpenAIEndpoint || !azureOpenAIDeployment) {
   throw new Error(
     "Please ensure to set AZURE_OPENAI_DEPLOYMENT_NAME and AZURE_OPENAI_ENDPOINT in your environment variables."
@@ -68,7 +68,7 @@ const threadResponse: Message =
   });
 console.log(`Message created:  ${JSON.stringify(threadResponse)}`);
 
-// Run the thread and poll it until it is in a terminate state
+// Run the thread and poll it until it is in a terminal state
 const runResponse: Run = await assistantsClient.beta.threads.runs.createAndPoll(
   assistantThread.id,
   {
