@@ -13,9 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@azure/core-auth": "^1.7.1",
     "@azure/identity": "^4.0.1",
-    "@azure/openai-assistants": "^1.0.0-beta.5",
+    "openai": "^4.42.0",
     "dotenv": "^16.4.5"
   }
 }

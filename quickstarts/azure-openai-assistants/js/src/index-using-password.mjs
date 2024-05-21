@@ -1,27 +1,27 @@
 import "dotenv/config";
-import {
-  AssistantsClient
-} from "@azure/openai-assistants";
-import { AzureKeyCredential } from "@azure/core-auth";
+import { AzureOpenAI } from "openai";
 
 // Get environment variables
 const azureOpenAIKey = process.env.AZURE_OPENAI_KEY;
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT;
-const azureOpenAIDeployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME;
-const credential = new AzureKeyCredential(azureOpenAIKey);
+const azureOpenAIDeployment = process.env
+  .AZURE_OPENAI_DEPLOYMENT_NAME;
 
 // Check env varaibles
 if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIDeployment) {
   throw new Error(
-    "Please set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME in your environment variables."
+    "Please ensure to set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT in your environment variables."
   );
 }
 
 // Get Azure SDK client
 const getClient = () => {
-  const assistantsClient = new AssistantsClient(azureOpenAIEndpoint, credential);
+  const assistantsClient = new AzureOpenAI({
+    endpoint: azureOpenAIEndpoint,
+    apiKey: azureOpenAIKey,
+  });
   return assistantsClient;
-}
+};
 
 const assistantsClient = getClient();
 
@@ -36,44 +36,37 @@ const role = "user";
 const message = "I need to solve the equation `3x + 11 = 14`. Can you help me?";
 
 // Create an assistant
-const assistantResponse = await assistantsClient.createAssistant(options);
+const assistantResponse =
+  await assistantsClient.beta.assistants.create(options);
 console.log(`Assistant created: ${JSON.stringify(assistantResponse)}`);
 
 // Create a thread
-const assistantThread = await assistantsClient.createThread({});
+const assistantThread = await assistantsClient.beta.threads.create({});
 console.log(`Thread created: ${JSON.stringify(assistantThread)}`);
 
 // Add a user question to the thread
-const threadResponse = await assistantsClient.createMessage(
-  assistantThread.id,
-  role,
-  message
-);
+const threadResponse =
+  await assistantsClient.beta.threads.messages.create(assistantThread.id, {
+    role,
+    content: message,
+  });
 console.log(`Message created:  ${JSON.stringify(threadResponse)}`);
 
-// Run the thread
-let runResponse = await assistantsClient.createRun(assistantThread.id, {
-  assistantId: assistantResponse.id,
-});
+// Run the thread and poll it until it is in a terminate state
+const runResponse = await assistantsClient.beta.threads.runs.createAndPoll(
+  assistantThread.id,
+  {
+    assistant_id: assistantResponse.id,
+  },
+  { pollIntervalMs: 500 }
+);
 console.log(`Run created:  ${JSON.stringify(runResponse)}`);
 
-// Wait for the assistant to respond
-do {
-  await new Promise((r) => setTimeout(r, 500));
-  runResponse = await assistantsClient.getRun(
-    assistantThread.id,
-    runResponse.id
-  );
-} while (
-  // RunStatus is an enum with the following values: 
-  // "queued", "in_progress", "requires_action", "cancelling", "cancelled", "failed", "completed", "expired"
-  runResponse.status === "queued" ||
-  runResponse.status === "in_progress"
-);
-
 // Get the messages
-const runMessages = await assistantsClient.listMessages(assistantThread.id);
-for (const runMessageDatum of runMessages.data) {
+const runMessages = await assistantsClient.beta.threads.messages.list(
+  assistantThread.id
+);
+for await (const runMessageDatum of runMessages) {
   for (const item of runMessageDatum.content) {
     // types are: "image_file" or "text"
     if (item.type === "text") {
