@@ -22,7 +22,10 @@ AZURE_TENANT_ID=<AD tenant id or name>
 AZURE_CLIENT_ID=<ID of the user/service principal to authenticate as>
 AZURE_CLIENT_SECRET=<client secret used to authenticate to Azure AD>
 AZURE_OPENAI_DEPLOYMENT_NAME=<REPLACE-WITH-DEPLOYMENT-NAME>
+OPENAI_API_VERSION=<API_VERSION> 
 ```
+
+Learn more about [API Versions](https://learn.microsoft.com/azure/ai-services/openai/api-version-deprecation)
 
 ### Passwords
 
@@ -33,7 +36,11 @@ AZURE_OPENAI_KEY=<REPLACE-WITH-RESOURCE-KEY>
 AZURE_OPENAI_RESOURCE=<REPLACE-WITH-RESOURCE_NAME>
 AZURE_OPENAI_ENDPOINT=https://<REPLACE-WITH-RESOURCE_NAME>.openai.azure.com/
 AZURE_OPENAI_DEPLOYMENT_NAME=<REPLACE-WITH-DEPLOYMENT-NAME>
+OPENAI_API_VERSION=<API_VERSION> 
 ```
+
+Learn more about [API Versions](https://learn.microsoft.com/azure/ai-services/openai/api-version-deprecation)
+
 
 ## Output
 

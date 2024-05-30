@@ -14,9 +14,10 @@ const azureOpenAIKey = process.env.AZURE_OPENAI_KEY as string;
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT as string;
 const azureOpenAIDeployment = process.env
   .AZURE_OPENAI_DEPLOYMENT_NAME as string;
+const openAIVersion = process.env.OPENAI_API_VERSION as string;
 
 // Check env variables
-if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIDeployment) {
+if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIDeployment || !openAIVersion) {
   throw new Error(
     "Please set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME in your environment variables."
   );
@@ -26,6 +27,7 @@ if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIDeployment) {
 const getClient = (): AzureOpenAI => {
   const assistantsClient = new AzureOpenAI({
     endpoint: azureOpenAIEndpoint,
+    apiVersion: openAIVersion,
     apiKey: azureOpenAIKey,
   });
   return assistantsClient;

@@ -19,9 +19,10 @@ import {
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT as string;
 const azureOpenAIDeployment = process.env
   .AZURE_OPENAI_DEPLOYMENT_NAME as string;
+const openAIVersion = process.env.OPENAI_API_VERSION as string;
 
 // Check env variables
-if (!azureOpenAIEndpoint || !azureOpenAIDeployment) {
+if (!azureOpenAIEndpoint || !azureOpenAIDeployment || !openAIVersion) {
   throw new Error(
     "Please ensure to set AZURE_OPENAI_DEPLOYMENT_NAME and AZURE_OPENAI_ENDPOINT in your environment variables."
   );
@@ -34,6 +35,7 @@ const getClient = (): AzureOpenAI => {
   const azureADTokenProvider = getBearerTokenProvider(credential, scope);
   const assistantsClient = new AzureOpenAI({
     endpoint: azureOpenAIEndpoint,
+    apiVersion: openAIVersion,
     azureADTokenProvider,
   });
   return assistantsClient;
