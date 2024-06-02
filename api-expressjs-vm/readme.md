@@ -4,6 +4,7 @@ name: Create Express.js virtual machine using Azure CLI
 description: This tutorial shows how to secure two App Services (frontend and backend), passing user auth from the frontend app to the backend. 
 languages:
 - javascript
+- nodejs
 products:
 - azure-virtual-machines
 ---
