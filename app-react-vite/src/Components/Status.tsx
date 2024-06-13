@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 let url = `/api/status`;
 
-const cloudEnv = import.meta.env.VITE_CLOUD_ENV;
-const backendEnv = import.meta.env.VITE_BACKEND_URI;
+const cloudEnv = import.meta.env.VITE_CLOUD_ENV || `production`;
+const backendEnv = import.meta.env.VITE_BACKEND_URI || `https://localhost:7071`;
 
 console.log(`CLOUD_ENV = ${cloudEnv}`)
 console.log(`BACKEND_URI = ${backendEnv}`)
