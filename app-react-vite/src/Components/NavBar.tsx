@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 const NavBar = ({user}:any) => {
 
-    const providers = ['twitter', 'github', 'aad'];
+    const providers = [
+        { displayName: 'Twitter', useName: 'twitter' },
+        { displayName: 'GitHub', useName: 'github' },
+        { displayName: 'Microsoft Entra ID', useName: 'aad' }
+    ];
     const redirect = `/`;
 
     useEffect(() => {
@@ -10,8 +14,11 @@ const NavBar = ({user}:any) => {
 
     return (
         <>
-        {!user && providers.map((provider) => (
-            <span key={provider} ><a href={`/.auth/login/${provider}?post_login_redirect_uri=${redirect}`}>{provider.toLowerCase().split(' ').map(x=>x[0].toUpperCase()+x.slice(1)).join(' ')}</a> </span>
+        {!user && providers.map((provider, index) => (
+            <span key={provider.useName} >
+                <a href={`/.auth/login/${provider.useName}?post_login_redirect_uri=${redirect}`}>{provider.displayName}</a>
+                {index < providers.length - 1 ? ' | ' : ''}
+            </span>
         ))}
         {user && (
             <div>
