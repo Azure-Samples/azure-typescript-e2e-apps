@@ -14,7 +14,7 @@ const queueName: string = "<QUEUE NAME>";
 
 async function main(): Promise<void> {
   // create a Service Bus client using the connection string to the Service Bus namespace
-  const serviceBusClient: ServiceBusClient = new ServiceBusClient(
+  const serviceBusClient = new ServiceBusClient(
     connectionString,
   );
 
