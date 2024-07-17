@@ -1,5 +1,5 @@
 {
-  "name": "service-bus-original",
+  "name": "service-bus-with-typescript",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
