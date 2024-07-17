@@ -16,6 +16,13 @@
 	"features": {
 		"ghcr.io/jsburckhardt/devcontainer-features/gitleaks:1": {},
 		"ghcr.io/devcontainers/features/azure-cli:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"rvest.vs-code-prettier-eslint"
+			]
+		}
 	}
 
 	// Configure tool-specific properties.

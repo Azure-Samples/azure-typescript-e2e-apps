@@ -1,0 +1,29 @@
+{
+  "name": "service-bus-with-typescript",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@azure/identity": "^4.3.0",
+    "@azure/service-bus": "^7.9.5",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "@typescript-eslint/parser": "^5.62.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.3",
+    "prettier-eslint": "^16.3.0"
+  },
+  "prettier": {
+    "printWidth": 80
+  }
+}
