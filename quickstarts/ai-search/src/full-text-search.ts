@@ -10,11 +10,13 @@ import {
   SearchFieldArray,
   SearchIndex,
 } from "@azure/search-documents";
-import indexDefinition from "./hotels_quickstart_index.json" with { type: "json" };
-import hotelData from "./hotels.json" with { type: "json" };
 import "dotenv/config";
 
-// Getting endpoint and apiKey from .env file
+// Import data
+import indexDefinition from "./hotels_quickstart_index.json" with { type: "json" };
+import hotelData from "./hotels.json" with { type: "json" };
+
+// Get endpoint and apiKey from .env file
 const endpoint: string = process.env.SEARCH_API_ENDPOINT!!;
 const apiKey: string = process.env.SEARCH_API_KEY!!;
 if (!endpoint || !apiKey) {
@@ -68,26 +70,19 @@ async function createIndex(
 ) {
   console.log(`Running Azure AI Search JavaScript quickstart...`);
 
-  // Create a new SearchIndexClient
-  const indexClient = new SearchIndexClient(
-    endpoint,
-    new AzureKeyCredential(apiKey),
-  );
-
   // Delete the index if it already exists
   indexName
-    ? await indexClient.deleteIndex(indexName)
+    ? await searchIndexClient.deleteIndex(indexName)
     : console.log("Index doesn't exist.");
 
   console.log("Creating index...");
-  const newIndex: SearchIndex = await indexClient.createIndex(searchIndex);
+  const newIndex: SearchIndex = await searchIndexClient.createIndex(searchIndex);
 
   // Print the new index
   printSearchIndex(newIndex);
 }
 async function loadData(
   searchClient: SearchClient<Hotel>,
-  indexName: string,
   hotels: Hotel[],
 ) {
   console.log("Uploading documents...");
@@ -260,7 +255,7 @@ async function main(indexName: string, indexDef: SearchIndex, hotels: Hotel[]) {
   await createIndex(indexClient, indexName, indexDef);
 
   // Load with data
-  await loadData(searchClient, indexName, hotels);
+  await loadData(searchClient, hotels);
 
   wait(1000);
 
