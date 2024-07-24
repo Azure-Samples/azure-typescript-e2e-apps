@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint . --ext .ts --fix",
+    "prettier:fix": "prettier --write \"src/**/*.ts\""
   },
   "author": "",
   "license": "ISC",

@@ -1,6 +1,10 @@
-import { SecretClient, KeyVaultSecret, SecretProperties } from "@azure/keyvault-secrets";
+import {
+  SecretClient,
+  KeyVaultSecret,
+  SecretProperties,
+} from "@azure/keyvault-secrets";
 import { DefaultAzureCredential } from "@azure/identity";
-import 'dotenv/config'
+import "dotenv/config";
 
 // Passwordless credential
 const credential = new DefaultAzureCredential();
@@ -23,7 +27,6 @@ function printSecretProperties(secret: SecretProperties) {
 }
 
 async function main() {
-
   // Create a new SecretClient
   const client = new SecretClient(url, credential);
 
@@ -32,7 +35,10 @@ async function main() {
   const secretName = `secret${uniqueString}`;
 
   // Create a secret
-  const createSecretResult: KeyVaultSecret = await client.setSecret(secretName, "MySecretValue");
+  const createSecretResult: KeyVaultSecret = await client.setSecret(
+    secretName,
+    "MySecretValue",
+  );
   printSecret(createSecretResult);
 
   // Get the secret by name
@@ -40,9 +46,13 @@ async function main() {
   printSecret(getSecretResult);
 
   // Update properties
-  const updatedSecret: SecretProperties = await client.updateSecretProperties(secretName, getSecretResult.properties.version, {
-    enabled: false
-  });
+  const updatedSecret: SecretProperties = await client.updateSecretProperties(
+    secretName,
+    getSecretResult.properties.version,
+    {
+      enabled: false,
+    },
+  );
   printSecretProperties(updatedSecret);
 
   // Delete secret (without immediate purge)
