@@ -7,7 +7,6 @@ import {
   SearchDocumentsResult,
   AzureKeyCredential,
   odata,
-  SearchOptions,
   SearchFieldArray,
   SearchIndex,
 } from "@azure/search-documents";
