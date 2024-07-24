@@ -260,8 +260,8 @@ async function main(indexName: string, indexDef: SearchIndex, hotels: Hotel[]) {
   wait(1000);
 
   // Search index
-  await searchAllReturnAllFields(searchClient, "luxury hotels");
-  await searchAllSelectReturnedFields(searchClient, "luxury hotels");
+  await searchAllReturnAllFields(searchClient, "*");
+  await searchAllSelectReturnedFields(searchClient, "*");
   await searchWithFilterOrderByAndSelect(searchClient, "wifi", "FL");
   await searchWithLimitedSearchFields(searchClient, "sublime cliff");
   await searchWithFacets(searchClient, "*");
