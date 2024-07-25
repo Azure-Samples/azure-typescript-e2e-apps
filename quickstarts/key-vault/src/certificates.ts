@@ -69,7 +69,7 @@ function printObjectProperties(obj: Record<string, any>): void {
     }
   });
 }
-function printDelectedCertificate(deletedCertificate: DeletedCertificate) {
+function printDeletedCertificate(deletedCertificate: DeletedCertificate) {
   const { recoveryId, deletedOn, scheduledPurgeDate } = deletedCertificate;
   console.log("Deleted Certificate: ", {
     recoveryId,
