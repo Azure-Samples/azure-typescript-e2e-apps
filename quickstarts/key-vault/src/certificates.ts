@@ -21,7 +21,7 @@ const url = `https://${keyVaultName}.vault.azure.net`;
 function printCertificate(
   certificate: KeyVaultCertificate | KeyVaultCertificateWithPolicy,
 ) {
-  console.log("-- printCertficate ---------------------------");
+  console.log("-- printCertificate ---------------------------");
 
   // if policy is defined, it's a KeyVaultCertificateWithPolicy
   if ((certificate as KeyVaultCertificateWithPolicy).policy) {
@@ -94,12 +94,12 @@ async function main() {
   // Get the created certificate
   const pendingCertificate: KeyVaultCertificateWithPolicy =
     await createPoller.getResult();
-  printCertficate(pendingCertificate);
+  printCertificate(pendingCertificate);
 
   // Get certificate by name
   let certificateWithPolicy: KeyVaultCertificateWithPolicy =
     await client.getCertificate(certificateName);
-  printCertficate(pendingCertificate);
+  printCertificate(pendingCertificate);
 
   // Get certificate by version
   const certificateFromVersion: KeyVaultCertificate =
@@ -107,7 +107,7 @@ async function main() {
       certificateName,
       certificateWithPolicy.properties.version!,
     );
-  printCertficate(certificateFromVersion);
+  printCertificate(certificateFromVersion);
 
   // Update properties of the certificate
   const updatedCertificate: KeyVaultCertificate =
@@ -120,7 +120,7 @@ async function main() {
         },
       },
     );
-  printCertficate(updatedCertificate);
+  printCertificate(updatedCertificate);
 
   // Updating the certificate's policy:
   const certificatePolicy: CertificatePolicy =
@@ -132,13 +132,13 @@ async function main() {
 
   // Get certificate again to see the updated policy
   certificateWithPolicy = await client.getCertificate(certificateName);
-  printCertficate(certificateWithPolicy);
+  printCertificate(certificateWithPolicy);
 
   // Delete certificate
   const deletePoller = await client.beginDeleteCertificate(certificateName);
   const deletedCertificate: DeletedCertificate =
     await deletePoller.pollUntilDone();
-  printDelectedCertificate(deletedCertificate);
+    printDeletedCertificate(deletedCertificate);
 }
 
 main().catch((error) => {
