@@ -6,7 +6,7 @@ const router: Router = express.Router();
 router.use(express.json());
 
 const config = noPasswordConfig;
-console.log(`DB Config: ${JSON.stringify(config)}`)
+// console.log(`DB Config: ${JSON.stringify(config)}`)
 const database = new Database(config);
 
 router.get('/', async (_, res) => {
