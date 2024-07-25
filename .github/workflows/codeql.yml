@@ -13,6 +13,7 @@ name: "CodeQL"
 
 on:
   push:
+
     branches: ["main"]
   pull_request:
     # The branches below must be a subset of the branches above
@@ -32,9 +33,11 @@ jobs:
       contents: read
       security-events: write
 
+
     strategy:
       fail-fast: false
       matrix:
+
         language: ["javascript", "typescript"]
         # CodeQL supports [ $supported-codeql-languages ]
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support

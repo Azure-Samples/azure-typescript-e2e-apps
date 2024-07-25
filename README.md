@@ -12,7 +12,7 @@ products:
 
 # Azure TypeScript E2E apps
 
-A monorepo of apps used with the Azure cloud. 
+A monorepo of apps used with the Azure cloud as part of the [Azure Developer Center for JavaScript](https://learn.microsoft.com/azure/developer/javascript/). This repo provides sample code and project to deploy JavaScript and TypeScript to Azure. 
 
 ## Features
 
