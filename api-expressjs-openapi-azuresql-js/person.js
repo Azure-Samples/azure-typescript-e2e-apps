@@ -11,7 +11,7 @@ const config = noPasswordConfig;
 console.log(config);
 
 // Create database object
-const database = new Database(config);
+// const database = new Database(config);
 
 router.get('/', async (_, res) => {
   try {
