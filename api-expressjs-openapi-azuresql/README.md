@@ -1,4 +1,15 @@
-# Express.js with OpenAPI with Azure SQL
+---
+page_type: sample
+languages:
+- javascript
+- typescript
+- nodejs
+products:
+- azure-app-service
+- azure-sql
+---
+
+# Express.js with OpenAPI with Azure SQL (TypeScript)
 
 * /users
 * /api-docs
