@@ -18,7 +18,7 @@ if (!keyVaultName) throw new Error("KEY_VAULT_NAME is empty");
 // URL to the Key Vault
 const url = `https://${keyVaultName}.vault.azure.net`;
 
-function printCertficate(
+function printCertificate(
   certificate: KeyVaultCertificate | KeyVaultCertificateWithPolicy,
 ) {
   console.log("-- printCertficate ---------------------------");
