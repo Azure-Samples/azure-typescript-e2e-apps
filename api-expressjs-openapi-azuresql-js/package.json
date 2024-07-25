@@ -11,7 +11,7 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "mssql": "^9.1.1",
+    "mssql": "^11.0.1",
     "swagger-ui-express": "^4.6.2",
     "yamljs": "^0.3.0"
   },
