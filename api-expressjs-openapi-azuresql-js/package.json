@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "mssql": "^9.1.1",
-    "swagger-ui-express": "^4.6.2",
+    "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
