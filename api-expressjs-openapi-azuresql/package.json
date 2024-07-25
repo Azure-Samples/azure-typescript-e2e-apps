@@ -17,7 +17,7 @@
     "@types/node": "^18.16.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
-    "mssql": "^9.1.1",
+    "mssql": "^11.0.1",
     "swagger-ui-express": "^4.6.2",
     "typescript": "^5.0.4",
     "yamljs": "^0.3.0"
