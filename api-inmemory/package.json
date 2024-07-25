@@ -13,7 +13,7 @@
     "@azure/functions": "4.0.0-alpha.9"
   },
   "devDependencies": {
-    "azure-functions-core-tools": "4.0.5095",
+    "azure-functions-core-tools": "4.0.5907",
     "@types/node": "^18.x",
     "typescript": "^4.0.0"
   },
