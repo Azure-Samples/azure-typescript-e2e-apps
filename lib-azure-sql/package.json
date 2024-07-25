@@ -19,7 +19,7 @@
     "dotenv": "^16.0.3",
     "mssql": "^9.1.1",
     "ts-node": "^10.9.1",
-    "uuid": "^9.0.0"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/mssql": "^8.1.2",
