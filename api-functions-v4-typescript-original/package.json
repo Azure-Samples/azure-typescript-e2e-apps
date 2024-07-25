@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.x",
-    "typescript": "^4.0.0",
+    "typescript": "^5.5.4",
     "rimraf": "^5.0.0"
   },
   "main": "dist/src/functions/*.js"
