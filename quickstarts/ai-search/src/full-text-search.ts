@@ -82,12 +82,14 @@ async function createIndex(
   printSearchIndex(newIndex);
 }
 async function loadData(
-  searchClient: SearchClient<Hotel>,
-  hotels: Hotel[],
+  searchClient: any,
+  hotels: any,
 ) {
   console.log("Uploading documents...");
 
   let indexDocumentsResult = await searchClient.mergeOrUploadDocuments(hotels);
+
+    console.log(JSON.stringify(indexDocumentsResult));
 
   console.log(
     `Index operations succeeded: ${JSON.stringify(indexDocumentsResult.results[0].succeeded)}`,
@@ -245,27 +247,27 @@ async function main(indexName: string, indexDef: SearchIndex, hotels: Hotel[]) {
     endpoint,
     new AzureKeyCredential(apiKey),
   );
-  const searchClient = new SearchClient<Hotel>(
-    endpoint,
-    indexName,
-    new AzureKeyCredential(apiKey),
-  );
 
   // Create the index
   await createIndex(indexClient, indexName, indexDef);
 
+  const searchClient = indexClient.getSearchClient(indexName);
+  //const searchClient = new SearchClient(endpoint, indexName, new AzureKeyCredential(apiKey));
+
+
   // Load with data
+  console.log("Loading data...", indexName);
   await loadData(searchClient, hotels);
 
-  wait(1000);
+  wait(10000);
 
   // Search index
-  await searchAllReturnAllFields(searchClient, "*");
-  await searchAllSelectReturnedFields(searchClient, "*");
-  await searchWithFilterOrderByAndSelect(searchClient, "wifi", "FL");
-  await searchWithLimitedSearchFields(searchClient, "sublime cliff");
-  await searchWithFacets(searchClient, "*");
-  await lookupDocumentById(searchClient, "3");
+//   await searchAllReturnAllFields(searchClient, "*");
+//   await searchAllSelectReturnedFields(searchClient, "*");
+//   await searchWithFilterOrderByAndSelect(searchClient, "wifi", "FL");
+//   await searchWithLimitedSearchFields(searchClient, "sublime cliff");
+//   await searchWithFacets(searchClient, "*");
+//   await lookupDocumentById(searchClient, "3");
 }
 
 main(indexDefinition?.name, indexDef, hotels).catch((err) => {
