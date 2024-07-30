@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "lint": "eslint . --ext .ts --fix",
-    "prettier:fix": "prettier --write \"src/**/*.ts\""
+    "build": "npm run clean && npm run format && npm run lint && npm run build:tsc",
+    "format": "prettier --write src/**/*.ts",
+    "lint": "eslint src/**/*.ts --fix",
+    "build:tsc": "tsc",
+    "clean": "rm -rf dist"
   },
   "author": "",
   "license": "ISC",
@@ -20,10 +21,12 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.2",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.3.3",
-    "prettier-eslint": "^16.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "wtfnode": "^0.9.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   },
