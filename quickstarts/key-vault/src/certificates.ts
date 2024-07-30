@@ -12,15 +12,13 @@ import "dotenv/config";
 const credential = new DefaultAzureCredential();
 
 // Get Key Vault name from environment variables
-const keyVaultName = process.env.KEY_VAULT_NAME;
-if (!keyVaultName) throw new Error("KEY_VAULT_NAME is empty");
-
-// URL to the Key Vault
-const url = `https://${keyVaultName}.vault.azure.net`;
+// such as `https://${keyVaultName}.vault.azure.net`
+const keyVaultUrl = process.env.KEY_VAULT_URL;
+if (!keyVaultUrl) throw new Error("KEY_VAULT_URL is empty");
 
 function printCertificate(
-  certificate: KeyVaultCertificate | KeyVaultCertificateWithPolicy,
-) {
+  certificate: KeyVaultCertificate | KeyVaultCertificateWithPolicy
+): void {
   console.log("-- printCertificate ---------------------------");
 
   // if policy is defined, it's a KeyVaultCertificateWithPolicy
@@ -69,7 +67,7 @@ function printObjectProperties(obj: Record<string, any>): void {
     }
   });
 }
-function printDeletedCertificate(deletedCertificate: DeletedCertificate) {
+function printDeletedCertificate(deletedCertificate: DeletedCertificate): void {
   const { recoveryId, deletedOn, scheduledPurgeDate } = deletedCertificate;
   console.log("Deleted Certificate: ", {
     recoveryId,
@@ -77,9 +75,9 @@ function printDeletedCertificate(deletedCertificate: DeletedCertificate) {
     scheduledPurgeDate,
   });
 }
-async function main() {
+async function main(): Promise<void> {
   // Create a new CertificateClient
-  const client = new CertificateClient(url, credential);
+  const client = new CertificateClient(keyVaultUrl, credential);
 
   // Create a unique certificate name
   const uniqueString = new Date().getTime().toString();
@@ -88,46 +86,44 @@ async function main() {
   // Creating a self-signed certificate
   const createPoller = await client.beginCreateCertificate(
     certificateName,
-    DefaultCertificatePolicy,
+    DefaultCertificatePolicy
   );
 
   // Get the created certificate
-  const pendingCertificate: KeyVaultCertificateWithPolicy =
-    await createPoller.getResult();
+  const pendingCertificate = await createPoller.getResult();
   printCertificate(pendingCertificate);
 
   // Get certificate by name
-  let certificateWithPolicy: KeyVaultCertificateWithPolicy =
-    await client.getCertificate(certificateName);
+  let certificateWithPolicy = await client.getCertificate(certificateName);
   printCertificate(pendingCertificate);
 
   // Get certificate by version
-  const certificateFromVersion: KeyVaultCertificate =
-    await client.getCertificateVersion(
-      certificateName,
-      certificateWithPolicy.properties.version!,
-    );
+  const certificateFromVersion = await client.getCertificateVersion(
+    certificateName,
+    certificateWithPolicy.properties.version!
+  );
   printCertificate(certificateFromVersion);
 
   // Update properties of the certificate
-  const updatedCertificate: KeyVaultCertificate =
-    await client.updateCertificateProperties(
-      certificateName,
-      certificateWithPolicy.properties.version!,
-      {
-        tags: {
-          customTag: "my value",
-        },
+  const updatedCertificate = await client.updateCertificateProperties(
+    certificateName,
+    certificateWithPolicy.properties.version!,
+    {
+      tags: {
+        customTag: "my value",
       },
-    );
+    }
+  );
   printCertificate(updatedCertificate);
 
-  // Updating the certificate's policy:
-  const certificatePolicy: CertificatePolicy =
-    await client.updateCertificatePolicy(certificateName, {
+  // Updating the certificate's policy
+  const certificatePolicy = await client.updateCertificatePolicy(
+    certificateName,
+    {
       issuerName: "Self",
       subject: "cn=MyOtherCert",
-    });
+    }
+  );
   printObjectProperties(certificatePolicy);
 
   // Get certificate again to see the updated policy
@@ -136,9 +132,8 @@ async function main() {
 
   // Delete certificate
   const deletePoller = await client.beginDeleteCertificate(certificateName);
-  const deletedCertificate: DeletedCertificate =
-    await deletePoller.pollUntilDone();
-    printDeletedCertificate(deletedCertificate);
+  const deletedCertificate = await deletePoller.pollUntilDone();
+  printDeletedCertificate(deletedCertificate);
 }
 
 main().catch((error) => {

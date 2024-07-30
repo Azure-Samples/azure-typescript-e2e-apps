@@ -10,48 +10,46 @@ import "dotenv/config";
 const credential = new DefaultAzureCredential();
 
 // Get Key Vault name from environment variables
-const keyVaultName = process.env.KEY_VAULT_NAME;
-if (!keyVaultName) throw new Error("KEY_VAULT_NAME is empty");
+// such as `https://${keyVaultName}.vault.azure.net`
+const keyVaultUrl = process.env.KEY_VAULT_URL;
+if (!keyVaultUrl) throw new Error("KEY_VAULT_URL is empty");
 
-// URL to the Key Vault
-const url = `https://${keyVaultName}.vault.azure.net`;
-
-function printSecret(secret: KeyVaultSecret) {
+function printSecret(secret: KeyVaultSecret): void {
   const { name, value, properties } = secret;
   const { enabled, expiresOn, createdOn } = properties;
   console.log("Secret: ", { name, value, enabled, expiresOn, createdOn });
 }
-function printSecretProperties(secret: SecretProperties) {
+function printSecretProperties(secret: SecretProperties): void {
   const { name, enabled, expiresOn, createdOn } = secret;
   console.log("Secret: ", { name, enabled, expiresOn, createdOn });
 }
 
-async function main() {
+async function main(): Promise<void> {
   // Create a new SecretClient
-  const client = new SecretClient(url, credential);
+  const client = new SecretClient(keyVaultUrl, credential);
 
   // Create a unique secret name
   const uniqueString = new Date().getTime().toString();
   const secretName = `secret${uniqueString}`;
 
   // Create a secret
-  const createSecretResult: KeyVaultSecret = await client.setSecret(
+  const createSecretResult = await client.setSecret(
     secretName,
-    "MySecretValue",
+    "MySecretValue"
   );
   printSecret(createSecretResult);
 
   // Get the secret by name
-  const getSecretResult: KeyVaultSecret = await client.getSecret(secretName);
+  const getSecretResult = await client.getSecret(secretName);
   printSecret(getSecretResult);
 
   // Update properties
-  const updatedSecret: SecretProperties = await client.updateSecretProperties(
+  const updatedSecret = await client.updateSecretProperties(
     secretName,
     getSecretResult.properties.version,
     {
       enabled: false,
-    },
+    }
   );
   printSecretProperties(updatedSecret);
 

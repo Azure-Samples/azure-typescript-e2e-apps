@@ -10,13 +10,11 @@ import "dotenv/config";
 const credential = new DefaultAzureCredential();
 
 // Get Key Vault name from environment variables
-const keyVaultName = process.env.KEY_VAULT_NAME;
-if (!keyVaultName) throw new Error("KEY_VAULT_NAME is empty");
+// such as `https://${keyVaultName}.vault.azure.net`
+const keyVaultUrl = process.env.KEY_VAULT_URL;
+if (!keyVaultUrl) throw new Error("KEY_VAULT_URL is empty");
 
-// URL to the Key Vault
-const url = `https://${keyVaultName}.vault.azure.net`;
-
-function printKey(keyVaultKey: KeyVaultKey) {
+function printKey(keyVaultKey: KeyVaultKey): void {
   const { name, key, id, keyType, keyOperations, properties } = keyVaultKey;
   console.log("Key: ", { name, key, id, keyType });
 
@@ -26,9 +24,9 @@ function printKey(keyVaultKey: KeyVaultKey) {
   console.log("Key Operations: ", keyOperations.join(", "));
 }
 
-async function main() {
+async function main(): Promise<void> {
   // Create a new KeyClient
-  const client = new KeyClient(url, credential);
+  const client = new KeyClient(keyVaultUrl, credential);
 
   // Create unique key names
   const uniqueString = Date.now().toString();
@@ -37,38 +35,38 @@ async function main() {
   const rsaKeyName = `sample-rsa-key-${uniqueString}`;
 
   // Create a EC key
-  const ecKey: KeyVaultKey = await client.createKey(keyName, "EC");
+  const ecKey = await client.createKey(keyName, "EC");
   printKey(ecKey);
 
   // Elliptic curve key
-  const ec256Key: KeyVaultKey = await client.createEcKey(ecKeyName, {
+  const ec256Key = await client.createEcKey(ecKeyName, {
     curve: "P-256",
   });
   printKey(ec256Key);
 
   // RSA key
-  const rsa2048Key: KeyVaultKey = await client.createRsaKey(rsaKeyName, {
+  const rsa2048Key = await client.createRsaKey(rsaKeyName, {
     keySize: 2048,
   });
   printKey(rsa2048Key);
 
   // Get a key
-  const key: KeyVaultKey = await client.getKey(keyName);
+  const key = await client.getKey(keyName);
   printKey(key);
 
   // Get properties of all keys
   for await (const keyProperties of client.listPropertiesOfKeys()) {
-    const iteratedKey: KeyVaultKey = await client.getKey(keyProperties.name);
+    const iteratedKey = await client.getKey(keyProperties.name);
     printKey(iteratedKey);
   }
 
   // Update key properties - disable key
-  const updatedKey: KeyVaultKey = await client.updateKeyProperties(
+  const updatedKey = await client.updateKeyProperties(
     keyName,
     ecKey.properties.version,
     {
       enabled: false,
-    },
+    }
   );
   printKey(updatedKey);
 
@@ -77,7 +75,7 @@ async function main() {
   await deletePoller.pollUntilDone();
 
   // Get a deleted key
-  const deletedKey: DeletedKey = await client.getDeletedKey(keyName);
+  const deletedKey = await client.getDeletedKey(keyName);
   console.log("deleted key: ", deletedKey.name);
 
   // Purge a deleted key
