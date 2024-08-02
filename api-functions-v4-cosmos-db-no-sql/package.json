@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@azure/functions": "^4.0.0-alpha.10",
-    "@types/node": "^16.x",
+    "@types/node": "^22.x",
     "typescript": "^4.0.0"
   }
 }
