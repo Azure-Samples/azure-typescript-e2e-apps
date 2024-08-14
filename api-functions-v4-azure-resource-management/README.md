@@ -1,10 +1,29 @@
+---
+name: "Tutorial: Manage Azure resource groups with TypeScript Function API"
+description: In this tutorial, you'll create a local TypeScript Azure Function app with APIs to manage Azure resource groups and deploy the app to Azure.
+page_type: sample
+languages:
+- javascript
+- typescript
+products:
+- azure-functions
+---
 # JavaScript end-to-end Azure Function to manage Azure
+
+This sample is used as part of a [Tutorial: Manage Azure resource groups with TypeScript Function API](https://learn.microsoft.com/azure/developer/javascript/how-to/with-web-app/azure-function-resource-group-management).
 
 A simple Azure Function app with three API endpoints:
 
 * [POST,DELETE] http://localhost:7071/api/resourcegroup
 * [GET] http://localhost:7071/api/resourcegroups
 * [GET] http://localhost:7071/api/resources
+
+## Security
+
+This sample uses the default Azure Functions experience which includes a connection string to Azure Storage. To learn about production security practices:
+
+* [Securing Azure Functions](https://learn.microsoft.com/azure/azure-functions/security-concepts)
+* [Security recommendations for Blob storage](https://learn.microsoft.com/azure/storage/blobs/security-recommendations)
 
 ## Features
 
