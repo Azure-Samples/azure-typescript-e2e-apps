@@ -14,7 +14,7 @@
     "azurite:start": "azurite --location azurite --debug azurite\\debug.log"
   },
   "dependencies": {
-    "@azure/functions": "4.0.0-alpha.9",
+    "@azure/functions": "4.5.1",
     "mongodb": "^5.3.0"
   },
   "devDependencies": {
