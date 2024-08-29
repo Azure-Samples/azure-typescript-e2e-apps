@@ -15,7 +15,7 @@
     "@azure/cosmos": "^3.17.3",
     "body-parser": "^1.20.2",
     "install": "^0.13.0",
-    "npm": "^9.6.6"
+    "npm": "^10.8.3"
   },
   "devDependencies": {
     "@azure/functions": "^4.0.0-alpha.10",
