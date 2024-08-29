@@ -11,7 +11,7 @@
     "test": "echo \"No tests yet...\""
   },
   "devDependencies": {
-    "@azure/functions": "^3.0.0",
+    "@azure/functions": "^4.5.1",
     "@types/node": "^16.x",
     "typescript": "^4.0.0"
   }
