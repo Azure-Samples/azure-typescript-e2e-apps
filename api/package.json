@@ -10,7 +10,7 @@
     "test": "jest --verbose --coverage"
   },
   "dependencies": {
-    "@azure/functions": "4.0.0-alpha.9",
+    "@azure/functions": "4.5.1",
     "dotenv": "^16.0.3",
     "ts-jest": "^29.1.0"
   },
