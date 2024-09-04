@@ -1,0 +1,35 @@
+{
+  "name": "openai-chat-quickstart",
+  "version": "1.0.0",
+  "scripts": {
+    "key": "ts-node src/index-key.ts",
+    "no-key": "ts-node src/index-no-key.ts",
+    "build": "npm run clean && npm run format && npm run lint && npm run build:tsc",
+    "format": "prettier --write src/**/*.ts",
+    "lint": "eslint src/**/*.ts --fix",
+    "build:tsc": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@azure/identity": "^4.4.1",
+    "dotenv": "^16.4.5",
+    "openai": "^4.57.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3",
+    "wtfnode": "^0.9.1"
+  },
+  "prettier": {
+    "printWidth": 80
+  }
+}
