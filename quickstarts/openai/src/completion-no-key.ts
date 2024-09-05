@@ -1,0 +1,52 @@
+import { AzureOpenAI } from "openai";
+import { type Completion } from "openai/resources/index";
+import {
+  DefaultAzureCredential,
+  getBearerTokenProvider,
+} from "@azure/identity";
+import "dotenv/config";
+
+// Azure OpenAI API version and deployment
+const apiVersion = "2024-04-01-preview";
+const deploymentName = "gpt-35-turbo-instruct";
+
+// Chat prompt and max tokens
+const prompt = ["When was Microsoft founded?"];
+const maxTokens = 128;
+
+function getClient(): AzureOpenAI {
+  const scope = "https://cognitiveservices.azure.com/.default";
+  const azureADTokenProvider = getBearerTokenProvider(
+    new DefaultAzureCredential(),
+    scope
+  );
+  return new AzureOpenAI({ azureADTokenProvider, deployment: deploymentName, apiVersion });
+}
+async function getCompletion(
+  client: AzureOpenAI,
+  prompt: string[],
+  model: string,
+  max_tokens: number
+): Promise<Completion> {
+  return client.completions.create({
+    prompt,
+    model,
+    max_tokens,
+  });
+}
+async function printChoices(completion: Completion): Promise<void> {
+  for (const choice of completion.choices) {
+    console.log(choice.text);
+  }
+}
+export async function main() {
+  console.log("== Get completions Sample ==");
+
+  const client = getClient();
+  const completion = await getCompletion(client, prompt, deploymentName, maxTokens);
+  await printChoices(completion);
+}
+
+main().catch((err) => {
+  console.error("Error occurred:", err);
+});
