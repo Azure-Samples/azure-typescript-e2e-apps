@@ -23,7 +23,8 @@ async function getCompletion(
   model: string,
   max_tokens: number
 ): Promise<Completion> {
-  return await client.completions.create({
+  return client.completions.create({
+
     prompt,
     model,
     max_tokens,
