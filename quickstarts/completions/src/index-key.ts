@@ -29,7 +29,8 @@ async function getCompletion(
     max_tokens,
   });
 }
-async function getChoices(completion: Completion): Promise<void> {
+async function printChoices(completion: Completion): Promise<void> {
+
   for (const choice of completion.choices) {
     console.log(choice.text);
   }
