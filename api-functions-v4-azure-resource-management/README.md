@@ -7,6 +7,8 @@ languages:
 - typescript
 products:
 - azure-functions
+extensions:
+  ms.doc: /azure/developer/javascript/how-to/with-web-app/azure-function-resource-group-management
 ---
 # JavaScript end-to-end Azure Function to manage Azure
 
