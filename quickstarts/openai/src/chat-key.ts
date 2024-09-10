@@ -1,7 +1,7 @@
 import { AzureOpenAI } from "openai";
-import {
-  type ChatCompletion,
-  type ChatCompletionCreateParamsNonStreaming,
+import type {
+  ChatCompletion,
+  ChatCompletionCreateParamsNonStreaming,
 } from "openai/resources/index";
 import "dotenv/config";
 
