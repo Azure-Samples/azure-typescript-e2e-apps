@@ -11,7 +11,7 @@ const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
 const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<api key>";
 
 // Azure OpenAI API version and deployment
-const apiVersion = "2023-12-01-preview";
+const apiVersion = "2024-07-01-preview";
 const deploymentName = "gpt-4-with-turbo";
 
 // Set URL
