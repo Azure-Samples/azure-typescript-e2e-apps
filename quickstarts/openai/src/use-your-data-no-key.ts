@@ -54,8 +54,7 @@ async function main(){
           endpoint: searchEndpoint,
           index_name: searchIndex,
           authentication: {
-            type: "api_key",
-            key: searchKey,
+            type: "system_assigned_managed_identity",
           },
         },
       },
