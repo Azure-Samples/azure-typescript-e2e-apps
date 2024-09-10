@@ -4,7 +4,8 @@ import "dotenv/config";
 
 // Set the Azure and AI Search values from environment variables
 const endpoint = process.env["AZURE_OPENAI_ENDPOINT"];
-const azureApiKey = process.env["AZURE_OPENAI_API_KEY"];
+const apiKey = process.env["AZURE_OPENAI_API_KEY"];
+
 
 const deploymentName = "gpt-4";
 
