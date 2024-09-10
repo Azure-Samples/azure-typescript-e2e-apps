@@ -24,7 +24,8 @@ async function main() {
         prompt: prompt,
         size: "1024x1024",
         n: 1,
-        model: deploymentName,
+        model: "",
+
         style: "vivid" // or "natural"
     });
   
