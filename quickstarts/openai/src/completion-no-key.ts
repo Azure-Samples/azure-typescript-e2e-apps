@@ -25,12 +25,11 @@ function getClient(): AzureOpenAI {
 async function getCompletion(
   client: AzureOpenAI,
   prompt: string[],
-  model: string,
   max_tokens: number
 ): Promise<Completion> {
   return client.completions.create({
     prompt,
-    model,
+    model: "",
     max_tokens,
   });
 }
