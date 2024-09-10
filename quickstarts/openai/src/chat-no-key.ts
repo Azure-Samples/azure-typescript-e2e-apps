@@ -1,14 +1,15 @@
-import { AzureOpenAI } from "openai";
-import type {
-  ChatCompletionCreateParamsNonStreaming,
-  ChatCompletion,
-} from "openai/resources/index";
 import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
 import "dotenv/config";
+import { AzureOpenAI } from "openai";
+import type {
+  ChatCompletion,
+  ChatCompletionCreateParamsNonStreaming,
+} from "openai/resources/index";
 
+// Required Azure OpenAI deployment name and API version
 const apiVersion = "2024-07-01-preview";
 const deploymentName = "gpt-4o"; //This must match your deployment name.
 
@@ -18,7 +19,11 @@ function getClient(): AzureOpenAI {
     new DefaultAzureCredential(),
     scope
   );
-  return new AzureOpenAI({ azureADTokenProvider, deployment: deploymentName, apiVersion });
+  return new AzureOpenAI({
+    azureADTokenProvider,
+    deployment: deploymentName,
+    apiVersion,
+  });
 }
 
 function createMessages(): ChatCompletionCreateParamsNonStreaming {

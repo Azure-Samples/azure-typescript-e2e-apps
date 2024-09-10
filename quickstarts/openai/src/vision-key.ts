@@ -1,24 +1,26 @@
+import "dotenv/config";
 import { AzureOpenAI } from "openai";
 import type {
   ChatCompletion,
-  Completion,
   ChatCompletionCreateParamsNonStreaming,
 } from "openai/resources/index";
-import "dotenv/config";
 
 // You will need to set these environment variables or edit the following values
 const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
 const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<api key>";
+const imageUrl = process.env["IMAGE_URL"] || "<image url>";
 
-// Azure OpenAI API version and deployment
+// Required Azure OpenAI deployment name and API version
 const apiVersion = "2024-07-01-preview";
 const deploymentName = "gpt-4-with-turbo";
 
-// Set URL
-const imageUrl = process.env["IMAGE_URL"] || "<image url>";
-
 function getClient(): AzureOpenAI {
-  return new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment: deploymentName });
+  return new AzureOpenAI({
+    endpoint,
+    apiKey,
+    apiVersion,
+    deployment: deploymentName,
+  });
 }
 function createMessages(): ChatCompletionCreateParamsNonStreaming {
   return {

@@ -1,12 +1,12 @@
-import { AzureOpenAI } from "openai";
-import { type Completion } from "openai/resources/index";
 import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
 import "dotenv/config";
+import { AzureOpenAI } from "openai";
+import { type Completion } from "openai/resources/index";
 
-// Azure OpenAI API version and deployment
+// Required Azure OpenAI deployment name and API version
 const apiVersion = "2024-07-01-preview";
 const deploymentName = "gpt-35-turbo-instruct";
 
@@ -20,7 +20,11 @@ function getClient(): AzureOpenAI {
     new DefaultAzureCredential(),
     scope
   );
-  return new AzureOpenAI({ azureADTokenProvider, deployment: deploymentName, apiVersion });
+  return new AzureOpenAI({
+    azureADTokenProvider,
+    deployment: deploymentName,
+    apiVersion,
+  });
 }
 async function getCompletion(
   client: AzureOpenAI,

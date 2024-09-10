@@ -1,52 +1,48 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
-/**
- * Demonstrates how to convert text into speech.
- *
- * @summary text to speech.
- */
-
-import "openai/shims/node";
-import { AzureOpenAI } from "openai";
-import { writeFile } from "fs/promises";
-
-// Set AZURE_OPENAI_ENDPOINT to the endpoint of your
-// OpenAI resource. You can find this in the Azure portal.
-// Load the .env file if it exists
 import "dotenv/config";
-
-// You will need to set these environment variables or edit the following values
-const speechFilePath = process.env["SPEECH_FILE_PATH"] || "<path to save the speech file>";
-
-// Corresponds to your Model deployment within your OpenAI resource
-// Navigate to the Azure OpenAI Studio to deploy a model.
-const deployment = "tts";
-const apiVersion = "2024-07-01-preview";
+import { writeFile } from "fs/promises";
+import { AzureOpenAI } from "openai";
+import type { SpeechCreateParams } from "openai/resources/audio/speech";
+import "openai/shims/node";
 
 // You will need to set these environment variables or edit the following values
 const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
 const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<api key>";
+const speechFilePath =
+  process.env["SPEECH_FILE_PATH"] || "<path to save the speech file>";
 
+// Required Azure OpenAI deployment name and API version
+const deploymentName = "tts";
+const apiVersion = "2024-07-01-preview";
 
 function getClient(): AzureOpenAI {
-  return new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment });
+  return new AzureOpenAI({
+    endpoint,
+    apiKey,
+    apiVersion,
+    deployment: deploymentName,
+  });
 }
 
+async function generateAudioStream(
+  client: AzureOpenAI,
+  params: SpeechCreateParams
+): Promise<NodeJS.ReadableStream> {
+  const response = await client.audio.speech.create(params);
+  if (response.ok) return response.body;
+  throw new Error(`Failed to generate audio stream: ${response.statusText}`);
+}
 export async function main() {
   console.log("== Text to Speech Sample ==");
 
   const client = getClient();
-  const response = await client.audio.speech.create({
-    model: "",
-
+  const streamToRead = await generateAudioStream(client, {
+    model: deploymentName,
     voice: "alloy",
     input: "the quick brown chicken jumped over the lazy dogs",
   });
 
-  const stream = response.body;
   console.log(`Streaming response to ${speechFilePath}`);
-  await writeFile(speechFilePath, stream);
+  await writeFile(speechFilePath, streamToRead);
   console.log("Finished streaming");
 }
 

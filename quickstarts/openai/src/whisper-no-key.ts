@@ -1,21 +1,29 @@
-import { AzureOpenAI } from "openai";
-import { DefaultAzureCredential, getBearerTokenProvider } from "@azure/identity";
-import { createReadStream } from "fs";
-
-// Set AZURE_OPENAI_ENDPOINT to the endpoint of your
-// OpenAI resource. You can find this in the Azure portal.
-// Load the .env file if it exists
+import {
+  DefaultAzureCredential,
+  getBearerTokenProvider,
+} from "@azure/identity";
 import "dotenv/config";
+import { createReadStream } from "fs";
+import { AzureOpenAI } from "openai";
 
 // You will need to set these environment variables or edit the following values
 const audioFilePath = process.env["AUDIO_FILE_PATH"] || "<audio file path>";
 
-function getClient(){
+// Required Azure OpenAI deployment name and API version
+const apiVersion = "2024-07-01-preview";
+const deploymentName = "whisper";
+
+function getClient() {
   const scope = "https://cognitiveservices.azure.com/.default";
-  const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), scope);
-  const deployment = "whisper";
-  const apiVersion = "2024-07-01-preview";
-  return new AzureOpenAI({ azureADTokenProvider, deployment, apiVersion });
+  const azureADTokenProvider = getBearerTokenProvider(
+    new DefaultAzureCredential(),
+    scope
+  );
+  return new AzureOpenAI({
+    azureADTokenProvider,
+    deployment: deploymentName,
+    apiVersion,
+  });
 }
 
 export async function main() {
