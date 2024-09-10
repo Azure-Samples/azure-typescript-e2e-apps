@@ -39,7 +39,8 @@ export async function main() {
 
   const openai = getClient();
   const response = await openai.audio.speech.create({
-    model: deployment,
+    model: "",
+
     voice: "alloy",
     input: "the quick brown chicken jumped over the lazy dogs",
   });
