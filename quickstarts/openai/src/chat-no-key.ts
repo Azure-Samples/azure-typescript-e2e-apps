@@ -1,7 +1,7 @@
 import { AzureOpenAI } from "openai";
-import {
-  type ChatCompletionCreateParamsNonStreaming,
-  type ChatCompletion,
+import type {
+  ChatCompletionCreateParamsNonStreaming,
+  ChatCompletion,
 } from "openai/resources/index";
 import {
   DefaultAzureCredential,
