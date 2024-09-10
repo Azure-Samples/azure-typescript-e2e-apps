@@ -16,7 +16,8 @@ function getClient(): AzureOpenAI {
 
   }
 async function main() {
-    console.log("== Batch Image Generation ==");
+    console.log("== Image Generation ==");
+
     const client = getClient();
 
     const results = await client.images.generate({
