@@ -12,7 +12,8 @@ const searchEndpoint = process.env["AZURE_AI_SEARCH_ENDPOINT"];
 const searchKey = process.env["AZURE_AI_SEARCH_API_KEY"];
 const searchIndex = process.env["AZURE_AI_SEARCH_INDEX"];
 
-const apiVersion="";
+const apiVersion="2024-07-01-preview";
+
 
 function getClient(): AzureOpenAI {
     return new AzureOpenAI({ endpoint, apiKey: azureApiKey, deployment: deploymentId, apiVersion });
