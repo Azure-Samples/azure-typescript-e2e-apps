@@ -76,5 +76,3 @@ main().catch((err) => {
 });
 
 
-
-module.exports = { main };
