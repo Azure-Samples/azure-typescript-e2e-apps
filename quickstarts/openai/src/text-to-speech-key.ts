@@ -38,7 +38,8 @@ export async function main() {
 
   const client = getClient();
   const response = await client.audio.speech.create({
-    model: deployment,
+    model: "",
+
     voice: "alloy",
     input: "the quick brown chicken jumped over the lazy dogs",
   });
