@@ -17,7 +17,8 @@ const apiVersion="2024-07-01-preview";
 
 
 function getClient(): AzureOpenAI {
-    return new AzureOpenAI({ endpoint, apiKey: azureApiKey, deployment: deploymentId, apiVersion });
+    return new AzureOpenAI({ endpoint, apiKey: apiKey, deployment: deploymentName, apiVersion });
+
   }
 
 async function main(){
