@@ -12,7 +12,6 @@ import "dotenv/config";
 
 // You will need to set these environment variables or edit the following values
 const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
-const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<api key>";
 
 // Azure OpenAI API version and deployment
 const apiVersion = "2023-12-01-preview";
