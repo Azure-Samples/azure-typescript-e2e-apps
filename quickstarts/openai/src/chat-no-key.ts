@@ -9,7 +9,7 @@ import {
 } from "@azure/identity";
 import "dotenv/config";
 
-const apiVersion = "2024-05-01-preview";
+const apiVersion = "2024-07-01-preview";
 const deploymentName = "gpt-4o"; //This must match your deployment name.
 
 function getClient(): AzureOpenAI {
