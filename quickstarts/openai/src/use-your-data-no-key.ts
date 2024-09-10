@@ -23,7 +23,8 @@ function getClient(): AzureOpenAI {
     new DefaultAzureCredential(),
     scope
   );
-  return new AzureOpenAI({ azureADTokenProvider, deployment: deploymentId, apiVersion });
+  return new AzureOpenAI({ azureADTokenProvider, deployment: deploymentName, apiVersion });
+
 }
 
 async function main(){
