@@ -4,7 +4,8 @@ import "dotenv/config";
 // You will need to set these environment variables or edit the following values
 const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] ;
 const apiKey = process.env["AZURE_OPENAI_API_KEY"] ;
-const OPENAI_API_VERSION = "2024-02-01";
+const apiVersion = "2024-07-01";
+
 const deploymentName = "dall-e-3";
 
 // The prompt to generate images from
