@@ -42,7 +42,7 @@ export async function main() {
   console.log("== Get completions Sample ==");
 
   const client = getClient();
-  const completion = await getCompletion(client, prompt, deploymentName, maxTokens);
+  const completion = await getCompletion(client, prompt, maxTokens);
   await printChoices(completion);
 }
 
