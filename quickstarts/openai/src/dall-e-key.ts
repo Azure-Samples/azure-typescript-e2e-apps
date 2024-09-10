@@ -12,7 +12,8 @@ const deploymentName = "dall-e-3";
 const prompt = "a monkey eating a banana";
 
 function getClient(): AzureOpenAI {
-    return new AzureOpenAI({ endpoint, apiKey, apiVersion: OPENAI_API_VERSION, deployment: deploymentName });
+    return new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment: deploymentName });
+
   }
 async function main() {
     console.log("== Batch Image Generation ==");
