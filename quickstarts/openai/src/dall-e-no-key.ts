@@ -5,7 +5,8 @@ import {
 } from "@azure/identity";
 import "dotenv/config";
 
-const apiVersion = "2024-02-01";
+const apiVersion = "2024-07-01";
+
 const deploymentName = "dall-e-3";
 
 // The prompt to generate images from
