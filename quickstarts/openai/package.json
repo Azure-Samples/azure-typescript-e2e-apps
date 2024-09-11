@@ -1,0 +1,47 @@
+{
+  "name": "completions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "completion-key": "ts-node src/completion-key.ts",
+    "chat-key": "ts-node src/chat-key.ts",
+    "vision-key": "ts-node src/vision-key.ts",
+    "dall-e-key": "ts-node src/dall-e.ts",
+    "text-to-speech-key": "ts-node src/text-to-speech-key.ts",
+    "use-your-data-key": "ts-node src/use-your-data-key.ts",
+    "whisper-key": "ts-node src/whisper-key.ts",
+
+    "completion-no-key": "ts-node src/completion-no-key.ts",
+    "chat-no-key": "ts-node src/chat-no-key.ts",
+
+
+    "build": "npm run clean && npm run format && npm run lint && npm run build:tsc",
+    "format": "prettier --write src/**/*.ts",
+    "lint": "eslint src/**/*.ts --fix",
+    "build:tsc": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@azure/identity": "^4.4.1",
+    "@azure/openai": "^2.0.0-beta.2",
+    "dotenv": "^16.4.5",
+    "openai": "^4.57.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3",
+    "wtfnode": "^0.9.1"
+  },
+  "prettier": {
+    "printWidth": 80
+  }
+}
