@@ -10,6 +10,7 @@ import type {
 } from "openai/resources/index";
 
 // You will need to set these environment variables or edit the following values
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
 const imageUrl = process.env["IMAGE_URL"] || "<image url>";
 
 // Required Azure OpenAI deployment name and API version
@@ -23,6 +24,7 @@ function getClient(): AzureOpenAI {
     scope
   );
   return new AzureOpenAI({
+    endpoint,
     azureADTokenProvider,
     deployment: deploymentName,
     apiVersion,

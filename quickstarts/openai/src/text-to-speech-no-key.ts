@@ -9,6 +9,7 @@ import type { SpeechCreateParams } from "openai/resources/audio/speech";
 import "openai/shims/node";
 
 // You will need to set these environment variables or edit the following values
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
 const speechFilePath =
   process.env["SPEECH_FILE_PATH"] || "<path to save the speech file>";
 
@@ -23,6 +24,7 @@ function getClient(): AzureOpenAI {
     scope
   );
   return new AzureOpenAI({
+    endpoint,
     azureADTokenProvider,
     deployment: deploymentName,
     apiVersion,
@@ -42,7 +44,7 @@ export async function main() {
 
   const client = getClient();
   const streamToRead = await generateAudioStream(client, {
-    model: deploymentName,
+    model: "",
     voice: "alloy",
     input: "the quick brown chicken jumped over the lazy dogs",
   });

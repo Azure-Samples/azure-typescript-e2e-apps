@@ -6,6 +6,9 @@ import "dotenv/config";
 import { AzureOpenAI } from "openai";
 import { type Completion } from "openai/resources/index";
 
+// You will need to set these environment variables or edit the following values
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
+
 // Required Azure OpenAI deployment name and API version
 const apiVersion = "2024-07-01-preview";
 const deploymentName = "gpt-35-turbo-instruct";
@@ -21,6 +24,7 @@ function getClient(): AzureOpenAI {
     scope
   );
   return new AzureOpenAI({
+    endpoint,
     azureADTokenProvider,
     deployment: deploymentName,
     apiVersion,

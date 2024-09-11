@@ -7,6 +7,7 @@ import { createReadStream } from "fs";
 import { AzureOpenAI } from "openai";
 
 // You will need to set these environment variables or edit the following values
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
 const audioFilePath = process.env["AUDIO_FILE_PATH"] || "<audio file path>";
 
 // Required Azure OpenAI deployment name and API version
@@ -20,6 +21,7 @@ function getClient() {
     scope
   );
   return new AzureOpenAI({
+    endpoint,
     azureADTokenProvider,
     deployment: deploymentName,
     apiVersion,

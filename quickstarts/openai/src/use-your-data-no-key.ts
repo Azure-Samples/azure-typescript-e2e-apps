@@ -6,7 +6,8 @@ import "@azure/openai/types";
 import "dotenv/config";
 import { AzureOpenAI } from "openai";
 
-// Set the AI Search values from environment variables
+// You will need to set these environment variables or edit the following values
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "<endpoint>";
 const searchEndpoint = process.env["AZURE_AI_SEARCH_ENDPOINT"];
 const searchIndex = process.env["AZURE_AI_SEARCH_INDEX"];
 
@@ -21,6 +22,7 @@ function getClient(): AzureOpenAI {
     scope
   );
   return new AzureOpenAI({
+    endpoint,
     azureADTokenProvider,
     deployment: deploymentName,
     apiVersion,
