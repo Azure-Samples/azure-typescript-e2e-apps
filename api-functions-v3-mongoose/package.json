@@ -15,7 +15,7 @@
   "devDependencies": {
     "@azure/functions": "^3.0.0",
     "@types/mongoose": "^5.11.97",
-    "@types/node": "^16.x",
+    "@types/node": "^22.x",
     "typescript": "^4.0.0"
   }
 }
