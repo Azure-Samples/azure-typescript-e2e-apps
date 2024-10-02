@@ -11,13 +11,13 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "mssql": "^9.1.1",
-    "swagger-ui-express": "^4.6.2",
+    "mssql": "^11.0.1",
+    "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
-    "prettier": "^2.8.8"
+    "prettier": "^3.3.3"
   }
 }
