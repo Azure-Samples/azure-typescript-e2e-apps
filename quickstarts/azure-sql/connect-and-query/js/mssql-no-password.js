@@ -34,7 +34,7 @@ const noPasswordConfig = {
 const getAllPersons = `select * from [dbo].[Person]`;
 
 const myQuery = async () => {
-  const config = noPasswordConfig;
+  const config = passwordConfig;
   // console.log(config);
 
   var poolConnection = await sql.connect(config);

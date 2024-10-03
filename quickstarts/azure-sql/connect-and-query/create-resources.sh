@@ -1,4 +1,4 @@
-subscription="REPLACE-WITH-YOUR-SUBSCRIPTION" # add subscription here
+subscription="de0e88c4-ba0d-4910-bd9d-9e59573c59e6" # add subscription here
 
 az account set -s $subscription # ...or use 'az login'
 

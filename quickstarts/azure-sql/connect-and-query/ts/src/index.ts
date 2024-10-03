@@ -1,8 +1,8 @@
 import express from 'express';
 
 // Import App routes
-import person from './routes/person';
-import openapi from './routes/openapi';
+import person from './routes/person.js';
+import openapi from './routes/openapi.js';
 
 const port = process.env.PORT || 3000;
 
@@ -10,10 +10,10 @@ const app = express();
 
 // Connect App routes
 app.use('/api-docs', openapi);
-app.use('/persons', person)
+app.use('/persons', person);
 app.use('*', (_, res) => {
   res.redirect('/api-docs');
-})
+});
 
 // Start the server
 app.listen(port, () => {

@@ -1,8 +1,5 @@
-import * as dotenv from 'dotenv'
-
-dotenv.config({ debug: true })
-// console.log(process.env)
-
+import * as dotenv from 'dotenv';
+dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
 
 /*
 
@@ -29,28 +26,25 @@ const user = process.env.AZURE_SQL_USER;
 const password = process.env.AZURE_SQL_PASSWORD;
 
 export const noPasswordConfig = {
-    server,
-    port,
-    database,
-    authentication: {
-        type
-    },
-    options: {
-        encrypt: true
-    }
-}
+  server,
+  port,
+  database,
+  authentication: {
+    type
+  },
+  options: {
+    encrypt: true
+  }
+};
 // </snippet_passwordless_connect>
 
 export const passwordConfig = {
-    server,
-    port,
-    database,
-    user,
-    password,
-    options: {
-        encrypt: true
-    }
-}
-
-
-
+  server,
+  port,
+  database,
+  user,
+  password,
+  options: {
+    encrypt: true
+  }
+};

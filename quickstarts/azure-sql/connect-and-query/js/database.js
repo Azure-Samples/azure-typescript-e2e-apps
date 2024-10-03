@@ -1,5 +1,7 @@
 import sql from 'mssql';
 
+let database = null;
+
 export default class Database {
   config = {};
   poolconnection = null;
@@ -7,35 +9,34 @@ export default class Database {
 
   constructor(config) {
     this.config = config;
-    //console.log(`Database: config: ${JSON.stringify(config)}`);
+    console.log(`Database: config: ${JSON.stringify(config)}`);
   }
 
   async connect() {
     try {
-      console.log(`Database connecting...${this.connected}`);
-      if (this.connected === false) {
         this.poolconnection = await sql.connect(this.config);
         this.connected = true;
-        console.log('Database connection successful');
-      } else {
-        console.log('Database already connected');
-      }
+        console.log('Database connected successfully.');
+        return this.poolconnection;
     } catch (error) {
-      console.error(`Error connecting to database: ${JSON.stringify(error)}`);
+      console.error('Error connecting to the database:', error);
+      this.connected = false;
     }
   }
 
   async disconnect() {
     try {
-      this.poolconnection.close();
-      console.log('Database connection closed');
+      if (this.connected) {
+        await this.poolconnection.close();
+        this.connected = false;
+        console.log('Database disconnected successfully.');
+      }
     } catch (error) {
-      console.error(`Error closing database connection: ${error}`);
+      console.error('Error disconnecting from the database:', error);
     }
   }
 
   async executeQuery(query) {
-    await this.connect();
     const request = this.poolconnection.request();
     const result = await request.query(query);
 
@@ -43,7 +44,6 @@ export default class Database {
   }
 
   async create(data) {
-    await this.connect();
     const request = this.poolconnection.request();
 
     request.input('firstName', sql.NVarChar(255), data.firstName);
@@ -57,7 +57,6 @@ export default class Database {
   }
 
   async readAll() {
-    await this.connect();
     const request = this.poolconnection.request();
     const result = await request.query(`SELECT * FROM Person`);
 
@@ -65,7 +64,6 @@ export default class Database {
   }
 
   async read(id) {
-    await this.connect();
 
     const request = this.poolconnection.request();
     const result = await request
@@ -76,7 +74,6 @@ export default class Database {
   }
 
   async update(id, data) {
-    await this.connect();
 
     const request = this.poolconnection.request();
 
@@ -92,7 +89,6 @@ export default class Database {
   }
 
   async delete(id) {
-    await this.connect();
 
     const idAsNumber = Number(id);
 
@@ -103,4 +99,34 @@ export default class Database {
 
     return result.rowsAffected[0];
   }
+
+
+}
+
+async function createTable(){
+  if (process.env.NODE_ENV === 'development') {
+    this.executeQuery(
+        `IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Person')
+       BEGIN
+         CREATE TABLE Person (
+           id int NOT NULL IDENTITY, 
+           firstName varchar(255), 
+           lastName varchar(255)
+         );
+       END`
+      )
+      .then(() => {
+        console.log('Table created');
+      })
+      .catch((err) => {
+        // Table may already exist
+        console.error(`Error creating table: ${err}`);
+      });
+  }
+}
+
+export const createDatabaseConnection = async (passwordConfig) =>{
+  database = new Database(passwordConfig);
+  await database.connect();
+  return database;
 }

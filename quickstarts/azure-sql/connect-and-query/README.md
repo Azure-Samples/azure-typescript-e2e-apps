@@ -16,7 +16,43 @@ Learn how to connect to a database in Azure SQL Database and query data using No
 
 * [Quickstart in official documentation](https://learn.microsoft.com/azure/azure-sql/database/azure-sql-javascript-mssql-quickstart)
 
+Samples provided include:
+
+* [JavaScript ESM](./js)
+* [TypeScript ESM](./ts)
+
 ## Set up
+
+1. Create the table in Azure SQL:
+
+    ```sql
+    SET ANSI_NULLS ON
+    GO
+    
+    SET QUOTED_IDENTIFIER ON
+    GO
+    
+    CREATE TABLE [dbo].[Person](
+    	[id] [int] IDENTITY(1,1) NOT NULL,
+    	[firstName] [nvarchar](255) NULL,
+    	[lastName] [nvarchar](255) NULL
+    PRIMARY KEY CLUSTERED 
+    (
+    	[id] ASC
+    )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+    ) ON [PRIMARY]
+    
+    GO
+    
+    INSERT INTO [dbo].[Person]
+               ([firstName]
+               ,[lastName])
+         VALUES
+               ('Willam'
+               ,'Jones')
+    GO
+    ```
+    
 
 1. Install dependencies: 
 
@@ -42,8 +78,17 @@ Learn how to connect to a database in Azure SQL Database and query data using No
     * `const config = noPasswordConfig;`
     * `const config = passwordConfig;`
 
+1. In `index.js`, verify or set which configuration you want:
+
+    * `const database = new Database(noPasswordConfig);`
+    * `const database = new Database(passwordConfig);`
+    
+    
+
 1. Start the app:
 
     ```
     NODE_ENV=development node index.js
     ```
+
+    ![App Screenshot](./media/azure-sql-openapi-screenshot.png)
