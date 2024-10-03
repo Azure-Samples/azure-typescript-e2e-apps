@@ -122,5 +122,6 @@ async function createTable() {
 export const createDatabaseConnection = async (passwordConfig) => {
   database = new Database(passwordConfig);
   await database.connect();
+  await createTable();
   return database;
 };

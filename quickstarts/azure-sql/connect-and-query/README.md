@@ -20,6 +20,8 @@ Samples provided include:
 
 * [JavaScript ESM](./js)
 * [TypeScript ESM](./ts)
+* [Create Azure resource to be used with passwords](./create-resources.sh)
+* [Create SQL table](#set-up)
 
 ## Set up
 
