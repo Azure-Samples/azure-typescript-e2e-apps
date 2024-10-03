@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
-dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
-
+if(process.env.NODE_ENV === 'development') {
+  dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
+}
 /*
 
 Example .env file:

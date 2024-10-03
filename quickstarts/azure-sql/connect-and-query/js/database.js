@@ -95,33 +95,33 @@ export default class Database {
 
     return result.rowsAffected[0];
   }
-}
 
-async function createTable() {
-  if (process.env.NODE_ENV === 'development') {
-    this.executeQuery(
-      `IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Person')
-       BEGIN
-         CREATE TABLE Person (
-           id int NOT NULL IDENTITY, 
-           firstName varchar(255), 
-           lastName varchar(255)
-         );
-       END`
-    )
-      .then(() => {
-        console.log('Table created');
-      })
-      .catch((err) => {
-        // Table may already exist
-        console.error(`Error creating table: ${err}`);
-      });
+  async createTable() {
+    if (process.env.NODE_ENV === 'development') {
+      this.executeQuery(
+        `IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Person')
+         BEGIN
+           CREATE TABLE Person (
+             id int NOT NULL IDENTITY, 
+             firstName varchar(255), 
+             lastName varchar(255)
+           );
+         END`
+      )
+        .then(() => {
+          console.log('Table created');
+        })
+        .catch((err) => {
+          // Table may already exist
+          console.error(`Error creating table: ${err}`);
+        });
+    }
   }
 }
 
 export const createDatabaseConnection = async (passwordConfig) => {
   database = new Database(passwordConfig);
   await database.connect();
-  await createTable();
+  await database.createTable();
   return database;
 };

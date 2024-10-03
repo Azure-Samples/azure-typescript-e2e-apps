@@ -1,11 +1,14 @@
 import express, { Router } from 'express';
 import { createDatabaseConnection } from '../dbazuresql.js';
-import { noPasswordConfig, passwordConfig } from '../config.js';
+import { 
+  passwordConfig as SQLAuthentication, 
+  noPasswordConfig as PasswordlessConfig 
+} from '../config.js';
 
 const router: Router = express.Router();
 router.use(express.json());
 
-const database = await createDatabaseConnection(passwordConfig);
+const database = await createDatabaseConnection(SQLAuthentication);
 
 router.get('/', async (_, res) => {
   try {

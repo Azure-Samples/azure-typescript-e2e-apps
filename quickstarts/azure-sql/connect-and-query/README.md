@@ -77,15 +77,9 @@ Samples provided include:
 
 1. In `person.js`, verify or set which configuration you want:
 
-    * `const config = noPasswordConfig;`
-    * `const config = passwordConfig;`
+    * `const database = await createDatabaseConnection(SQLAuthentication);`
+    * `const database = await createDatabaseConnection(PasswordlessConfig);`
 
-1. In `index.js`, verify or set which configuration you want:
-
-    * `const database = new Database(noPasswordConfig);`
-    * `const database = new Database(passwordConfig);`
-    
-    
 
 1. Start the app:
 
