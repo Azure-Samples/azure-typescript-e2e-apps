@@ -1,21 +1,16 @@
 import express from 'express';
-import { noPasswordConfig, passwordConfig } from './config.js';
-import Database from './database.js';
+import { passwordConfig, noPasswordConfig } from './config.js';
+import { createDatabaseConnection } from './database.js';
 
 const router = express.Router();
 router.use(express.json());
 
-const config = noPasswordConfig;
+const database = await createDatabaseConnection(passwordConfig);
 
-// Development only - don't do in production
-console.log(config);
-
-// Create database object
-// const database = new Database(config);
-
-router.get('/', async (_, res) => {
+router.get('/', async (req, res) => {
   try {
     // Return a list of persons
+
     const persons = await database.readAll();
     console.log(`persons: ${JSON.stringify(persons)}`);
     res.status(200).json(persons);
@@ -26,7 +21,7 @@ router.get('/', async (_, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    // Create a person
+    // add a person
     const person = req.body;
     console.log(`person: ${JSON.stringify(person)}`);
     const rowsAffected = await database.create(person);

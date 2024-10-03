@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
+    "module": "NodeNext",
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
+
     "outDir": "dist",
     "rootDir": "./src",
-    "strict": false,
-    "sourceMap": true,
-    "noImplicitAny": false,
-    "resolveJsonModule": true,
     "esModuleInterop": true
   }
 }
