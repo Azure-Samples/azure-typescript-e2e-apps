@@ -7,8 +7,7 @@
   "scripts": {
     "format": "prettier --write *.js",
     "dev": "cross-env NODE_ENV=development DEBUG=express:* node index.js",
-    "start": "node index.js",
-    "test": "echo \"No tests yet...\"",
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.21",

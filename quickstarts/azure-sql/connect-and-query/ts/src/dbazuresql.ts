@@ -32,14 +32,21 @@ export default class Database {
     }
   }
 
-  async create(table, data) {
+  async executeQuery(query) {
+    const request = this.poolconnection.request();
+    const result = await request.query(query);
+
+    return result.rowsAffected[0];
+  }
+
+  async create(data) {
     const request = this.poolconnection.request();
 
     request.input('firstName', sql.NVarChar(255), data.firstName);
     request.input('lastName', sql.NVarChar(255), data.lastName);
 
     const result = await request.query(
-      `INSERT INTO ${table} (firstName, lastName) VALUES (@firstName, @lastName)`
+      `INSERT INTO Person (firstName, lastName) VALUES (@firstName, @lastName)`
     );
 
     return result.rowsAffected[0];
@@ -86,33 +93,34 @@ export default class Database {
 
     return result.rowsAffected[0];
   }
+  async createTable() {
+    if (process.env.NODE_ENV === 'development') {
+      this.executeQuery(
+        `IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Person')
+         BEGIN
+           CREATE TABLE Person (
+             id int NOT NULL IDENTITY, 
+             firstName varchar(255), 
+             lastName varchar(255)
+           );
+         END`
+      )
+        .then(() => {
+          console.log('Table created');
+        })
+        .catch((err) => {
+          // Table may already exist
+          console.error(`Error creating table: ${err}`);
+        });
+    }
+  }
+  
 }
 
-async function createTable() {
-  if (process.env.NODE_ENV === 'development') {
-    this.executeQuery(
-      `IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Person')
-       BEGIN
-         CREATE TABLE Person (
-           id int NOT NULL IDENTITY, 
-           firstName varchar(255), 
-           lastName varchar(255)
-         );
-       END`
-    )
-      .then(() => {
-        console.log('Table created');
-      })
-      .catch((err) => {
-        // Table may already exist
-        console.error(`Error creating table: ${err}`);
-      });
-  }
-}
 
 export const createDatabaseConnection = async (passwordConfig) => {
   database = new Database(passwordConfig);
   await database.connect();
-  await createTable();
+  await database.createTable();
   return database;
 };

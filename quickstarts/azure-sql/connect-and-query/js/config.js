@@ -1,5 +1,8 @@
 import * as dotenv from 'dotenv';
-dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
+
+if(process.env.NODE_ENV === 'development') {
+  dotenv.config({ path: `.env.${process.env.NODE_ENV}`, debug: true });
+}
 
 // TIP: Port must be a number, not a string!
 const server = process.env.AZURE_SQL_SERVER;
