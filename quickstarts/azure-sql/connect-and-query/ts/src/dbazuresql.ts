@@ -9,7 +9,6 @@ export default class Database {
 
   constructor(config) {
     this.config = config;
-    console.log(`Database: config: ${JSON.stringify}`);
   }
 
   async connect() {

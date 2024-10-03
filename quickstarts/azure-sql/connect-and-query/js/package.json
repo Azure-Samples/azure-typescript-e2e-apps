@@ -8,7 +8,7 @@
     "format": "prettier --write *.js",
     "dev": "cross-env NODE_ENV=development DEBUG=express:* node index.js",
     "start": "node index.js",
-    "test": "echo \"No tests yet...\""
+    "test": "echo \"No tests yet...\"",
   },
   "dependencies": {
     "express": "^4.17.21",
@@ -19,6 +19,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "eslint": "^8.40.0"
   }
 }

@@ -5,7 +5,6 @@ import { noPasswordConfig, passwordConfig } from '../config.js';
 const router: Router = express.Router();
 router.use(express.json());
 
-console.log(`passwordConfig: ${JSON.stringify(passwordConfig)}`);
 const database = await createDatabaseConnection(passwordConfig);
 
 router.get('/', async (_, res) => {

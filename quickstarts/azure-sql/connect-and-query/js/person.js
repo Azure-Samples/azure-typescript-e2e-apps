@@ -21,7 +21,6 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-
     // add a person
     const person = req.body;
     console.log(`person: ${JSON.stringify(person)}`);
@@ -34,7 +33,6 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-
     // Get the person with the specified ID
     const personId = req.params.id;
     console.log(`personId: ${personId}`);
@@ -52,7 +50,6 @@ router.get('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-
     // Update the person with the specified ID
     const personId = req.params.id;
     console.log(`personId: ${personId}`);

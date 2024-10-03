@@ -9,15 +9,14 @@ export default class Database {
 
   constructor(config) {
     this.config = config;
-    console.log(`Database: config: ${JSON.stringify(config)}`);
   }
 
   async connect() {
     try {
-        this.poolconnection = await sql.connect(this.config);
-        this.connected = true;
-        console.log('Database connected successfully.');
-        return this.poolconnection;
+      this.poolconnection = await sql.connect(this.config);
+      this.connected = true;
+      console.log('Database connected successfully.');
+      return this.poolconnection;
     } catch (error) {
       console.error('Error connecting to the database:', error);
       this.connected = false;
@@ -64,7 +63,6 @@ export default class Database {
   }
 
   async read(id) {
-
     const request = this.poolconnection.request();
     const result = await request
       .input('id', sql.Int, +id)
@@ -74,7 +72,6 @@ export default class Database {
   }
 
   async update(id, data) {
-
     const request = this.poolconnection.request();
 
     request.input('id', sql.Int, +id);
@@ -89,7 +86,6 @@ export default class Database {
   }
 
   async delete(id) {
-
     const idAsNumber = Number(id);
 
     const request = this.poolconnection.request();
@@ -99,14 +95,12 @@ export default class Database {
 
     return result.rowsAffected[0];
   }
-
-
 }
 
-async function createTable(){
+async function createTable() {
   if (process.env.NODE_ENV === 'development') {
     this.executeQuery(
-        `IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Person')
+      `IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Person')
        BEGIN
          CREATE TABLE Person (
            id int NOT NULL IDENTITY, 
@@ -114,7 +108,7 @@ async function createTable(){
            lastName varchar(255)
          );
        END`
-      )
+    )
       .then(() => {
         console.log('Table created');
       })
@@ -125,8 +119,8 @@ async function createTable(){
   }
 }
 
-export const createDatabaseConnection = async (passwordConfig) =>{
+export const createDatabaseConnection = async (passwordConfig) => {
   database = new Database(passwordConfig);
   await database.connect();
   return database;
-}
+};
