@@ -1,25 +1,32 @@
-import "dotenv/config";
 import { AzureOpenAI } from "openai";
 
+// Add `Cognitive Services User` to identity for Azure OpenAI resource
+import {
+  DefaultAzureCredential,
+  getBearerTokenProvider,
+} from "@azure/identity";
+
 // Get environment variables
-const azureOpenAIKey = process.env.AZURE_OPENAI_KEY;
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT;
 const azureOpenAIDeployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME;
 const azureOpenAIVersion = process.env.OPENAI_API_VERSION;
 
 // Check env variables
-if (!azureOpenAIKey || !azureOpenAIEndpoint || !azureOpenAIDeployment || !azureOpenAIVersion) {
+if (!azureOpenAIEndpoint || !azureOpenAIDeployment || !azureOpenAIVersion) {
   throw new Error(
-    "Please set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME in your environment variables."
+    "Please ensure to set AZURE_OPENAI_DEPLOYMENT_NAME and AZURE_OPENAI_ENDPOINT in your environment variables."
   );
 }
 
 // Get Azure SDK client
 const getClient = () => {
+  const credential = new DefaultAzureCredential();
+  const scope = "https://cognitiveservices.azure.com/.default";
+  const azureADTokenProvider = getBearerTokenProvider(credential, scope);
   const assistantsClient = new AzureOpenAI({
     endpoint: azureOpenAIEndpoint,
     apiVersion: azureOpenAIVersion,
-    apiKey: azureOpenAIKey,
+    azureADTokenProvider,
   });
   return assistantsClient;
 };

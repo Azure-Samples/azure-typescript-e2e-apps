@@ -8,13 +8,12 @@
     "create-resource": "bash scripts/create-azure-resource.sh",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "ts-node"
+    "dev": "node -r dotenv/config index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@azure/identity": "^4.0.1",
-    "openai": "^4.42.0",
-    "dotenv": "^16.4.5"
+    "openai": "^4.42.0"
   }
 }
