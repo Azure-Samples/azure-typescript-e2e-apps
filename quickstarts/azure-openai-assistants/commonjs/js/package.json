@@ -1,0 +1,22 @@
+{
+  "name": "azure-openai-assistants-javascript-commonjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "create-resource": "bash scripts/create-azure-resource.sh",
+    "start": "node -r dotenv/config src/index.js",
+    "start:withpassword": "node src/index-using-password.js",
+    "format": "prettier --write ./src/*.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@azure/identity": "^4.4.1",
+    "dotenv": "^16.4.5",
+    "openai": "^4.67.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}
