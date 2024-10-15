@@ -53,12 +53,6 @@ RUN_THREAD_RESPONSE=$(curl $AZURE_OPENAI_ENDPOINT/openai/threads/$THREAD_ID/runs
 RUN_ID=$(echo $RUN_THREAD_RESPONSE | jq --raw-output '.id')
 echo 'RUN_ID ' $RUN_ID
 
-# Retrieve the status of the run - continue until status is completed
-# RUN_STATUS_RESULT=$(curl $AZURE_OPENAI_ENDPOINT/openai/threads/$THREAD_ID/runs/$RUN_ID?api-version=$AZURE_API_VERSION \
-#   -H "api-key: $AZURE_OPENAI_API_KEY")
-# RUN_STATUS=$(echo $RUN_STATUS_RESULT | jq --raw-output '.status')
-# echo 'RUN_STATUS ' $RUN_STATUS
-
 while true; do
   # Make the curl request and capture the response
   RUN_STATUS_RESULT=$(curl -s "$AZURE_OPENAI_ENDPOINT/openai/threads/$THREAD_ID/runs/$RUN_ID?api-version=$AZURE_API_VERSION" \
@@ -83,5 +77,4 @@ done
 ASSISTANT_ANSWER=$(curl $AZURE_OPENAI_ENDPOINT/openai/threads/$THREAD_ID/messages?api-version=$AZURE_API_VERSION \
   -H "Content-Type: application/json" \
   -H "api-key: $AZURE_OPENAI_API_KEY")
-# echo 'ASSISTANT_ANSWER ' $ASSISTANT_ANSWER
 echo $ASSISTANT_ANSWER | jq -r '.data[] | .content[0].text.value'
