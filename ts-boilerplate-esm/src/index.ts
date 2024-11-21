@@ -1,24 +1,17 @@
-import express, { Request, Response } from 'express';
+import Fastify from 'fastify'
 
-const app = express();
-const port = process.env.PORT || 3000;
+const fastify = Fastify({
+  logger: false
+})
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+fastify.get('/', function (_, reply) {
+  reply.send({ hello: 'world' })
+})
 
-// Simple GET endpoint
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, world!');
-});
-
-// Simple POST endpoint
-app.post('/data', (req: Request, res: Response) => {
-  const data = req.body;
-  console.log(data);
-  res.json({ received: data });
-});
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+fastify.listen({ port: 3000 }, function (err, address) {
+  if (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+  // Server is now listening on ${address}
+})

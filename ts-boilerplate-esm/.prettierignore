@@ -1,0 +1,10 @@
+# Ignore artifacts:
+dist
+coverage
+
+# Ignore all node_modules directories:
+node_modules
+
+# Ignore all .env files:
+.env
+

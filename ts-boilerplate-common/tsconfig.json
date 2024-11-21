@@ -2,12 +2,17 @@
     "compilerOptions": {
       "module": "commonjs",
       "target": "es5",
+      "moduleResolution": "node",
+
       "outDir": "dist",
       "rootDir": "./src",
-      "strict": false,
-      "sourceMap": true,
+
+      "strict": true,
       "noImplicitAny": true,
+
+      "sourceMap": true,
       "resolveJsonModule": true,
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "skipLibCheck": true
     }
   }
