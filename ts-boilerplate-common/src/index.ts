@@ -1,24 +1,54 @@
-import express, { Request, Response } from 'express';
+import fastifyStatic from '@fastify/static'
+import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import path from 'path'
 
-const app = express();
-const port = process.env.PORT || 3000;
+const fastify = Fastify({
+  logger: true
+})
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+const publicPath = path.join(__dirname, 'public')
+console.log('publicPath', publicPath)
 
-// Simple GET endpoint
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, world!');
-});
+// Register the fastify-static plugin
+fastify.register(fastifyStatic, {
+  root: publicPath,
+  prefix: '/public',
+})
 
-// Simple POST endpoint
-app.post('/data', (req: Request, res: Response) => {
-  const data = req.body;
-  console.log(data);
-  res.json({ received: data });
-});
+// Register CORS plugin
+fastify.register(require('@fastify/cors'), {
+  origin: '*', // Allow all origins
+})
+const routes = (fastify: FastifyInstance, _: any, done: () => void) => {
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+  // JSON data
+  fastify.post('/api', (request: FastifyRequest, reply: FastifyReply) => {
+    console.log(`************           API post request received: ${JSON.stringify(request.body)}`)
+    const data = request.body
+    reply.code(200).send({ received: data })
+  });
+
+  // root
+  fastify.get('/', (_: FastifyRequest, reply: FastifyReply) => {
+    console.log(`************           ROOT post request received`)
+    reply.sendFile('index.html')
+  });
+
+  done();
+}
+
+fastify.register(routes);
+
+/**
+ * Run the server!
+ */
+const start = async () => {
+  try {
+    await fastify.listen({ port: 3000, host: '0.0.0.0' })
+    console.log(`server listening on 3000`)
+  } catch (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+}
+start()
