@@ -1,0 +1,7 @@
+dist
+*.env
+node_modules
+.azure
+.DS_Store
+Thumbs.db
+*.log*

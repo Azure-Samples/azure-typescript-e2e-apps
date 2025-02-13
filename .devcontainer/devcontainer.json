@@ -3,7 +3,7 @@
 {
 	"name": "Repo owner - all projects",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -12,7 +12,7 @@
 	"forwardPorts": [7071],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install -g azure-functions-core-tools@4.5611 --save-exact --unsafe-perm true",
+	"postCreateCommand": "npm install -g azure-functions-core-tools@4.0.6610 --save-exact --unsafe-perm true",
 	"features": {
 		"ghcr.io/jsburckhardt/devcontainer-features/gitleaks:1": {},
 		"ghcr.io/devcontainers/features/azure-cli:1": {}
@@ -20,7 +20,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"rvest.vs-code-prettier-eslint"
+				"humao.rest-client"
 			]
 		}
 	}

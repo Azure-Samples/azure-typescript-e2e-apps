@@ -1,0 +1,24 @@
+{
+  "name": "ts-boilerplate-common",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "tsc",
+    "build:fe": "cp \"src/public\" \"./dist/public/\" -r",
+    "start": "npm run clean && npm run build && npm run build:fe && node dist/index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@fastify/static": "^8.0.2",
+    "fastify": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.1",
+    "prettier": "3.3.3",
+    "typescript": "^5.6.3"
+  }
+}
