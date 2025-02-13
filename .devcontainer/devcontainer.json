@@ -20,7 +20,6 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"rvest.vs-code-prettier-eslint",
 				"humao.rest-client"
 			]
 		}
