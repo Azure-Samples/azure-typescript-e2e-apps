@@ -48,17 +48,15 @@ function App() {
     if (!selectedFile) return;
 
     const url = `${API_SERVER}/api/sas?file=${encodeURIComponent(
-        selectedFile.name
-      )}&permission=${permission}&container=${containerName}&timerange=${timerange}`;
-      
-    fetch(url,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      selectedFile.name
+    )}&permission=${permission}&container=${containerName}&timerange=${timerange}`;
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
       }
-    )
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
