@@ -9,9 +9,20 @@ export async function status(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  return {
-    jsonBody: { status: 'status ok' }
+  const responseBody = {
+    status: 'ok',
+    request: {
+      method: request.method,
+      url: request.url,
+      headers: request.headers
+    },
+    context: {
+      invocationId: context.invocationId
+      // Other context properties can be added here if needed
+    }
   };
+
+  return { jsonBody: responseBody };
 }
 
 app.get('status', {

@@ -4,18 +4,10 @@ import { ChangeEvent, useState } from 'react';
 import ErrorBoundary from './components/error-boundary';
 import { convertFileToArrayBuffer } from './lib/convert-file-to-arraybuffer';
 
-import axios, { AxiosResponse } from 'axios';
 import './App.css';
 
 // Used only for local development
 const API_SERVER = import.meta.env.VITE_API_SERVER as string;
-
-const request = axios.create({
-  baseURL: API_SERVER,
-  headers: {
-    'Content-type': 'application/json'
-  }
-});
 
 type SasResponse = {
   url: string;
@@ -55,19 +47,23 @@ function App() {
 
     if (!selectedFile) return;
 
-    request
-      .post(
-        `/api/sas?file=${encodeURIComponent(
-          selectedFile.name
-        )}&permission=${permission}&container=${containerName}&timerange=${timerange}`,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
+    const url = `${API_SERVER}/api/sas?file=${encodeURIComponent(
+      selectedFile.name
+    )}&permission=${permission}&container=${containerName}&timerange=${timerange}`;
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText} - URL: ${url}`);
         }
-      )
-      .then((result: AxiosResponse<SasResponse>) => {
-        const { data } = result;
+        return response.json();
+      })
+      .then((data: SasResponse) => {
         const { url } = data;
         setSasTokenUrl(url);
       })
@@ -76,7 +72,7 @@ function App() {
           const { message, stack } = error;
           setSasTokenUrl(`Error getting sas token: ${message} ${stack || ''}`);
         } else {
-          setUploadStatus(error as string);
+          setUploadStatus(String(error));
         }
       });
   };
@@ -98,13 +94,16 @@ function App() {
       })
       .then(() => {
         setUploadStatus('Successfully finished upload');
-        return request.get(`/api/list?container=${containerName}`);
+        return fetch(`${API_SERVER}/api/list?container=${containerName}`);
       })
-      .then((result: AxiosResponse<ListResponse>) => {
-        // Axios response
-        const { data } = result;
-        const { list } = data;
-        setList(list);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText} - URL: ${response.url}`);
+        }
+        return response.json();
+      })
+      .then((data: ListResponse) => {
+        setList(data.list);
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {

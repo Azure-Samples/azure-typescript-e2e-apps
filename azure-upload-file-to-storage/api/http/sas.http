@@ -1,0 +1,2 @@
+POST http://localhost:7071/api/sas?file=test&permissions=w&container=upload&timerange=5 HTTP/1.1
+content-type: application/json
