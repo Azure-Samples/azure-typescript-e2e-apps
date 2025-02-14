@@ -47,10 +47,11 @@ function App() {
 
     if (!selectedFile) return;
 
-    fetch(
-      `${API_SERVER}/api/sas?file=${encodeURIComponent(
+    const url = `${API_SERVER}/api/sas?file=${encodeURIComponent(
         selectedFile.name
-      )}&permission=${permission}&container=${containerName}&timerange=${timerange}`,
+      )}&permission=${permission}&container=${containerName}&timerange=${timerange}`;
+      
+    fetch(url,
       {
         method: 'POST',
         headers: {
