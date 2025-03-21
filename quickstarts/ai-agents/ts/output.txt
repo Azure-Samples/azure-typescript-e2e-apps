@@ -1,0 +1,38 @@
+Sure! To solve the equation \(3x + 11 = 14\), we need to isolate the variable \(x\).
+
+Here are the steps:
+
+1. Subtract 11 from both sides of the equation:
+\[3x + 11 - 11 = 14 - 11\]
+
+2. Simplify both sides:
+\[3x = 3\]
+
+3. Divide both sides by 3:
+\[x = \frac{3}{3}\]
+
+4. Simplify:
+\[x = 1\]
+
+So, the solution to the equation \(3x + 11 = 14\) is \(x = 1\).Messages:
+----------------------------------------------
+Type: text
+Text: Sure! To solve the equation \(3x + 11 = 14\), we need to isolate the variable \(x\).
+
+Here are the steps:
+
+1. Subtract 11 from both sides of the equation:
+\[3x + 11 - 11 = 14 - 11\]
+
+2. Simplify both sides:
+\[3x = 3\]
+
+3. Divide both sides by 3:
+\[x = \frac{3}{3}\]
+
+4. Simplify:
+\[x = 1\]
+
+So, the solution to the equation \(3x + 11 = 14\) is \(x = 1\).
+Type: text
+Text: I need to solve the equation `3x + 11 = 14`. Can you help me?
