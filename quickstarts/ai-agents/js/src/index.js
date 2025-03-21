@@ -1,5 +1,4 @@
 // index.js
-
 import {
   AIProjectsClient,
   DoneEvent,
@@ -16,6 +15,7 @@ dotenv.config();
 
 // Set the connection string from the environment variable
 const connectionString = process.env.PROJECT_CONNECTION_STRING;
+const model = "gpt-4o";
 
 // Throw an error if the connection string is not set
 if (!connectionString) {
@@ -29,14 +29,14 @@ export async function main() {
   );
 
   // Step 1 code interpreter tool
-  const codeInterpreterTool = ToolUtility.createCodeInterpreterTool();
+  const codeInterpreterTool = ToolUtility.createCodeInterpreterTool([]);
 
   // Step 2 an agent
-  const agent = await client.agents.createAgent("gpt-4o-mini", {
+  const agent = await client.agents.createAgent(model, {
     name: "my-agent",
     instructions: "You are a helpful agent",
     tools: [codeInterpreterTool.definition],
-    toolResources: codeInterpreterTool.file_ids,
+    toolResources: codeInterpreterTool.resources,
   });
 
   // Step 3 a thread
@@ -86,14 +86,13 @@ export async function main() {
 
   // Messages iterate from oldest to newest
   // messages[0] is the most recent
-  for (let i = messages.data.length - 1; i >= 0; i--) {
-    const m = messages.data[i];
-    if (m.content && m.content.length > 0 && isOutputOfType(m.content[0], "text")) {
+  await messages.data.forEach((m) => {
+    console.log(`Type: ${m.content[0].type}`);
+    if (isOutputOfType(m.content[0], "text")) {
       const textContent = m.content[0];
-      console.log(`${textContent.text.value}`);
-      console.log(`---------------------------------`);
+      console.log(`Text: ${textContent.text.value}`);
     }
-  }
+  });
 
   // 7. Delete the agent once done
   await client.agents.deleteAgent(agent.id);

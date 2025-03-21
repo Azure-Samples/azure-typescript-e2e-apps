@@ -412,3 +412,6 @@ FodyWeavers.xsd
 .DS_Store
 **/.DS_Store
 **/.eslintcache
+
+**/credential.yml
+**/credential.yaml

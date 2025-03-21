@@ -1,10 +1,4 @@
 // index.ts
-
-import type {
-  MessageDeltaChunk,
-  MessageDeltaTextContent,
-  MessageTextContentOutput,
-} from "@azure/ai-projects";
 import {
   AIProjectsClient,
   DoneEvent,
@@ -12,52 +6,58 @@ import {
   isOutputOfType,
   MessageStreamEvent,
   RunStreamEvent,
-  ToolUtility,
+  ToolUtility
+} from "@azure/ai-projects";
+import type {
+  MessageDeltaChunk,
+  MessageDeltaTextContent,
+  MessageTextContentOutput
 } from "@azure/ai-projects";
 import { DefaultAzureCredential } from "@azure/identity";
+import dotenv from 'dotenv';
 
-const connectionString =
-  process.env["AZURE_AI_PROJECTS_CONNECTION_STRING"] || "<project connection string>";
+dotenv.config();
 
+// Set the connection string from the environment variable
+const connectionString = process.env.PROJECT_CONNECTION_STRING;
+const model = "gpt-4o";
+
+// Throw an error if the connection string is not set
 if (!connectionString) {
-  throw new Error("AZURE_AI_PROJECTS_CONNECTION_STRING must be set in the environment variables");
+  throw new Error("Please set the PROJECT_CONNECTION_STRING environment variable.");
 }
 
-export async function main(): Promise<void> {
+export async function main() {
   const client = AIProjectsClient.fromConnectionString(
     connectionString || "",
     new DefaultAzureCredential(),
   );
 
-  // Step 1: Create code interpreter tool
-  const codeInterpreterTool = ToolUtility.createCodeInterpreterTool();
+  // Step 1 code interpreter tool
+  const codeInterpreterTool = ToolUtility.createCodeInterpreterTool([]);
 
-  // Step 2: Create an agent
-  const agent = await client.agents.createAgent("gpt-4o-mini", {
+  // Step 2 an agent
+  const agent = await client.agents.createAgent(model, {
     name: "my-agent",
     instructions: "You are a helpful agent",
     tools: [codeInterpreterTool.definition],
-    toolResources: {
-      codeInterpreter: {
-        fileIds: []
-      }
-    }
+    toolResources: codeInterpreterTool.resources,
   });
 
-  // Step 3: Create a thread
+  // Step 3 a thread
   const thread = await client.agents.createThread();
 
-  // Step 4: Add a message to thread
+  // Step 4 a message to thread
   await client.agents.createMessage(
     thread.id, {
     role: "user",
     content: "I need to solve the equation `3x + 11 = 14`. Can you help me?",
   });
 
-  // Intermission: message is now correlated with thread
-  // Intermission: listing messages will retrieve the message just added
+  // Intermission is now correlated with thread
+  // Intermission messages will retrieve the message just added
 
-  // Step 5: Run the agent
+  // Step 5 the agent
   const streamEventMessages = await client.agents.createRun(thread.id, agent.id).stream();
 
   for await (const eventMessage of streamEventMessages) {
@@ -71,6 +71,7 @@ export async function main(): Promise<void> {
             if (contentPart.type === "text") {
               const textContent = contentPart as MessageDeltaTextContent;
               const textValue = textContent.text?.value || "No text";
+              process.stdout.write(textValue);
             }
           });
         }
@@ -88,17 +89,17 @@ export async function main(): Promise<void> {
 
   // 6. Print the messages from the agent
   const messages = await client.agents.listMessages(thread.id);
+  console.log("Messages:\n----------------------------------------------");
 
   // Messages iterate from oldest to newest
   // messages[0] is the most recent
-  for (let i = messages.data.length - 1; i >= 0; i--) {
-    const m = messages.data[i];
+  await messages.data.forEach((m) => {
+    console.log(`Type: ${m.content[0].type}`);
     if (isOutputOfType<MessageTextContentOutput>(m.content[0], "text")) {
       const textContent = m.content[0] as MessageTextContentOutput;
-      console.log(`${textContent.text.value}`);
-      console.log(`---------------------------------`);
+      console.log(`Text: ${textContent.text.value}`);
     }
-  }
+  });
 
   // 7. Delete the agent once done
   await client.agents.deleteAgent(agent.id);
