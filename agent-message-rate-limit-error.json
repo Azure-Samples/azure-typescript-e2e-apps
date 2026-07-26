@@ -1,0 +1,35 @@
+{
+    "data": {
+        "id": "step_3jvJW2ljvo9BiGrjI7dWLnTD",
+        "object": "thread.run.step",
+        "created_at": 1749049871,
+        "run_id": "run_2JDnauXAoaz9zUO3po6dDQVo",
+        "assistant_id": "asst_T7EVn6EY9SffNjBSWfPquRCl",
+        "thread_id": "thread_m9EbMt50BauuWS1U73onUcEa",
+        "type": "message_creation",
+        "status": "failed",
+        "cancelled_at": null,
+        "completed_at": null,
+        "expires_at": 1749050464,
+        "failed_at": 1749049876,
+        "last_error": {
+            "code": "rate_limit_exceeded",
+            "message": "Rate limit is exceeded. Try again in 50 seconds."
+        },
+        "step_details": {
+            "type": "message_creation",
+            "message_creation": {
+                "message_id": "msg_GbuHVL7n2sK2ynWy6pcovMP8"
+            }
+        },
+        "usage": {
+            "prompt_tokens": 1490,
+            "completion_tokens": 37,
+            "total_tokens": 1527,
+            "prompt_token_details": {
+                "cached_tokens": 0
+            }
+        }
+    },
+    "event": "thread.run.step.failed"
+}

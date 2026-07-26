@@ -2,19 +2,22 @@
   "name": "azureaiagents",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "tsc && node -r dotenv/config dist/index.js",
+    "start:js": "node -r dotenv/config src/original.js",
+    "start:code": "tsc && node -r dotenv/config dist/codeInterpreterWithStreaming.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@azure/ai-agents": "^1.0.0-beta.3",
     "@azure/ai-projects": "^1.0.0-beta.2",
     "@azure/core-util": "^1.11.0",
     "@azure/identity": "^4.6.0",
+    "csv-parser": "^3.2.0",
     "dotenv": "^16.4.7"
   },
   "devDependencies": {
