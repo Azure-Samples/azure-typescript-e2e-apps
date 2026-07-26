@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  install-check:
+    name: Install check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory:
+          - "."
+          - api-inmemory
+          - api-functions-v4-azure-resource-management
+          - app-react-vite
+          - azure-upload-file-to-storage/api
+          - azure-upload-file-to-storage/app
+          - quickstarts/ai-agents/ts
+          - quickstarts/ai-search
+          - quickstarts/azure-openai-assistants/ts
+          - quickstarts/key-vault
+          - quickstarts/openai
+          - quickstarts/service-bus/ts
+          - test-api-functions-v4
+          - ts-boilerplate-common
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ${{ matrix.directory }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.directory }}
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install --ignore-scripts
+          fi
+
+      - name: Build (if script exists)
+        working-directory: ${{ matrix.directory }}
+        run: |
+          if npm run build --if-present 2>/dev/null; then
+            echo "✅ Build succeeded"
+          else
+            echo "⚠️ Build failed — non-blocking for sample repos"
+          fi
+        continue-on-error: true
+
+      - name: Lint (if script exists)
+        working-directory: ${{ matrix.directory }}
+        run: npm run lint --if-present
+        continue-on-error: true
